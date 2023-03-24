@@ -19,12 +19,18 @@ export default function App() {
   const [color, setBgColor] = React.useState({
     bgColor: "lightgreen",
     hColor: "green",
+    topNav: "orange",
+    bottomNav: "orange",
+    cardsColor: "white",
   });
   return (
     <ColorsContext.Provider
       value={{
         bgColor: color.bgColor,
         hColor: color.hColor,
+        topNav: color.topNav,
+        bottomNav: color.bottomNav,
+        cardsColor: color.cardsColor,
         setBgColor: setBgColor,
       }}
     >

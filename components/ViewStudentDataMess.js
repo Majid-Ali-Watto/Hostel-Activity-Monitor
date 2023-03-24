@@ -8,6 +8,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { styles } from "../assets/styles/viewstudentdatamess";
 import { loginStyles } from "../assets/styles/login";
 import { getBGcolor } from "../Constants/BG_Color";
+import { ColorsContext } from "../App";
 import {
   View,
   Text,
@@ -23,6 +24,7 @@ export default function ViewStudentDataMess({ navigation }) {
   const [user, setUser] = useState("");
   const [password, setpassword] = useState("");
   const [show, setShow] = useState(true);
+  const { bgColor, hColor, cardsColor } = React.useContext(ColorsContext);
 
   const Login = async () => {
     await instance
@@ -61,12 +63,9 @@ export default function ViewStudentDataMess({ navigation }) {
     return (
       <Modal animationType="slide" transparent={false} visible={show}>
         <View
-          style={[
-            loginStyles.loginContainer,
-            { backgroundColor: getBGcolor() },
-          ]}
+          style={[loginStyles.loginContainer, { backgroundColor: bgColor }]}
         >
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, backgroundColor: hColor }}>
             <Header />
           </View>
           <ScrollView>
@@ -133,7 +132,7 @@ export default function ViewStudentDataMess({ navigation }) {
     );
   };
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: getBGcolor() }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
       {modaL()}
       <SList navigation={navigation} />
     </SafeAreaView>

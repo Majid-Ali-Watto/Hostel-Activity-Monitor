@@ -148,17 +148,18 @@ export default function AppSettings({ navigation }) {
     "Non-serializable values were found in the navigation state.",
   ]);
   const [time, setTime] = React.useState();
-  const { bgColor, hColor, setBgColor } = React.useContext(ColorsContext);
+  const { bgColor, hColor, topNav, bottomNav, cardsColor, setBgColor } =
+    React.useContext(ColorsContext);
 
   const [bColor, setBColor] = React.useState(bgColor);
   const [fColor, setFColor] = React.useState("black");
   const [header, setHeaderColor] = React.useState(hColor);
   const [HfColor, setHFColor] = React.useState("black");
-  const [cardColor, setCardColor] = React.useState("silver");
+  const [cardColor, setCardColor] = React.useState(cardsColor);
   const [cardTextColor, setCardTextColor] = React.useState("");
-  const [topNavColor, setTopNavColor] = React.useState("");
+  const [topNavColor, setTopNavColor] = React.useState(topNav);
   const [topNavTextColor, setTopNavTextColor] = React.useState("");
-  const [bottomNavColor, setBottomNavColor] = React.useState("");
+  const [bottomNavColor, setBottomNavColor] = React.useState(bottomNav);
   const [bottomNavTextColor, setBottomNavTextColor] = React.useState("");
   const BodyParts = (heading) => {
     console.log(bColor, header);
@@ -211,19 +212,18 @@ export default function AppSettings({ navigation }) {
           </View>
         </View>
         <View
-          style={{ height: "40%", borderWidth: 0.5, borderColor: "silver" }}
+          style={{
+            height: "40%",
+            borderWidth: 0.5,
+            borderColor: "silver",
+            // flexDirection: "row",
+            flexWrap: "wrap",
+            width: "100%",
+          }}
         >
           <FlatList
             // showsHorizontalScrollIndicator={false}
-            // horizontal={true}
-            style={{
-              flexDirection: "column",
-              // justifyContent: 'flex-start',
-              // alignItems: 'center',
-              flexWrap: "wrap",
-              // height: '100%',
-              // width: '90%',
-            }}
+
             data={colors}
             renderItem={({ item }) => (
               <View
@@ -238,16 +238,36 @@ export default function AppSettings({ navigation }) {
                   onPress={() => {
                     if (time == "Body") {
                       setBColor(item);
-                      setBgColor({ bgColor: bColor, hColor: header });
+                      setBgColor({
+                        bgColor: item,
+                        hColor: header,
+                        cardsColor: cardColor,
+                        bottomNav: bottomNavColor,
+                        topNav: topNavColor,
+                      });
                     } else if (time == "Header") {
                       setHeaderColor(item);
-                      setBgColor({ bgColor: bColor, hColor: header });
+                      setBgColor({
+                        bgColor: bColor,
+                        hColor: item,
+                        cardsColor: cardColor,
+                        bottomNav: bottomNavColor,
+                        topNav: topNavColor,
+                      });
                       console.log(bgColor, hColor);
                     } else if (time == "Body Text") setFColor(item);
                     else if (time == "Header Text") {
                       setHFColor(item);
-                    } else if (time == "Card") setCardColor(item);
-                    else if (time == "Cards Text") setCardTextColor(item);
+                    } else if (time == "Card") {
+                      setCardColor(item);
+                      setBgColor({
+                        bgColor: bColor,
+                        hColor: header,
+                        cardsColor: item,
+                        bottomNav: bottomNavColor,
+                        topNav: topNavColor,
+                      });
+                    } else if (time == "Cards Text") setCardTextColor(item);
                     else if (time == "Top Nav") setTopNavColor(item);
                     else if (time == "TopNav Text") setTopNavTextColor(item);
                     else if (time == "Bottom Nav") setBottomNavColor(item);
@@ -264,7 +284,7 @@ export default function AppSettings({ navigation }) {
         </View>
         <View
           style={{
-            height: 50,
+            height: "12%",
             marginTop: 1,
             borderColor: "silver",
             borderWidth: 1,
@@ -311,7 +331,7 @@ export default function AppSettings({ navigation }) {
                   navigation.goBack();
                 }}
               >
-                <Icon name="arrow-left" color="darkgray" size={25} />
+                <Icon name="arrow-left" color="black" size={25} />
               </TouchableOpacity>
             </View>
             <View style={{ justifyContent: "center" }}>

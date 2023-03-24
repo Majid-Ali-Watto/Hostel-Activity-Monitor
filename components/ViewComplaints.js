@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import IP from "../Constants/NetworkIP";
+import { ColorsContext } from "../App";
+
 // import SelectDropdown from "react-native-select-dropdown";
 import axios from "axios";
 const instance = axios.create();
@@ -23,6 +25,7 @@ export default function ViewComplaints() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const { bgColor, cardsColor } = React.useContext(ColorsContext);
 
   const fetchComplaints = async () => {
     await instance
@@ -71,7 +74,7 @@ export default function ViewComplaints() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: getBGcolor() }]}>
+    <View style={[styles.container, { backgroundColor: bgColor }]}>
       <View style={{ width: "100%" }}>
         <TextInput
           placeholder="Search complaints"
@@ -103,7 +106,12 @@ export default function ViewComplaints() {
         <FlatList
           data={filteredComplaints}
           renderItem={({ item }) => (
-            <View style={styles.complaintContainer}>
+            <View
+              style={[
+                styles.complaintContainer,
+                { backgroundColor: cardsColor },
+              ]}
+            >
               <TouchableOpacity onPress={() => handleComplaintPress(item)}>
                 <View style={styles.complaintTitle}>
                   <Text style={styles.complaintTit}>{item.title}</Text>
@@ -132,9 +140,7 @@ export default function ViewComplaints() {
         onRequestClose={() => setModalVisible(false)}
       >
         {selectedComplaint && (
-          <View
-            style={[styles.modalContainer, { backgroundColor: getBGcolor() }]}
-          >
+          <View style={[styles.modalContainer, { backgroundColor: bgColor }]}>
             <View style={{ flex: 1 }}>
               <Text style={styles.modalTitle}>{selectedComplaint.title}</Text>
             </View>

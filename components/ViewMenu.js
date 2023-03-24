@@ -17,10 +17,10 @@ function getDate() {
   return today;
 }
 
-function ItemCard({ item }) {
+function ItemCard({ item }, cardsColor) {
   return (
     <View>
-      <Card style={styles.card}>
+      <Card style={[styles.card, { backgroundColor: cardsColor }]}>
         <View style={styles.menuDay}>
           <Text style={[styles.day, { fontFamily: "monospace" }]}>
             {item.day}
@@ -87,7 +87,7 @@ function ItemCard({ item }) {
 export default function ViewMenu() {
   const [searchTerm, setSearchTerm] = useState("");
   const [menus, setMenu] = useState([]);
-  const { bgColor, setBgColor } = React.useContext(ColorsContext);
+  const { bgColor, setBgColor, cardsColor } = React.useContext(ColorsContext);
 
   let menu = [];
   useEffect(() => {
@@ -192,7 +192,7 @@ export default function ViewMenu() {
 
       {filteredNames.map((item) => {
         if (item.date == getDate()) {
-          return ItemCard({ item });
+          return ItemCard({ item }, cardsColor);
         }
       })}
       <Divider />
@@ -205,7 +205,7 @@ export default function ViewMenu() {
       <FlatList
         data={filteredNames}
         renderItem={({ item }) => {
-          return ItemCard({ item });
+          return ItemCard({ item }, cardsColor);
         }}
         keyExtractor={(item, index) => index + item.day + item.date}
         // onEndReached={fetchNames}

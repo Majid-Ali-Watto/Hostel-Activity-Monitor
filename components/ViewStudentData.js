@@ -18,11 +18,14 @@ import {
   Alert,
   SafeAreaView,
 } from "react-native";
+import { ColorsContext } from "../App";
+
 import { getBGcolor } from "../Constants/BG_Color";
 export default function StudentData({ navigation }) {
   const [user, setUser] = useState("");
   const [password, setpassword] = useState("");
   const [show, setShow] = useState(true);
+  const { bgColor, hColor, cardsColor } = React.useContext(ColorsContext);
 
   const Login = async () => {
     await instance
@@ -61,12 +64,9 @@ export default function StudentData({ navigation }) {
     return (
       <Modal animationType="slide" transparent={false} visible={show}>
         <View
-          style={[
-            loginStyles.loginContainer,
-            { backgroundColor: getBGcolor() },
-          ]}
+          style={[loginStyles.loginContainer, { backgroundColor: bgColor }]}
         >
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, backgroundColor: hColor }}>
             <Header />
           </View>
           <ScrollView>
@@ -133,7 +133,7 @@ export default function StudentData({ navigation }) {
     );
   };
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: getBGcolor() }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
       {modaL()}
       <SList navigation={navigation} />
     </SafeAreaView>

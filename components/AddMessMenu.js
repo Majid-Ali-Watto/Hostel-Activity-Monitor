@@ -9,7 +9,10 @@ import { TextInput, RadioButton } from "react-native-paper";
 import { SelectList } from "react-native-dropdown-select-list";
 import { dishUnits } from "../Constants/dishUnits";
 import { getBGcolor } from "../Constants/BG_Color";
+import { ColorsContext } from "../App";
 export default function AddMessMenu() {
+  const { bgColor, setBgColor, cardsColor } = React.useContext(ColorsContext);
+
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [price, setPrice] = useState("");
@@ -61,7 +64,7 @@ export default function AddMessMenu() {
       });
   };
   return (
-    <View style={[styles.container, { backgroundColor: getBGcolor() }]}>
+    <View style={[styles.container, { backgroundColor: bgColor }]}>
       <Text style={styles.addMenuHeader}>Add Mess Menu</Text>
       <ScrollView>
         <View style={styles.textinputs}>
@@ -102,7 +105,9 @@ export default function AddMessMenu() {
           </View>
 
           <View style={styles.dishUnitContainer}>
-            <Text style={[styles.dishUnitLabel,{fontFamily: 'monospace'}]}>Select Dish Units</Text>
+            <Text style={[styles.dishUnitLabel, { fontFamily: "monospace" }]}>
+              Select Dish Units
+            </Text>
             <SelectList
               setSelected={(val) => setUnits(val)}
               data={dishUnits}

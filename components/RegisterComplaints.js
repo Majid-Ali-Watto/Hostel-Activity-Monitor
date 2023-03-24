@@ -7,10 +7,12 @@ import IP from "../Constants/NetworkIP";
 import { getUserP } from "../ContextAPI/userContext";
 import { styles } from "../assets/styles/registercomplaints";
 import { getBGcolor } from "../Constants/BG_Color";
+import { ColorsContext } from "../App";
 export default function RegisterComplaints(props) {
   const [text, setText] = useState("");
   const [textArea, setTextArea] = useState("");
   const [user, setUser] = useState("");
+  const { bgColor, setBgColor, cardsColor } = React.useContext(ColorsContext);
 
   const postComplaint = async () => {
     if (text.length == 0) {
@@ -53,7 +55,7 @@ export default function RegisterComplaints(props) {
     setUser(getUserP());
   }, []);
   return (
-    <ScrollView style={[styles.container, { backgroundColor: getBGcolor() }]}>
+    <ScrollView style={[styles.container, { backgroundColor: bgColor }]}>
       <TextInput
         maxLength={50}
         placeholder="Enter Complaint Title"

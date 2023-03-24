@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import ViewFeesChild from "./ViewFeeschild";
 import { setUserP } from "../ContextAPI/userContext";
 import { styles } from "../assets/styles/viewallfees";
@@ -19,6 +19,8 @@ import Header from "./Header";
 import axios from "axios";
 import IP from "../Constants/NetworkIP";
 import { getBGcolor } from "../Constants/BG_Color";
+import { ColorsContext } from "../App";
+
 const instance = axios.create();
 export default function ViewAllFees({ navigation }) {
   const [modal, viewModal] = useState(false);
@@ -30,6 +32,8 @@ export default function ViewAllFees({ navigation }) {
   const [password, setpassword] = useState("");
   const [ee, setEE] = useState([]);
   const [feee, setFeee] = useState("");
+  const { bgColor, hColor, cardsColor } = React.useContext(ColorsContext);
+
   const [Semester, setSemester] = useState([
     { Semester: "1st", paid: "Pending Fees Status", fee: 0 },
     { Semester: "2nd", paid: "Pending Fees Status", fee: 0 },
@@ -145,12 +149,9 @@ export default function ViewAllFees({ navigation }) {
         // onRequestClose={() => setShow(false)}
       >
         <View
-          style={[
-            loginStyles.loginContainer,
-            { backgroundColor: getBGcolor() },
-          ]}
+          style={[loginStyles.loginContainer, { backgroundColor: bgColor }]}
         >
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, backgroundColor: hColor }}>
             <Header />
           </View>
           <ScrollView>
@@ -222,7 +223,7 @@ export default function ViewAllFees({ navigation }) {
   };
 
   return (
-    <View style={[styles.mainView, { backgroundColor: getBGcolor() }]}>
+    <View style={[styles.mainView, { backgroundColor: bgColor }]}>
       {/* callig login/signup modal */}
       {modaL()}
       {/*  */}

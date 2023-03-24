@@ -1,4 +1,4 @@
-import React, { useState ,useContext} from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import IP from "../Constants/NetworkIP";
 const instance = axios.create();
@@ -24,7 +24,7 @@ export default function SecuritySection({ navigation }) {
   const [user, setUser] = useState("");
   const [password, setpassword] = useState("");
   const [show, setShow] = useState(true);
-  const {bgColor,hColor}= useContext(ColorsContext);
+  const { bgColor, hColor } = useContext(ColorsContext);
 
   const Login = async () => {
     await instance
@@ -63,12 +63,9 @@ export default function SecuritySection({ navigation }) {
     return (
       <Modal animationType="slide" transparent={false} visible={show}>
         <View
-          style={[
-            loginStyles.loginContainer,
-            { backgroundColor:bgColor },
-          ]}
+          style={[loginStyles.loginContainer, { backgroundColor: bgColor }]}
         >
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, backgroundColor: hColor }}>
             <Header />
           </View>
           <ScrollView>

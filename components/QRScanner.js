@@ -3,9 +3,11 @@ import { Text, View, LogBox } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { styles } from "../assets/styles/qrcode";
 import { getBGcolor } from "../Constants/BG_Color";
+import { ColorsContext } from "../App";
 export default function QRScanner({ navigation, route }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const { bgColor, setBgColor, cardsColor } = React.useContext(ColorsContext);
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -72,7 +74,7 @@ export default function QRScanner({ navigation, route }) {
     return decoded;
   }
   return (
-    <View style={[styles.container, { backgroundColor: getBGcolor() }]}>
+    <View style={[styles.container, { backgroundColor: bgColor }]}>
       <Text>Scan QR Code given on student's card</Text>
       <View style={{ margin: 20 }}></View>
       <BarCodeScanner

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   home: {
     elevation: 10,
-    // flex: 1,
+    flex: 1,
     ...getAlignment("center", "space-evenly"),
     marginTop: 0,
     marginBottom: 10,
@@ -55,13 +55,14 @@ const styles = StyleSheet.create({
   title: {
     ...getMF(0.05, 0.03),
     fontWeight: "bold",
+    // fontStyle: "italic",
   },
   rollno: {
-    ...getMF(0.05, 0.025),
+    ...getMF(0.05, 0.02),
   },
   department: {
     ...getMF(0.05, 0.02),
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
   data: {
     flex: 1,
@@ -72,7 +73,10 @@ const styles = StyleSheet.create({
     marginRight: WIDTH * 0.05,
     fontSize: HEIGHT * 0.025,
   },
-
+  semno: {
+    marginRight: WIDTH * 0.05,
+    fontSize: HEIGHT * 0.02,
+  },
   searchInput: {
     paddingLeft: 5,
     backgroundColor: "#fff",

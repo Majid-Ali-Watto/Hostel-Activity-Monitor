@@ -22,7 +22,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getBGcolor } from "../Constants/BG_Color";
 import { HEIGHT, WIDTH } from "../Constants/GlobalWidthHeight";
 import { dishUnits } from "../Constants/dishUnits";
-
+import { useContext } from "react";
+import { ColorsContext } from "../App";
 export default function SList(props) {
   const navigation = props.navigation;
   const [names, setNames] = useState([]);
@@ -33,6 +34,8 @@ export default function SList(props) {
   const [tab, setTab] = useState();
   const [uri, setUri] = useState([]);
   const [units, setUnits] = useState("");
+  const { bgColor, cardsColor } = useContext(ColorsContext);
+
   let labels = [
     // 'Name',
     "Reg No.",
@@ -191,7 +194,7 @@ export default function SList(props) {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: getBGcolor() }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
       <View style={styles.searchbar}>
         <TextInput
           placeholder="Search Student"
@@ -281,7 +284,7 @@ export default function SList(props) {
           renderItem={({ item }) => (
             <Card
               key={item.rollno}
-              style={styles.card}
+              style={[styles.card, { backgroundColor: cardsColor }]}
               onPress={() => {
                 setSem(item.semno);
                 setSearchTerm(item.rollno);
@@ -312,7 +315,7 @@ export default function SList(props) {
                   </View>
                   <View>
                     <Text style={styles.program}>{item.program}</Text>
-                    <Text style={styles.program}>{item.semno}</Text>
+                    <Text style={styles.semno}>{item.semno}</Text>
                   </View>
                 </View>
               </View>
@@ -362,7 +365,7 @@ export default function SList(props) {
             >
               {uri && (
                 <View style={stylesn.container}>
-                  <Card style={stylesn.card}>
+                  <Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
                     <View style={stylesn.imageSec}>
                       <Text style={stylesn.header}>{uri[0]}</Text>
                       <Image source={{ uri: uri[1] }} style={stylesn.img} />

@@ -8,15 +8,15 @@ import React from "react";
 import { styles } from "../assets/styles/approutes";
 import { useState, useEffect } from "react";
 // import { getBGcolor, getHBGcolor } from "../Constants/BG_Color";
-import { useContext } from "react";
 import SplashScreen from "./generic_components/SplashScreen";
+import { useContext } from "react";
 import { ColorsContext } from "../App";
 export default function AppRoutes({ navigation }) {
   // const [color, setBColor] = useState(getBGcolor());
   // const [hcolor, setBHColor] = useState(getHBGcolor());
   const [display, setDisplay] = useState("flex");
   const [displayRoute, setDisplayRoute] = useState("none");
-  const { bgColor, hColor } = useContext(ColorsContext);
+  const { bgColor, hColor, cardsColor } = useContext(ColorsContext);
   const icons = ["user-graduate", "user-lock", "user-check", "user-secret"];
   // const setColor = (c) => {
   //   setBColor(c);
@@ -58,7 +58,7 @@ export default function AppRoutes({ navigation }) {
             return (
               <Card
                 key={index}
-                style={styles.card}
+                style={[styles.card, { backgroundColor: cardsColor }]}
                 onPress={() => {
                   navigation.navigate(Object.entries(item)[0][0]);
                 }}
