@@ -1,5 +1,5 @@
 export const AppBackGroundColor = {
-  backgroundColor: "lightgreen",
+  // backgroundColor: "lightgreen",
 };
 export const AppHeader = "green";
 export const AppNavigationHeader = {

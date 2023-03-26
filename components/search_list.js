@@ -283,7 +283,7 @@ export default function SList(props) {
           data={filteredNames}
           renderItem={({ item }) => (
             <Card
-              key={item.rollno}
+              key={item.rollno + item.cnic}
               style={[styles.card, { backgroundColor: cardsColor }]}
               onPress={() => {
                 setSem(item.semno);
@@ -312,6 +312,7 @@ export default function SList(props) {
                   <View>
                     <Text style={styles.title}>{item.sname}</Text>
                     <Text style={styles.rollno}>{item.rollno}</Text>
+                    <Text style={styles.rollno}>{item.cnic}</Text>
                   </View>
                   <View>
                     <Text style={styles.program}>{item.program}</Text>

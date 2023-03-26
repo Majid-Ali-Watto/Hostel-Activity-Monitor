@@ -6,9 +6,8 @@ const Tab = createBottomTabNavigator();
 import ViewStudentDataMess from "../components/ViewStudentDataMess";
 import MarkAttendance from "./MarkAttendance";
 import AddMessMenu from "./AddMessMenu";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function MessSection() {
-  
   return (
     <Tab.Navigator screenOptions={{ ...BottomNavigationStyles }}>
       <Tab.Screen
@@ -16,13 +15,11 @@ export default function MessSection() {
         listeners={() => {
           const storeData = async () => {
             try {
-              await AsyncStorage.setItem('tab', "View Student's Mess Fee")
-            } catch (e) {
-            }
-          }
-         
-          storeData()
-          
+              await AsyncStorage.setItem("tab", "View Student's Mess Fee");
+            } catch (e) {}
+          };
+
+          storeData();
         }}
         component={ViewStudentDataMess}
         options={{
@@ -41,13 +38,11 @@ export default function MessSection() {
         listeners={() => {
           const storeData = async () => {
             try {
-              await AsyncStorage.setItem('tab', "Add Mess Menu")
-            } catch (e) {
-            }
-          }
-         
-          storeData()
-          
+              await AsyncStorage.setItem("tab", "Add Mess Menu");
+            } catch (e) {}
+          };
+
+          storeData();
         }}
         component={AddMessMenu}
         options={{
@@ -66,13 +61,11 @@ export default function MessSection() {
         listeners={() => {
           const storeData = async () => {
             try {
-              await AsyncStorage.setItem('tab', "Mark Attendance")
-            } catch (e) {
-            }
-          }
-         
-          storeData()
-          
+              await AsyncStorage.setItem("tab", "Mark Attendance");
+            } catch (e) {}
+          };
+
+          storeData();
         }}
         component={MarkAttendance}
         options={{
