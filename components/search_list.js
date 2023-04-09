@@ -5,8 +5,8 @@ const instance = axios.create();
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { styles } from "../assets/styles/search_lists";
 import { getUserRole } from "../ContextAPI/userContext";
-import { Card, Searchbar, Divider, Modal, TextInput } from "react-native-paper";
-import { SelectList } from "react-native-dropdown-select-list";
+import { getUserP } from "../ContextAPI/userContext";
+import { Card, Divider, Modal, TextInput, FAB, Button } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import {
   View,
@@ -18,12 +18,11 @@ import {
   Image,
   RefreshControl,
 } from "react-native";
+import MonthYear from "./generic_components/MothsYearPicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getBGcolor } from "../Constants/BG_Color";
-import { HEIGHT, WIDTH } from "../Constants/GlobalWidthHeight";
-import { dishUnits } from "../Constants/dishUnits";
 import { useContext } from "react";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
+import { HEIGHT } from "../Constants/GlobalWidthHeight";
 export default function SList(props) {
   const navigation = props.navigation;
   const [names, setNames] = useState([]);
@@ -31,31 +30,26 @@ export default function SList(props) {
   const [sem, setSem] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [profile, showProfile] = useState(false);
+  const [showAllStud, setShowAllStud] = useState("flex");
+  const [showRegStud, setShowRegStud] = useState("none");
+  const [showAdd, setShowAdd] = useState(false);
   const [tab, setTab] = useState();
   const [uri, setUri] = useState([]);
-  const [units, setUnits] = useState("");
   const { bgColor, cardsColor } = useContext(ColorsContext);
-
+  const [date, setDate] = React.useState(new Date().getMonth() + 1);
+  const [year, setYear] = React.useState(new Date().getFullYear());
   let labels = [
     // 'Name',
     "Reg No.",
     "Dept",
     "Program",
     "Semester",
-    "Fee Status",
-    "Fee",
-  ];
-  let data = [
-    // 'Majid Ali',
-    "04071813051",
-    "Department of Computer Sciences Quaid I Azam University",
-    "BS",
-    "9th",
-    "Pending",
-    "Rs. 35000",
+    "Hostel Fee",
+    "Mess Fee",
   ];
   useEffect(() => {
     fetchNames();
+    console.log("api called");
     const getData = async () => {
       try {
         let value = await AsyncStorage.getItem("tab");
@@ -73,6 +67,16 @@ export default function SList(props) {
     fetchNames();
     setRefreshing(false);
   });
+  const addMessStud = async () => {
+    // await axios
+    // .post("http://localhost:3000/save", payloadset)
+    // .then((response) => {
+    //   alert(response.data);
+    // })
+    // .catch((error) => {
+    //   alert(error);
+    // });
+  };
   const saveAttendance = async (payloadset) => {
     await instance
       .post(`${IP}/markAttendance`, payloadset)
@@ -189,6 +193,7 @@ export default function SList(props) {
       sem,
       exen,
       dateTime,
+      cnic: getUserP(),
     };
     saveExitEntry(payloadset);
   };
@@ -203,25 +208,7 @@ export default function SList(props) {
           value={searchTerm}
           style={styles.searchInput}
         />
-        {/* <Searchbar
-          style={styles.searchInput}
-          placeholder="Search Student"
-          placeholderTextColor="silver"
-          onChangeText={(text) => setSearchTerm(text)}
-          value={searchTerm}
-          
-        /> */}
-        {/* <TextBox
-          placeholder="Enter Name"
-          placeholderColor="silver"
-          style={styles.searchInput}
-          iconColor="silver"
-          borderRadius={50}
-          maxLength={11}
-          minLength={5}
-          value={searchTerm}
-          setValue={setSearchTerm}
-        /> */}
+
         <Icon
           name="qrcode"
           color="black"
@@ -297,8 +284,14 @@ export default function SList(props) {
                   item.dname,
                   item.program,
                   item.semno,
-                  item.status == false ? "Pending" : "Paid",
-                  "Rs. " + item.hostelfee,
+                  (item.status == false ? "Pending" : "Paid") +
+                    "-->" +
+                    "Rs. " +
+                    item.hostelfee,
+                  (item.mStatus == false ? "Pending" : "Paid") +
+                    "-->" +
+                    "Rs. " +
+                    item.messfee,
                 ]);
                 showProfile(true);
               }}
@@ -330,66 +323,144 @@ export default function SList(props) {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         />
-        <Modal
-          animationType="none"
-          transparent={false}
-          visible={profile}
-          // onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={stylesn.containerMain}>
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Icon
-                name="times"
-                color="black"
-                size={40}
-                onPress={() => {
-                  showProfile(false);
-                }}
-              />
-            </View>
-            <View
-              style={{
-                display:
-                  getUserRole() == "Security Supervisor" ? "flex" : "none",
-              }}
-            >
-              <Image
-                source={{ uri: uri[1] }}
-                style={{ width: "90%", height: "90%", margin: 10 }}
-              />
-            </View>
-            <View
-              style={{
-                display:
-                  getUserRole() != "Security Supervisor" ? "flex" : "none",
-              }}
-            >
-              {uri && (
-                <View style={stylesn.container}>
-                  <Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
-                    <View style={stylesn.imageSec}>
-                      <Text style={stylesn.header}>{uri[0]}</Text>
-                      <Image source={{ uri: uri[1] }} style={stylesn.img} />
-                    </View>
-
-                    <Text style={stylesn.divider}></Text>
-                    {labels.map((l, index) => {
-                      return (
-                        <View>
-                          <View style={stylesn.row}>
-                            <Text style={stylesn.label}> {l}</Text>
-                            <Text style={stylesn.value}> {uri[index + 2]}</Text>
-                          </View>
-                          <View style={stylesn.dividerInner}></View>
-                        </View>
-                      );
-                    })}
-                  </Card>
-                </View>
-              )}
-            </View>
+      </View>
+      <Modal
+        animationType="fade"
+        transparent={false}
+        visible={profile}
+        // onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={stylesn.containerMain}>
+          <View
+            style={{
+              display: getUserRole() == "Security Supervisor" ? "flex" : "none",
+              flex: 1,
+            }}
+          >
+            <Image
+              source={{ uri: uri[1] }}
+              style={{ width: "100%", height: "100%" }}
+            />
           </View>
-        </Modal>
+          <View
+            style={{
+              display: getUserRole() != "Security Supervisor" ? "flex" : "none",
+              flex: 1,
+            }}
+          >
+            {uri && (
+              <View style={stylesn.container}>
+                <MonthYear
+                  bgColor={cardsColor}
+                  iconSize={15}
+                  setMonth={setDate}
+                  setYear={setYear}
+                  width={"100%"}
+                />
+                <Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
+                  <View style={stylesn.imageSec}>
+                    <Text style={stylesn.header}>{uri[0]}</Text>
+                    <Image source={{ uri: uri[1] }} style={stylesn.img} />
+                  </View>
+
+                  <Text style={stylesn.divider}></Text>
+                  {labels.map((l, index) => {
+                    return (
+                      <View>
+                        <View style={stylesn.row}>
+                          <Text style={stylesn.label}> {l}</Text>
+                          <Text style={stylesn.value}> {uri[index + 2]}</Text>
+                        </View>
+                        <View style={stylesn.dividerInner}></View>
+                      </View>
+                    );
+                  })}
+                </Card>
+              </View>
+            )}
+          </View>
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <FAB
+              icon="close"
+              style={stylesn.fab}
+              onPress={() => {
+                showProfile(false);
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="fade"
+        transparent={false}
+        visible={showAdd}
+        // onRequestClose={() => setModalVisible(false)}
+      >
+        <View
+          style={{
+            backgroundColor: "white",
+            width: "100%",
+            height: "50%",
+            margin:10,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+            <TextInput
+          placeholder="Add Student"
+          placeholderTextColor="silver"
+          onChangeText={(text) => setSearchTerm(text)}
+          value={searchTerm}
+          style={styles.searchInput}
+        />
+         <Button mode="contained" onPress={() => console.log('Pressed')}>
+    Add
+  </Button>
+        </View>
+      </Modal>
+      {/* <View style={{ justifyContent: "center", alignItems: "center" }}> */}
+      <FAB
+        icon="plus"
+        style={stylesn.fabAdd}
+        onPress={() => {
+          setShowAdd(true);
+          // addMessStud()
+        }}
+      />
+      {/* </View> */}
+      <View
+        style={{
+          display: showAllStud,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <FAB
+          // icon="people"
+          label="All Students"
+          style={stylesn.fabStudents}
+          onPress={() => {
+            setShowRegStud("flex");
+            setShowAllStud("none");
+          }}
+        />
+      </View>
+      <View
+        style={{
+          display: showRegStud,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <FAB
+          // icon="people"
+          label="Registered Students"
+          style={stylesn.fabStudents}
+          onPress={() => {
+            setShowRegStud("none");
+            setShowAllStud("flex");
+          }}
+        />
       </View>
     </SafeAreaView>
   );
@@ -398,28 +469,32 @@ const stylesn = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%",
-    justifyContent: "center",
-    paddingLeft: 8,
-    paddingRight: 8,
+    // flex:1,
+    // justifyContent: "center",
+    // alignItems:'center',
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   containerMain: {
     height: "100%",
     width: "100%",
-    justifyContent: "center",
-    paddingLeft: 8,
-    paddingRight: 8,
+    // justifyContent: "center",
+    paddingLeft: 5,
+    paddingRight: 5,
+    position: "relative",
+    top: -10,
   },
   card: {
     flex: 1,
     justifyContent: "center",
-    padding: 8,
-    // height: "100%",
+    padding: 5,
+
     elevation: 20,
-    margin: 1,
+    // margin: 1,
   },
   header: {
     margin: 24,
-    fontSize: 20,
+    fontSize: HEIGHT * 0.03,
     fontWeight: "bold",
     textAlign: "center",
     justifyContent: "center",
@@ -434,8 +509,8 @@ const stylesn = StyleSheet.create({
     alignItems: "center",
   },
   img: {
-    width: 60,
-    height: 60,
+    width: "20%",
+    height: "80%",
     margin: 24,
     justifyContent: "center",
     alignItems: "center",
@@ -472,5 +547,25 @@ const stylesn = StyleSheet.create({
     // backgroundColor: 'lightgreen',
 
     paddingLeft: 5,
+  },
+  fabAdd: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0,
+    borderRadius: 50,
+    backgroundColor: "white",
+  },
+  fabStudents: {
+    position: "absolute",
+    margin: 16,
+    left: 0,
+    bottom: 0,
+    borderRadius: 50,
+    backgroundColor: "white",
+    height: 50,
+    // width:120,
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
 });

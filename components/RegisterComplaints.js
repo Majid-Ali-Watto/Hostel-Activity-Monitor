@@ -6,8 +6,7 @@ const instance = axios.create();
 import IP from "../Constants/NetworkIP";
 import { getUserP } from "../ContextAPI/userContext";
 import { styles } from "../assets/styles/registercomplaints";
-import { getBGcolor } from "../Constants/BG_Color";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
 export default function RegisterComplaints(props) {
   const [text, setText] = useState("");
   const [textArea, setTextArea] = useState("");

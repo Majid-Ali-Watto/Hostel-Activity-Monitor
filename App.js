@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
+import React from "react";
 import AppRoutes from "./components/AppRoutes";
 import SecuritySection from "./components/SecuritySection";
 import HostelwardenSection from "./components/HostelwardenSection";
@@ -11,27 +12,56 @@ import ViewMenu from "./components/ViewMenu";
 import SList from "./components/search_list";
 import AppSettings from "./components/AppSetting";
 import { styles } from "./assets/styles/app";
-import { View } from "react-native";
-import React from "react";
-import { getBGcolor, setBGcolor } from "./Constants/BG_Color";
-const ColorsContext = React.createContext();
+import { Alert, View } from "react-native";
+import ColorsContext from "./ContextAPI/ColorsContext";
+import NetInfo from "@react-native-community/netinfo";
+import globalStylings from "./assets/styles/GlobalStyling/GlobalStyling";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+NetInfo.fetch().then(state => {
+  console.log("Connection ", state.isConnected);
+  if(!state.isConnected){
+      // alert('Internet Connection is Required');
+    Alert.alert('Network Status', 'Internet Connection is Required', [
+      {
+        text: 'Cancel',
+        // onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      // {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ])
+  }
+    // console.log("Connection type", state.type);
+   
+});
 export default function App() {
-  const [color, setBgColor] = React.useState({
-    bgColor: "lightgreen",
-    hColor: "green",
-    topNav: "orange",
-    bottomNav: "orange",
-    cardsColor: "white",
-  });
+  const [color, setBgColor] = React.useState(globalStylings);
+  const [load,setLoad] =React.useState({})
+  React.useEffect(()=>{
+   
+      try {
+        const value =  AsyncStorage.getItem("settings");
+        if (value !== null) {
+          setLoad(JSON.parse(value));
+        }
+      } catch (error) {
+  
+      }
+    
+  },[])
   return (
     <ColorsContext.Provider
       value={{
-        bgColor: color.bgColor,
+        bgColor: load.bgColor|| color.bgColor,
         hColor: color.hColor,
         topNav: color.topNav,
         bottomNav: color.bottomNav,
         cardsColor: color.cardsColor,
+        cardsTextColor:color.cardsTextColor,
         setBgColor: setBgColor,
+        bottomNavsTextColor:color.bottomNavsTextColor,
+        topNavsTextColor:color.topNavsTextColor,
+        color
       }}
     >
       {/* <View style={[styles.home, { backgroundColor: getBGcolor() }]}> */}
@@ -102,4 +132,4 @@ export default function App() {
     </ColorsContext.Provider>
   );
 }
-export { ColorsContext };
+

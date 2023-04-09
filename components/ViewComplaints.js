@@ -6,10 +6,13 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
-import { TextInput } from "react-native-paper";
+import { Card, TextInput } from "react-native-paper";
 import IP from "../Constants/NetworkIP";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 // import SelectDropdown from "react-native-select-dropdown";
 import axios from "axios";
@@ -17,8 +20,8 @@ const instance = axios.create();
 import compStatuses from "../Constants/compStatuses";
 import { getUserP } from "../ContextAPI/userContext";
 import { styles } from "../assets/styles/viewcomplaints";
-import { getBGcolor } from "../Constants/BG_Color";
 import TextBox from "./generic_components/textbox";
+import { HEIGHT } from "../Constants/GlobalWidthHeight";
 export default function ViewComplaints() {
   const [user, setUser] = useState("");
   const [complaints, setComplaints] = useState([]);
@@ -26,12 +29,18 @@ export default function ViewComplaints() {
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const { bgColor, cardsColor } = React.useContext(ColorsContext);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchComplaints = async () => {
     await instance
       .get(`${IP}/allComplaints`)
       .then(function (response) {
-        setComplaints(response.data);
+        let comps=[]
+        response.data.map((item)=>{
+          if (item.complainer==getUserP()) comps.unshift(item)
+          else comps.push(item)
+        })
+        setComplaints(comps)
       })
       .catch(function (error) {
         alert(error.message.toString());
@@ -42,7 +51,11 @@ export default function ViewComplaints() {
     fetchComplaints();
     setUser(getUserP());
   }, []);
-
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    fetchComplaints();
+    setRefreshing(false);
+  });
   const filteredComplaints = complaints.filter((complaint) => {
     if (complaint.title.toLowerCase().includes(searchTerm.toLowerCase()))
       return true;
@@ -55,13 +68,27 @@ export default function ViewComplaints() {
       "Confirmation",
       "Are you sure you want to proceed?",
       [
-        { text: "Cancel", style: "cancel" },
+        { text: "No", style: "cancel" },
         {
-          text: "OK",
-          onPress: () => {
-            setComplaints(
-              complaints.filter((complaint) => complaint.id !== complaintId)
-            );
+          text: "Yes",
+          onPress: async() => {
+
+            await instance
+            .delete(`${IP}/removeComp/${complaintId}`)
+            .then(function (response) {
+              if(response.data=="Complaint has been removed")
+              setComplaints(
+                complaints.filter((complaint) => complaint.id !== complaintId)
+              )
+              else {
+                alert("Something went wrong")
+              }
+            })
+            .catch(function (error) {
+              alert(error.message.toString());
+            });
+
+           
           },
         },
       ],
@@ -102,35 +129,48 @@ export default function ViewComplaints() {
         <Text style={styles.compCount}>Total: {filteredComplaints.length}</Text>
       </View>
 
-      <View style={{ marginBottom: 30, flex: 2 }}>
+      <View style={{ flex: 1, backgroundColor: bgColor }}>
         <FlatList
           data={filteredComplaints}
           renderItem={({ item }) => (
-            <View
+            <Card
               style={[
                 styles.complaintContainer,
                 { backgroundColor: cardsColor },
               ]}
             >
               <TouchableOpacity onPress={() => handleComplaintPress(item)}>
-                <View style={styles.complaintTitle}>
-                  <Text style={styles.complaintTit}>{item.title}</Text>
-                  <Text style={styles.divider}></Text>
-                  <Text style={styles.id}>ComplaintId:{item.id}</Text>
-                  <Text style={styles.complainer}>
-                    Complainer:{item.complainer}
-                  </Text>
+                {/* <View style={styles.complaintTitle}> */}
+                <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                <Text style={styles.complaintTit}>{item.title}</Text>
+
+                {item.complainer == getUserP() && (
+                <Icon
+                  name="trash"
+                  color="red"
+                  size={20}
+                  onPress={() => {
+                    handleDeletePress(item.id);
+                  }}
+                />
+              )}
                 </View>
+                <Text style={styles.divider}></Text>
+                <Text style={styles.id}>ComplaintId:{item.id}</Text>
+                <Text style={styles.complainer}>
+                  Complainer:{item.complainer}
+                </Text>
+                {/* </View> */}
               </TouchableOpacity>
 
-              {/* <TouchableOpacity onPress={() => handleDeletePress(item.id)}>
-                <Text style={styles.deleteButton}>Delete</Text>
-              </TouchableOpacity> */}
-            </View>
+             
+            </Card>
           )}
           keyExtractor={(item) => item.id}
-          onEndReached={fetchComplaints}
-          style={styles.complaintsList}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          style={[styles.complaintsList, { backgroundColor: bgColor }]}
         />
       </View>
       <Modal
@@ -144,13 +184,27 @@ export default function ViewComplaints() {
             <View style={{ flex: 1 }}>
               <Text style={styles.modalTitle}>{selectedComplaint.title}</Text>
             </View>
-            <View style={{ flex: 4 }}>
-              <Text style={styles.modalDescription}>
-                {selectedComplaint.id}
+            <View style={{ flex: 5 }}>
+              <Text style={{ width: "100%", height: "7%", fontSize: 13 }}>
+                Complaint ID:
+                {selectedComplaint.id} | Complaint By :{" "}
+                {selectedComplaint.complainer}
               </Text>
-              <Text style={styles.modalDescription}>
-                {selectedComplaint.body}
+              <Text
+                style={{
+                  textAlign: "left",
+                  fontWeight: "bold",
+                  marginTop: 10,
+                  fontSize: HEIGHT * 0.027,
+                }}
+              >
+                Description
               </Text>
+              <ScrollView>
+                <Text style={styles.modalDescription}>
+                  {selectedComplaint.body}
+                </Text>
+              </ScrollView>
             </View>
             <View style={{ flex: 1 }}>
               <TouchableOpacity

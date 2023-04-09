@@ -18,7 +18,7 @@ import {
   Alert,
   SafeAreaView,
 } from "react-native";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
 
 import { getBGcolor } from "../Constants/BG_Color";
 export default function StudentData({ navigation }) {
@@ -135,7 +135,7 @@ export default function StudentData({ navigation }) {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
       {modaL()}
-      <SList navigation={navigation} />
+      {!show && <SList navigation={navigation} />}
     </SafeAreaView>
   );
 }

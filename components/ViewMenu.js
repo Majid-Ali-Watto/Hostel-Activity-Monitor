@@ -4,18 +4,10 @@ import { styles } from "../assets/styles/viewmenu";
 import { Card, Divider, Searchbar } from "react-native-paper";
 import axios from "axios";
 import IP from "../Constants/NetworkIP";
-import { getBGcolor } from "../Constants/BG_Color";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
+import { getDate } from "../Utils/DaysAndDate";
+import { getdata } from "../Utils/DaysAndDate";
 const instance = axios.create();
-// let menu = [];
-function getDate() {
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, "0");
-  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-  var yyyy = today.getFullYear();
-  today = dd + "/" + mm + "/" + yyyy;
-  return today;
-}
 
 function ItemCard({ item }, cardsColor) {
   return (
@@ -119,10 +111,15 @@ export default function ViewMenu() {
           dish: menu[i].name,
           unitPrice: menu[i].price,
           units: menu[i].units,
+          time:
+            key == "Evening"
+              ? "7PM-9PM"
+              : currDay == "Sunday"
+              ? "11AM-12AM"
+              : "7AM-9AM",
         };
         obj.day = "" + currDay;
         obj.date = "" + fullDate;
-        // console.log("date and date ", obj.day, obj.date);
         obj[key] = inner;
         arr.push(obj);
         obj = {};
@@ -135,11 +132,13 @@ export default function ViewMenu() {
             dish: menu[i].name,
             unitPrice: menu[i].price,
             units: menu[i].units,
+            time: this.day == "Sunday" ? "11AM-12AM" : "7AM-9AM",
           },
           Evening: {
             dish: menu[i + 1].name,
             unitPrice: menu[i + 1].price,
             units: menu[i + 1].units,
+            time: "7PM-9PM",
           },
         });
         i = i + 1;
@@ -149,6 +148,12 @@ export default function ViewMenu() {
           dish: menu[i].name,
           unitPrice: menu[i].price,
           units: menu[i].units,
+          time:
+            key == "Evening"
+              ? "7PM-9PM"
+              : currDay == "Sunday"
+              ? "11AM-12AM"
+              : "7AM-9AM",
         };
         obj.day = "" + currDay;
         obj.date = "" + fullDate;
@@ -201,7 +206,6 @@ export default function ViewMenu() {
       </Text>
       <Divider />
 
-      {/* <View> */}
       <FlatList
         data={filteredNames}
         renderItem={({ item }) => {
@@ -210,41 +214,6 @@ export default function ViewMenu() {
         keyExtractor={(item, index) => index + item.day + item.date}
         // onEndReached={fetchNames}
       />
-      {/* </View> */}
     </View>
   );
-}
-
-const days = {
-  Mon: "Monday",
-  Tue: "Tuesday",
-  Wed: "Wednesday",
-  Thu: "Thursday",
-  Fri: "Friday",
-  Sat: "Saturday",
-  Sun: "Sunday",
-};
-const months = {
-  Jan: "01",
-  Feb: "02",
-  Mar: "03",
-  Apr: "04",
-  May: "05",
-  June: "06",
-  Jul: "07",
-  Aug: "08",
-  Sep: "09",
-  Oct: "10",
-  Nov: "11",
-  Dec: "12",
-};
-
-function getdata(day1) {
-  let currDay = days[day1.slice(0, 3)];
-  console.log(currDay);
-  let currMonth = months[day1.slice(4, 7)];
-  let currDate = day1.slice(8, 10);
-  let currYear = day1.slice(11, 15);
-  let fullDate = currDate + "/" + currMonth + "/" + currYear;
-  return { currDay, fullDate };
 }

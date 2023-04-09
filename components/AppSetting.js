@@ -13,27 +13,43 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Divider } from "react-native-paper";
 import { HEIGHT } from "../Constants/GlobalWidthHeight";
 import { LogBox } from "react-native";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
 export default function AppSettings({ navigation }) {
   LogBox.ignoreLogs([
     "Non-serializable values were found in the navigation state.",
   ]);
   const [time, setTime] = React.useState();
-  const { bgColor, hColor, topNav, bottomNav, cardsColor, setBgColor } =
-    React.useContext(ColorsContext);
-
+  const {
+    color,
+    bgColor,
+    hColor,
+    topNav,
+    bottomNav,
+    topNavsTextColor,
+    cardsColor,
+    cardsTextColor,
+    bottomNavsTextColor,
+    setBgColor,
+  } = React.useContext(ColorsContext);
+  const storeData = async (colors) => {
+   
+    try {
+      await AsyncStorage.setItem("settings",JSON.stringify(colors));
+    } catch (e) {}
+  };
   const [bColor, setBColor] = React.useState(bgColor);
   const [fColor, setFColor] = React.useState("black");
   const [header, setHeaderColor] = React.useState(hColor);
   const [HfColor, setHFColor] = React.useState("black");
   const [cardColor, setCardColor] = React.useState(cardsColor);
-  const [cardTextColor, setCardTextColor] = React.useState("");
+  const [cardTextColor, setCardTextColor] = React.useState(cardsTextColor);
   const [topNavColor, setTopNavColor] = React.useState(topNav);
-  const [topNavTextColor, setTopNavTextColor] = React.useState("");
+  const [topNavTextColor, setTopNavTextColor] =
+    React.useState(topNavsTextColor);
   const [bottomNavColor, setBottomNavColor] = React.useState(bottomNav);
-  const [bottomNavTextColor, setBottomNavTextColor] = React.useState("");
+  const [bottomNavTextColor, setBottomNavTextColor] =
+    React.useState(bottomNavsTextColor);
   const BodyParts = (heading) => {
-    console.log(bColor, header);
     return (
       <View
         style={{
@@ -87,9 +103,7 @@ export default function AppSettings({ navigation }) {
             height: "40%",
             borderWidth: 0.5,
             borderColor: "silver",
-            // flexDirection: "row",
-            flexWrap: "wrap",
-            width: "100%",
+            flexDirection: "row",
           }}
         >
           <FlatList
@@ -98,13 +112,14 @@ export default function AppSettings({ navigation }) {
             data={colors}
             renderItem={({ item }) => (
               <View
-                style={{
-                  // flex: 1,
-                  flexDirection: "column",
-                  width: "100%",
-                }}
+                style={
+                  {
+                    // flex: 1,
+                  }
+                }
               >
                 <Button
+                  mode="elevated"
                   style={[styles.paragraph, { backgroundColor: item }]}
                   onPress={() => {
                     if (time == "Body") {
@@ -125,7 +140,6 @@ export default function AppSettings({ navigation }) {
                         bottomNav: bottomNavColor,
                         topNav: topNavColor,
                       });
-                      console.log(bgColor, hColor);
                     } else if (time == "Body Text") setFColor(item);
                     else if (time == "Header Text") {
                       setHFColor(item);
@@ -144,14 +158,30 @@ export default function AppSettings({ navigation }) {
                     else if (time == "Bottom Nav") setBottomNavColor(item);
                     else if (time == "BottomNav Text")
                       setBottomNavTextColor(item);
+
+                    storeData(color);
+                    const getData = async () => {
+                      try {
+                        const value = await AsyncStorage.getItem("settings");
+                        if (value !== null) {
+                          console.log(value);
+                          return value;
+                        }
+                      } catch (e) {
+                        // error reading value
+                      }
+                    };
+                    getData();
                   }}
                 >
-                  {/* {"color"} */}
+                  C
                 </Button>
               </View>
             )}
             keyExtractor={(item, index) => index.toString()}
+            style={{ flex: 1 }}
           />
+          <Text style={{ flex: 1 }}>Font </Text>
         </View>
         <View
           style={{
@@ -281,14 +311,16 @@ const styles = StyleSheet.create({
   paragraph: {
     borderRadius: 50,
     margin: 3,
-    alignItems: "flex-start",
+    alignItems: "center",
     borderColor: "silver",
     borderWidth: 0.5,
-    padding: 15,
+    // width: "5%",
+    // height: "100%",
+    // padding: 15,
   },
 });
 
-//const storeData = async () => {
+//                const storeData = async () => {
 //                   try {
 //                     await AsyncStorage.setItem("color", item);
 //                   } catch (e) {

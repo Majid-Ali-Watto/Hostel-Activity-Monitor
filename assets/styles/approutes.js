@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     height: HEIGHT * 0.12,
     backgroundColor: "white",
     borderRadius: 0,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },

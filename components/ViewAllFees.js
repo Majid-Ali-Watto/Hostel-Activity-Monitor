@@ -14,12 +14,11 @@ import {
   Pressable,
   Alert,
 } from "react-native";
-import { Divider, TextInput } from "react-native-paper";
+import { Divider, DataTable, TextInput } from "react-native-paper";
 import Header from "./Header";
 import axios from "axios";
 import IP from "../Constants/NetworkIP";
-import { getBGcolor } from "../Constants/BG_Color";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
 
 const instance = axios.create();
 export default function ViewAllFees({ navigation }) {
@@ -235,30 +234,42 @@ export default function ViewAllFees({ navigation }) {
               <Text style={{ textAlign: "center", fontWeight: "bold" }}>
                 RegNo: {user}
               </Text>
+              <Divider style={{ height: 2, width: "100%" }} />
               {title == "Entry Exit Status" ? (
-                ee.map((e) => {
-                  return (
-                    <View key={e.datetime + e.status}>
-                      <View
+                <DataTable>
+                  <DataTable.Header>
+                    <DataTable.Title>Time/Date</DataTable.Title>
+                    <DataTable.Title>Status</DataTable.Title>
+                    <DataTable.Title numeric>Recorded By</DataTable.Title>
+                  </DataTable.Header>
+                 
+                  {ee.map((e) => {
+                    return (
+                      <View key={e.datetime + e.status}>
+                     
+                        <View
                         style={{
                           flexDirection: "row",
                           justifyContent: "space-between",
                         }}
                       >
-                        <Text style={{ margin: 10 }}>{e.datetime}</Text>
-                        <Text style={{ margin: 10 }}>{e.status}</Text>
+                        <Text style={{ margin: 5,fontSize:12 ,textAlign:'left',flex:1}}>{e.datetime}</Text>
+                        <Text style={{ margin: 5,fontSize:12,textAlign:'left',flex:1 }}>{e.status}</Text>
+                        <Text style={{ margin: 5,fontSize:12,textAlign:'left',flex:1 }}>{e.cnic}</Text>
                       </View>
                       <Divider />
-                    </View>
-                  );
-                })
+                      </View>
+                    );
+                  })}
+                 
+                </DataTable>
               ) : (
                 <Text style={{ textAlign: "center", marginTop: 20 }}>
                   {feee}
                 </Text>
               )}
             </ScrollView>
-            <View style={{ justifyContent: "center", flex: 1 }}>
+            <View style={{ justifyContent: "center", }}>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => {
@@ -320,7 +331,7 @@ export default function ViewAllFees({ navigation }) {
       </Modal>
       <View
         style={{
-          width: "100%",
+          flex: 1,
           justifyContent: "center",
           alignItems: "center",
         }}

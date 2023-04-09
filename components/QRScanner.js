@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Text, View, LogBox } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { styles } from "../assets/styles/qrcode";
-import { getBGcolor } from "../Constants/BG_Color";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
 export default function QRScanner({ navigation, route }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);

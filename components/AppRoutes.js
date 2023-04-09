@@ -6,29 +6,17 @@ import { BottomNavigationStyles } from "../assets/styles/AppBackGroun_Header/App
 import mainButtons from "../Constants/mainButtons";
 import React from "react";
 import { styles } from "../assets/styles/approutes";
-import { useState, useEffect } from "react";
-// import { getBGcolor, getHBGcolor } from "../Constants/BG_Color";
+import { useState } from "react";
 import SplashScreen from "./generic_components/SplashScreen";
 import { useContext } from "react";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
 export default function AppRoutes({ navigation }) {
-  // const [color, setBColor] = useState(getBGcolor());
-  // const [hcolor, setBHColor] = useState(getHBGcolor());
+
   const [display, setDisplay] = useState("flex");
   const [displayRoute, setDisplayRoute] = useState("none");
   const { bgColor, hColor, cardsColor } = useContext(ColorsContext);
   const icons = ["user-graduate", "user-lock", "user-check", "user-secret"];
-  // const setColor = (c) => {
-  //   setBColor(c);
-  // };
-  // const setHColor = (c) => {
-  //   setBHColor(c);
-  // };
-  useEffect(() => {
-    if (display == "flex") {
-    }
-  }, []);
-
+  
   const disp = () => {
     setTimeout(() => {
       setDisplay("none");

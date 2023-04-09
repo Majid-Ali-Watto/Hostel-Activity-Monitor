@@ -10,6 +10,7 @@ import SList from "./search_list";
 import { styles } from "../assets/styles/securitysection";
 import { loginStyles } from "../assets/styles/login";
 import { getBGcolor } from "../Constants/BG_Color";
+
 import {
   View,
   Text,
@@ -19,13 +20,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
 export default function SecuritySection({ navigation }) {
   const [user, setUser] = useState("");
   const [password, setpassword] = useState("");
   const [show, setShow] = useState(true);
   const { bgColor, hColor } = useContext(ColorsContext);
-
+  
   const Login = async () => {
     await instance
       .get(`${IP}/security/${user}`)
@@ -37,10 +38,15 @@ export default function SecuritySection({ navigation }) {
         ) {
           setUserP(user, "Security Supervisor");
           setShow(false);
-        } else alert("Invalid Password");
+          return true
+        } else {
+          alert("Invalid Password");
+          return false;
+        }
       })
       .catch(function (error) {
         alert(error.message.toString());
+        return false
       });
   };
   const SignUp = async () => {
@@ -107,7 +113,7 @@ export default function SecuritySection({ navigation }) {
                 <TouchableOpacity
                   style={loginStyles.button}
                   onPress={() => {
-                    Login();
+                   return Login();
                   }}
                 >
                   <Text style={loginStyles.buttonText}>Login</Text>
@@ -133,8 +139,8 @@ export default function SecuritySection({ navigation }) {
   };
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: getBGcolor() }]}>
-      {modaL()}
-      <SList navigation={navigation} />
+      {modaL() }
+      {!show && <SList navigation={navigation} />}
     </SafeAreaView>
   );
 }

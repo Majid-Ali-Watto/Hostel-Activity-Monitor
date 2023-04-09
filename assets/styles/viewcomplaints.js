@@ -51,23 +51,22 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   complaintsList: {
-    // flex: 1,
     marginTop: 10,
     marginBottom: 10,
   },
   complaintTit: {
     fontSize: 18,
   },
-  complaintTitle: {
-    marginVertical: 10,
-    color: "black",
-    padding: 8,
-    display: "flex",
-    backgroundColor: "white",
-    flexDirection: "column",
-    fontWeight: "normal",
-    width: WIDTH,
-  },
+  // complaintTitle: {
+  //   marginVertical: 10,
+  //   color: "black",
+  //   padding: 8,
+  //   display: "flex",
+  //   backgroundColor: "white",
+  //   flexDirection: "column",
+  //   fontWeight: "normal",
+  //   width: WIDTH,
+  // },
   modalContainer: {
     flex: 1,
     // alignItems: "center",
@@ -86,9 +85,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalDescription: {
-    fontSize: 18,
+    fontSize: HEIGHT*0.020,
     marginBottom: 10,
-    textAlign: "center",
+    // textAlign: "center",
+    fontWeight:'normal'
   },
   modalCloseButton: {
     backgroundColor: "#007aff",
@@ -105,6 +105,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginVertical: 10,
+    padding: 8,
+    display: "flex",
   },
   id: { fontSize: 11 },
   complainer: { fontSize: 11 },

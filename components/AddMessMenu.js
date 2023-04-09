@@ -8,10 +8,9 @@ import { styles } from "../assets/styles/addmessmenu";
 import { TextInput, RadioButton } from "react-native-paper";
 import { SelectList } from "react-native-dropdown-select-list";
 import { dishUnits } from "../Constants/dishUnits";
-import { getBGcolor } from "../Constants/BG_Color";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
 export default function AddMessMenu() {
-  const { bgColor, setBgColor, cardsColor } = React.useContext(ColorsContext);
+  const { bgColor } = React.useContext(ColorsContext);
 
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
@@ -89,6 +88,7 @@ export default function AddMessMenu() {
             keyboardType="numeric"
             activeOutlineColor="green"
             textColor="black"
+
           />
           <View style={styles.dateContainer}>
             <TextInput

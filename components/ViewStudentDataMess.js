@@ -7,8 +7,7 @@ import { TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { styles } from "../assets/styles/viewstudentdatamess";
 import { loginStyles } from "../assets/styles/login";
-import { getBGcolor } from "../Constants/BG_Color";
-import { ColorsContext } from "../App";
+import ColorsContext from "../ContextAPI/ColorsContext";
 import {
   View,
   Text,
@@ -134,7 +133,7 @@ export default function ViewStudentDataMess({ navigation }) {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
       {modaL()}
-      <SList navigation={navigation} />
+      {!show && <SList navigation={navigation} />}
     </SafeAreaView>
   );
 }

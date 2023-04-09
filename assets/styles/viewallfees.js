@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   childViews: {
     // flex: 0.33,
     height: HEIGHT * 0.28,
-    width: WIDTH*.95,
+    width: WIDTH * 0.95,
   },
   centeredView: {
     flex: 1,
@@ -22,12 +22,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 20,
+    padding: 10,
     height: HEIGHT * 0.8,
-    width: WIDTH * 0.95,
+    width: WIDTH * 0.99,
     shadowOpacity: 0.25,
     shadowRadius: 8,
-    elevation: 100,
+    elevation: 10,
   },
   button: {
     // backgroundColor: "#0000FF",
