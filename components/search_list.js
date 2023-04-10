@@ -6,7 +6,14 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { styles } from "../assets/styles/search_lists";
 import { getUserRole } from "../ContextAPI/userContext";
 import { getUserP } from "../ContextAPI/userContext";
-import { Card, Divider, Modal, TextInput, FAB, Button } from "react-native-paper";
+import {
+  Card,
+  Divider,
+  Modal,
+  TextInput,
+  FAB,
+  Button,
+} from "react-native-paper";
 import { StyleSheet } from "react-native";
 import {
   View,
@@ -35,7 +42,8 @@ export default function SList(props) {
   const [showAdd, setShowAdd] = useState(false);
   const [tab, setTab] = useState();
   const [uri, setUri] = useState([]);
-  const { bgColor, cardsColor } = useContext(ColorsContext);
+  const [isDisabled,setIsDisAbled] = useState(false)
+  const { bgColor, cardsColor, font_Family } = useContext(ColorsContext);
   const [date, setDate] = React.useState(new Date().getMonth() + 1);
   const [year, setYear] = React.useState(new Date().getFullYear());
   let labels = [
@@ -234,13 +242,17 @@ export default function SList(props) {
           style={styles.button}
           onPress={() => handleNamesPress(searchTerm, "Entery")}
         >
-          <Text style={styles.ButtonText}>Entry</Text>
+          <Text style={[styles.ButtonText, { fontFamily: font_Family }]}>
+            Entry
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => handleNamesPress(searchTerm, "Exit")}
         >
-          <Text style={styles.ButtonText}>Exit</Text>
+          <Text style={[styles.ButtonText, { fontFamily: font_Family }]}>
+            Exit
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -260,7 +272,9 @@ export default function SList(props) {
           style={styles.button}
           onPress={() => handleAttendance(searchTerm)}
         >
-          <Text style={styles.ButtonText}>Mark Attendance</Text>
+          <Text style={[styles.ButtonText, { fontFamily: font_Family }]}>
+            Mark Attendance
+          </Text>
         </TouchableOpacity>
       </View>
       <Divider style={styles.divider} />
@@ -303,18 +317,30 @@ export default function SList(props) {
 
                 <View style={styles.data}>
                   <View>
-                    <Text style={styles.title}>{item.sname}</Text>
-                    <Text style={styles.rollno}>{item.rollno}</Text>
-                    <Text style={styles.rollno}>{item.cnic}</Text>
+                    <Text style={[styles.title, { fontFamily: font_Family }]}>
+                      {item.sname}
+                    </Text>
+                    <Text style={[styles.rollno, { fontFamily: font_Family }]}>
+                      {item.rollno}
+                    </Text>
+                    <Text style={[styles.rollno, { fontFamily: font_Family }]}>
+                      {item.cnic}
+                    </Text>
                   </View>
                   <View>
-                    <Text style={styles.program}>{item.program}</Text>
-                    <Text style={styles.semno}>{item.semno}</Text>
+                    <Text style={[styles.program, { fontFamily: font_Family }]}>
+                      {item.program}
+                    </Text>
+                    <Text style={[styles.semno, { fontFamily: font_Family }]}>
+                      {item.semno}
+                    </Text>
                   </View>
                 </View>
               </View>
               <View>
-                <Text style={styles.department}>{item.dname}</Text>
+                <Text style={[styles.department, { fontFamily: font_Family }]}>
+                  {item.dname}
+                </Text>
               </View>
             </Card>
           )}
@@ -359,7 +385,9 @@ export default function SList(props) {
                 />
                 <Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
                   <View style={stylesn.imageSec}>
-                    <Text style={stylesn.header}>{uri[0]}</Text>
+                    <Text style={[stylesn.header, { fontFamily: font_Family }]}>
+                      {uri[0]}
+                    </Text>
                     <Image source={{ uri: uri[1] }} style={stylesn.img} />
                   </View>
 
@@ -368,8 +396,18 @@ export default function SList(props) {
                     return (
                       <View>
                         <View style={stylesn.row}>
-                          <Text style={stylesn.label}> {l}</Text>
-                          <Text style={stylesn.value}> {uri[index + 2]}</Text>
+                          <Text
+                            style={[stylesn.label, { fontFamily: font_Family }]}
+                          >
+                            {" "}
+                            {l}
+                          </Text>
+                          <Text
+                            style={[stylesn.value, { fontFamily: font_Family }]}
+                          >
+                            {" "}
+                            {uri[index + 2]}
+                          </Text>
                         </View>
                         <View style={stylesn.dividerInner}></View>
                       </View>
@@ -397,37 +435,71 @@ export default function SList(props) {
         // onRequestClose={() => setModalVisible(false)}
       >
         <View
-          style={{
-            backgroundColor: "white",
-            width: "100%",
-            height: "50%",
-            margin:10,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          style={stylesn.containerMain}
+          // style={{
+          //   backgroundColor: "white",
+          //   width: "80%",
+          //   height: "50%",
+          //  paddingLeft:10,
+          //  paddingRight:10,
+          //   // justifyContent: "center",
+          //   //  alignItems: "center",
+          // }}
         >
-            <TextInput
-          placeholder="Add Student"
-          placeholderTextColor="silver"
-          onChangeText={(text) => setSearchTerm(text)}
-          value={searchTerm}
-          style={styles.searchInput}
-        />
-         <Button mode="contained" onPress={() => console.log('Pressed')}>
-    Add
-  </Button>
+          <View
+            style={{
+              flex: 0.3,
+              backgroundColor: "white",
+              justifyContent: "center",
+              padding:10,
+              position:'relative',
+              top:HEIGHT*0.3,
+              borderRadius:20
+            }}
+          >
+          
+            <View style={{ flex: 0.8 }}>
+            <Text style={[stylesn.headerConfirm,{fontFamily:font_Family}]}>Student's Mess Confirmation</Text>
+            <Divider style={{padding:0,margin:0,height:1}} />
+              <Text style={{fontFamily:font_Family}}>Are you sure to register   
+              <Text style={{fontWeight:'bold',}}> '{searchTerm}'</Text> as Mess member
+              </Text>
+            </View>
+
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Button
+                mode="contained"
+                onPress={() => {setShowAdd(false);setIsDisAbled(false)}}
+                style={{ fontFamily: font_Family,backgroundColor:'lightblue' }}
+              >
+                Cancel
+              </Button>
+              <Button
+                mode="contained"
+                onPress={() => {setShowAdd(false);setIsDisAbled(false)}}
+                style={{ fontFamily: font_Family,backgroundColor:'blue' }}
+              >
+                Add
+              </Button>
+            </View>
+          </View>
         </View>
       </Modal>
-      {/* <View style={{ justifyContent: "center", alignItems: "center" }}> */}
+      <View style={{ justifyContent: "center", alignItems: "center", display: showRegStud, }}>
       <FAB
         icon="plus"
+        disabled={isDisabled}
         style={stylesn.fabAdd}
         onPress={() => {
-          setShowAdd(true);
+          if(searchTerm!='' && searchTerm.length==11)
+           { setShowAdd(true);setIsDisAbled(true)}
+          else alert('Enter valid RegNo')
           // addMessStud()
         }}
       />
-      {/* </View> */}
+      </View>
       <View
         style={{
           display: showAllStud,
@@ -436,7 +508,7 @@ export default function SList(props) {
         }}
       >
         <FAB
-          // icon="people"
+          disabled={isDisabled}
           label="All Students"
           style={stylesn.fabStudents}
           onPress={() => {
@@ -453,7 +525,7 @@ export default function SList(props) {
         }}
       >
         <FAB
-          // icon="people"
+          disabled={isDisabled}
           label="Registered Students"
           style={stylesn.fabStudents}
           onPress={() => {
@@ -500,6 +572,15 @@ const stylesn = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     // backgroundColor:'lightgray'
+  },
+  headerConfirm: {
+    
+   
+    fontSize: HEIGHT * 0.025,
+    fontWeight: "bold",
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
   },
   imageSec: {
     width: "100%",

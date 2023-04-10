@@ -23,6 +23,7 @@ export default function AppSettings({ navigation }) {
     color,
     bgColor,
     hColor,
+    hTextColor,
     topNav,
     bottomNav,
     topNavsTextColor,
@@ -40,7 +41,7 @@ export default function AppSettings({ navigation }) {
   const [bColor, setBColor] = React.useState(bgColor);
   const [fColor, setFColor] = React.useState("black");
   const [header, setHeaderColor] = React.useState(hColor);
-  const [HfColor, setHFColor] = React.useState("black");
+  const [HfColor, setHFColor] = React.useState(hTextColor);
   const [cardColor, setCardColor] = React.useState(cardsColor);
   const [cardTextColor, setCardTextColor] = React.useState(cardsTextColor);
   const [topNavColor, setTopNavColor] = React.useState(topNav);
@@ -111,13 +112,7 @@ export default function AppSettings({ navigation }) {
 
             data={colors}
             renderItem={({ item }) => (
-              <View
-                style={
-                  {
-                    // flex: 1,
-                  }
-                }
-              >
+              <View>
                 <Button
                   mode="elevated"
                   style={[styles.paragraph, { backgroundColor: item }]}
@@ -143,6 +138,14 @@ export default function AppSettings({ navigation }) {
                     } else if (time == "Body Text") setFColor(item);
                     else if (time == "Header Text") {
                       setHFColor(item);
+                      setBgColor({
+                        bgColor: bColor,
+                        hColor: header,
+                        hTextColor:item,
+                        cardsColor: cardColor,
+                        bottomNav: bottomNavColor,
+                        topNav: topNavColor,
+                      });
                     } else if (time == "Card") {
                       setCardColor(item);
                       setBgColor({

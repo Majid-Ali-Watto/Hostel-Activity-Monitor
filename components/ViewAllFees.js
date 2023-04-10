@@ -31,7 +31,7 @@ export default function ViewAllFees({ navigation }) {
   const [password, setpassword] = useState("");
   const [ee, setEE] = useState([]);
   const [feee, setFeee] = useState("");
-  const { bgColor, hColor, cardsColor } = React.useContext(ColorsContext);
+  const { bgColor, hColor, font_Family } = React.useContext(ColorsContext);
 
   const [Semester, setSemester] = useState([
     { Semester: "1st", paid: "Pending Fees Status", fee: 0 },
@@ -139,14 +139,10 @@ export default function ViewAllFees({ navigation }) {
       });
   };
 
+
   const modaL = () => {
     return (
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={show}
-        // onRequestClose={() => setShow(false)}
-      >
+      <Modal animationType="slide" transparent={false} visible={show}>
         <View
           style={[loginStyles.loginContainer, { backgroundColor: bgColor }]}
         >
@@ -155,7 +151,7 @@ export default function ViewAllFees({ navigation }) {
           </View>
           <ScrollView>
             <View style={loginStyles.textinputs}>
-              <Text style={loginStyles.loginSignUpText}>
+              <Text style={[loginStyles.loginSignUpText,{fontFamily:font_Family}]}>
                 Login/SignUp for further process
               </Text>
 
@@ -187,7 +183,7 @@ export default function ViewAllFees({ navigation }) {
                     SignUp();
                   }}
                 >
-                  <Text style={loginStyles.buttonText}>SignUp</Text>
+                  <Text style={[loginStyles.buttonText,{fontFamily:font_Family}]}>SignUp</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={loginStyles.button}
@@ -195,7 +191,7 @@ export default function ViewAllFees({ navigation }) {
                     Login();
                   }}
                 >
-                  <Text style={loginStyles.buttonText}>Login</Text>
+                  <Text style={[loginStyles.buttonText,{fontFamily:font_Family}]}>Login</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -203,16 +199,12 @@ export default function ViewAllFees({ navigation }) {
               <TouchableOpacity
                 style={loginStyles.backbutton}
                 onPress={() => {
-                  // setShow(false);
-                  // setTimeout(() => {
-                  //   navigation.goBack();
-                  // }, 100);
                   setShow(false);
                   navigation.goBack();
                 }}
               >
                 <Icon name="arrow-left" color="black" size={30} />
-                <Text style={loginStyles.backbuttonText}>Go Back</Text>
+                <Text style={[loginStyles.backbuttonText,{fontFamily:font_Family}]}>Go Back</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -220,18 +212,15 @@ export default function ViewAllFees({ navigation }) {
       </Modal>
     );
   };
-
   return (
     <View style={[styles.mainView, { backgroundColor: bgColor }]}>
-      {/* callig login/signup modal */}
       {modaL()}
-      {/*  */}
       <Modal animationType="slide" transparent={true} visible={modalSem}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <ScrollView>
-              <Text style={styles.modalText}>{titleSem}</Text>
-              <Text style={{ textAlign: "center", fontWeight: "bold" }}>
+              <Text style={[styles.modalText,{fontFamily:font_Family}]}>{titleSem}</Text>
+              <Text style={{ textAlign: "center", fontWeight: "bold",fontFamily:font_Family }}>
                 RegNo: {user}
               </Text>
               <Divider style={{ height: 2, width: "100%" }} />
@@ -253,9 +242,9 @@ export default function ViewAllFees({ navigation }) {
                           justifyContent: "space-between",
                         }}
                       >
-                        <Text style={{ margin: 5,fontSize:12 ,textAlign:'left',flex:1}}>{e.datetime}</Text>
-                        <Text style={{ margin: 5,fontSize:12,textAlign:'left',flex:1 }}>{e.status}</Text>
-                        <Text style={{ margin: 5,fontSize:12,textAlign:'left',flex:1 }}>{e.cnic}</Text>
+                        <Text style={{fontFamily:font_Family, margin: 5,fontSize:12 ,textAlign:'left',flex:1}}>{e.datetime}</Text>
+                        <Text style={{fontFamily:font_Family, margin: 5,fontSize:12,textAlign:'left',flex:1 }}>{e.status}</Text>
+                        <Text style={{fontFamily:font_Family, margin: 5,fontSize:12,textAlign:'left',flex:1 }}>{e.cnic}</Text>
                       </View>
                       <Divider />
                       </View>
@@ -264,7 +253,7 @@ export default function ViewAllFees({ navigation }) {
                  
                 </DataTable>
               ) : (
-                <Text style={{ textAlign: "center", marginTop: 20 }}>
+                <Text style={{ textAlign: "center", marginTop: 20,fontFamily:font_Family }}>
                   {feee}
                 </Text>
               )}
@@ -277,7 +266,7 @@ export default function ViewAllFees({ navigation }) {
                   viewModalSem(!modalSem);
                 }}
               >
-                <Text style={styles.textStyle}>Close</Text>
+                <Text style={[styles.textStyle,{fontFamily:font_Family}]}>Close</Text>
               </Pressable>
             </View>
           </View>
@@ -287,7 +276,7 @@ export default function ViewAllFees({ navigation }) {
       <Modal animationType="fade" transparent={true} visible={modal}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>{title}</Text>
+            <Text style={[styles.modalText,{fontFamily:font_Family}]}>{title}</Text>
             <ScrollView>
               {Semester.map((s) => {
                 if (title == s.paid || title == "Entry Exit Status") {
@@ -299,6 +288,7 @@ export default function ViewAllFees({ navigation }) {
                         backgroundColor: "lightgreen",
                         padding: 10,
                         margin: 10,
+                        fontFamily:font_Family
                       }}
                       onPress={() => {
                         viewModal(false);
@@ -323,7 +313,7 @@ export default function ViewAllFees({ navigation }) {
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => viewModal(!modal)}
               >
-                <Text style={styles.textStyle}>Close</Text>
+                <Text style={[styles.textStyle,{fontFamily:font_Family}]}>Close</Text>
               </Pressable>
             </View>
           </View>

@@ -8,7 +8,7 @@ const getCommonStyles = (fw, ta, fs, pos, l, fstyle) => {
     textAlign: ta,
     fontSize: fs,
     position: pos,
-    // left: l,
+    left: l,
     fontStyle: fstyle,
   }
 }
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
 
   },
   dishUnitLabel: {
-    ...getCommonStyles("normal", 'left', 18, "relative", -22, 'italic'),
+    ...getCommonStyles("normal", 'left', 18, "relative", 15, 'italic'),
     marginRight: 20,
   },
   radiobuttonLabel: {

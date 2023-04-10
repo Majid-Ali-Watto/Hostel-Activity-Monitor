@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { TextInput, Button, ScrollView, Alert } from "react-native";
-
+import { TextInput, ScrollView, Alert } from "react-native";
+import { Button } from "react-native-paper";
 import axios from "axios";
 const instance = axios.create();
 import IP from "../Constants/NetworkIP";
@@ -11,7 +11,7 @@ export default function RegisterComplaints(props) {
   const [text, setText] = useState("");
   const [textArea, setTextArea] = useState("");
   const [user, setUser] = useState("");
-  const { bgColor, setBgColor, cardsColor } = React.useContext(ColorsContext);
+  const { bgColor, font_Family } = React.useContext(ColorsContext);
 
   const postComplaint = async () => {
     if (text.length == 0) {
@@ -70,7 +70,8 @@ export default function RegisterComplaints(props) {
         style={styles.complaintBody}
       />
 
-      <Button title="Submit" onPress={postComplaint} />
+      <Button mode="contained" onPress={postComplaint} style={{fontFamily:font_Family,backgroundColor:'blue'}}>
+     SUBMIT</Button>
     </ScrollView>
   );
 }

@@ -13,14 +13,13 @@ const styles = StyleSheet.create({
   headertext: {
     fontSize: WIDTH * 0.06,
     fontWeight: "bold",
-    color: "white",
+    
     paddingLeft: 10,
     paddingRight: 10,
   },
   subheadertext: {
     fontSize: WIDTH * 0.04,
     fontWeight: "bold",
-    color: "white",
   },
   lineStyle: {
     borderWidth: 0.3,

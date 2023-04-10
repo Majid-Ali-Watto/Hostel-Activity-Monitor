@@ -9,15 +9,15 @@ import { getDate } from "../Utils/DaysAndDate";
 import { getdata } from "../Utils/DaysAndDate";
 const instance = axios.create();
 
-function ItemCard({ item }, cardsColor) {
+function ItemCard({ item }, cardsColor,font_Family) {
   return (
     <View>
       <Card style={[styles.card, { backgroundColor: cardsColor }]}>
         <View style={styles.menuDay}>
-          <Text style={[styles.day, { fontFamily: "monospace" }]}>
+          <Text style={[styles.day, { fontFamily:font_Family}]}>
             {item.day}
           </Text>
-          <Text style={[styles.day, { fontFamily: "monospace" }]}>
+          <Text style={[styles.day, { fontFamily:font_Family }]}>
             {item.date}
           </Text>
         </View>
@@ -25,8 +25,8 @@ function ItemCard({ item }, cardsColor) {
         <Divider />
         {item.hasOwnProperty("Morning") ? (
           <View style={styles.timeStyle}>
-            <Text style={{ fontFamily: "monospace" }}>{item.Morning.dish}</Text>
-            <Text style={[styles.timeAM, { fontFamily: "monospace" }]}>
+            <Text style={{ fontFamily:font_Family}}>{item.Morning.dish}</Text>
+            <Text style={[styles.timeAM, { fontFamily:font_Family }]}>
               {item.Morning.time}
             </Text>
           </View>
@@ -36,10 +36,10 @@ function ItemCard({ item }, cardsColor) {
         <Divider />
         {item.hasOwnProperty("Morning") ? (
           <View style={styles.timeStyle}>
-            <Text style={{ fontFamily: "monospace" }}>
+            <Text style={{ fontFamily:font_Family }}>
               Rs.{item.Morning.unitPrice}*{item.Morning.units}
             </Text>
-            <Text style={[styles.total, { fontFamily: "monospace" }]}>
+            <Text style={[styles.total, { fontFamily:font_Family }]}>
               Rs. {item.Morning.units * item.Morning.unitPrice}
             </Text>
           </View>
@@ -50,8 +50,8 @@ function ItemCard({ item }, cardsColor) {
         <Divider style={{ backgroundColor: "black" }} />
         {item.hasOwnProperty("Evening") ? (
           <View style={styles.timeStyle}>
-            <Text style={{ fontFamily: "monospace" }}>{item.Evening.dish}</Text>
-            <Text style={[styles.timePM, { fontFamily: "monospace" }]}>
+            <Text style={{ fontFamily: font_Family}}>{item.Evening.dish}</Text>
+            <Text style={[styles.timePM, { fontFamily: font_Family }]}>
               {item.Evening.time}
             </Text>
           </View>
@@ -61,10 +61,10 @@ function ItemCard({ item }, cardsColor) {
         <Divider />
         {item.hasOwnProperty("Evening") ? (
           <View style={styles.timeStyle}>
-            <Text style={{ fontFamily: "monospace" }}>
+            <Text style={{ fontFamily:font_Family}}>
               Rs.{item.Evening.unitPrice}*{item.Evening.units}
             </Text>
-            <Text style={[styles.total, { fontFamily: "monospace" }]}>
+            <Text style={[styles.total, { fontFamily:font_Family }]}>
               Rs. {item.Evening.units * item.Evening.unitPrice}
             </Text>
           </View>
@@ -79,7 +79,7 @@ function ItemCard({ item }, cardsColor) {
 export default function ViewMenu() {
   const [searchTerm, setSearchTerm] = useState("");
   const [menus, setMenu] = useState([]);
-  const { bgColor, setBgColor, cardsColor } = React.useContext(ColorsContext);
+  const { bgColor, font_Family, cardsColor } = React.useContext(ColorsContext);
 
   let menu = [];
   useEffect(() => {
@@ -190,18 +190,18 @@ export default function ViewMenu() {
       />
 
       <Divider />
-      <Text style={[styles.header, { fontFamily: "monospace" }]}>
+      <Text style={[styles.header, { fontFamily:font_Family }]}>
         Today's Menu
       </Text>
       <Divider />
 
       {filteredNames.map((item) => {
         if (item.date == getDate()) {
-          return ItemCard({ item }, cardsColor);
+          return ItemCard({ item }, cardsColor,font_Family);
         }
       })}
       <Divider />
-      <Text style={[styles.header, { fontFamily: "monospace" }]}>
+      <Text style={[styles.header, { fontFamily:font_Family }]}>
         Complete Menu
       </Text>
       <Divider />
@@ -209,7 +209,7 @@ export default function ViewMenu() {
       <FlatList
         data={filteredNames}
         renderItem={({ item }) => {
-          return ItemCard({ item }, cardsColor);
+          return ItemCard({ item }, cardsColor,font_Family);
         }}
         keyExtractor={(item, index) => index + item.day + item.date}
         // onEndReached={fetchNames}

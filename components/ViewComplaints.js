@@ -28,7 +28,7 @@ export default function ViewComplaints() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const { bgColor, cardsColor } = React.useContext(ColorsContext);
+  const { bgColor, cardsColor,font_Family } = React.useContext(ColorsContext);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchComplaints = async () => {
@@ -126,7 +126,7 @@ export default function ViewComplaints() {
       {/* </View> */}
       <Text style={styles.divider}></Text>
       <View style={styles.compCountSec}>
-        <Text style={styles.compCount}>Total: {filteredComplaints.length}</Text>
+        <Text style={[styles.compCount,{fontFamily:font_Family}]}>Total: {filteredComplaints.length}</Text>
       </View>
 
       <View style={{ flex: 1, backgroundColor: bgColor }}>
@@ -141,8 +141,8 @@ export default function ViewComplaints() {
             >
               <TouchableOpacity onPress={() => handleComplaintPress(item)}>
                 {/* <View style={styles.complaintTitle}> */}
-                <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                <Text style={styles.complaintTit}>{item.title}</Text>
+                <View style={{flexDirection:'row',justifyContent:'space-between',fontFamily:font_Family}}>
+                <Text style={[styles.complaintTit,{fontFamily:font_Family}]}>{item.title}</Text>
 
                 {item.complainer == getUserP() && (
                 <Icon
@@ -156,8 +156,8 @@ export default function ViewComplaints() {
               )}
                 </View>
                 <Text style={styles.divider}></Text>
-                <Text style={styles.id}>ComplaintId:{item.id}</Text>
-                <Text style={styles.complainer}>
+                <Text style={[styles.id,{fontFamily:font_Family}]}>ComplaintId:{item.id}</Text>
+                <Text style={[styles.complainer,{fontFamily:font_Family}]}>
                   Complainer:{item.complainer}
                 </Text>
                 {/* </View> */}
@@ -182,10 +182,10 @@ export default function ViewComplaints() {
         {selectedComplaint && (
           <View style={[styles.modalContainer, { backgroundColor: bgColor }]}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.modalTitle}>{selectedComplaint.title}</Text>
+              <Text style={[styles.modalTitle,{fontFamily:font_Family}]}>{selectedComplaint.title}</Text>
             </View>
             <View style={{ flex: 5 }}>
-              <Text style={{ width: "100%", height: "7%", fontSize: 13 }}>
+              <Text style={{ width: "100%", height: "7%", fontSize: 13,fontFamily:font_Family }}>
                 Complaint ID:
                 {selectedComplaint.id} | Complaint By :{" "}
                 {selectedComplaint.complainer}
@@ -196,12 +196,13 @@ export default function ViewComplaints() {
                   fontWeight: "bold",
                   marginTop: 10,
                   fontSize: HEIGHT * 0.027,
+                  fontFamily:font_Family
                 }}
               >
                 Description
               </Text>
               <ScrollView>
-                <Text style={styles.modalDescription}>
+                <Text style={[styles.modalDescription,{fontFamily:font_Family}]}>
                   {selectedComplaint.body}
                 </Text>
               </ScrollView>
@@ -211,7 +212,7 @@ export default function ViewComplaints() {
                 style={styles.modalCloseButton}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.modalCloseButtonText}>Close</Text>
+                <Text style={[styles.modalCloseButtonText,{fontFamily:font_Family}]}>Close</Text>
               </TouchableOpacity>
             </View>
           </View>

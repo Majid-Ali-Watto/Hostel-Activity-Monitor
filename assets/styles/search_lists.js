@@ -2,11 +2,20 @@ import { StyleSheet } from "react-native";
 import { WIDTH } from "../../Constants/GlobalWidthHeight";
 import { HEIGHT } from "../../Constants/GlobalWidthHeight";
 import { AppBackGroundColor } from "./AppBackGroun_Header/AppAndHeaders";
-const getWH = (w, h) => {
-  return {
-    width: HEIGHT * w,
-    height: HEIGHT * h,
-  };
+const getWH = (w, h,img) => {
+  if(!img)
+    {return {
+      width: WIDTH * w,
+      height: HEIGHT * h,
+    };}
+    else{
+      return {
+        width: HEIGHT * w,
+        height: HEIGHT * h,
+      };
+    }
+  
+ 
 };
 const getAlignment = (a, j) => {
   return {
@@ -37,15 +46,15 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    shadowColor: AppBackGroundColor.backgroundColor,
-    ...getWH(0.5, 0.16),
+    shadowColor: 'transparent',
+    ...getWH(0.95, 0.16,false),
     paddingTop: 5,
     elevation: 10,
     backgroundColor: "white",
     marginTop: WIDTH * 0.03,
   },
   img: {
-    ...getWH(0.08, 0.08),
+     ...getWH(0.08, 0.08,true),
     borderRadius: 50,
     margin: WIDTH * 0.01,
   },
@@ -81,7 +90,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     backgroundColor: "#fff",
     margin: 5,
-    ...getWH(0.42, 0.06),
+    ...getWH(0.85, 0.06,false),
   },
   divider: {
     height: 1,

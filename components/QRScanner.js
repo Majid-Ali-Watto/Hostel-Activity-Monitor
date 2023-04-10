@@ -6,7 +6,7 @@ import ColorsContext from "../ContextAPI/ColorsContext";
 export default function QRScanner({ navigation, route }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const { bgColor, setBgColor, cardsColor } = React.useContext(ColorsContext);
+  const { bgColor, font_Family } = React.useContext(ColorsContext);
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -25,10 +25,10 @@ export default function QRScanner({ navigation, route }) {
   };
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+    return <Text style={{fontFamily:font_Family}}>Requesting for camera permission</Text>;
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <Text style={{fontFamily:font_Family}}>No access to camera</Text>;
   }
   function createObject() {
     let arr = [],
@@ -74,7 +74,7 @@ export default function QRScanner({ navigation, route }) {
   }
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
-      <Text>Scan QR Code given on student's card</Text>
+      <Text style={{fontFamily:font_Family}}>Scan QR Code given on student's card</Text>
       <View style={{ margin: 20 }}></View>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}

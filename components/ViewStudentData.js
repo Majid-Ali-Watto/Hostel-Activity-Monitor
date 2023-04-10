@@ -20,12 +20,11 @@ import {
 } from "react-native";
 import ColorsContext from "../ContextAPI/ColorsContext";
 
-import { getBGcolor } from "../Constants/BG_Color";
 export default function StudentData({ navigation }) {
   const [user, setUser] = useState("");
   const [password, setpassword] = useState("");
   const [show, setShow] = useState(true);
-  const { bgColor, hColor, cardsColor } = React.useContext(ColorsContext);
+  const { bgColor, hColor, font_Family } = React.useContext(ColorsContext);
 
   const Login = async () => {
     await instance
@@ -71,7 +70,7 @@ export default function StudentData({ navigation }) {
           </View>
           <ScrollView>
             <View style={loginStyles.textinputs}>
-              <Text style={loginStyles.loginSignUpText}>
+              <Text style={[loginStyles.loginSignUpText,{fontFamily:font_Family}]}>
                 Login/SignUp for further process
               </Text>
 
@@ -103,7 +102,7 @@ export default function StudentData({ navigation }) {
                     SignUp();
                   }}
                 >
-                  <Text style={loginStyles.buttonText}>SignUp</Text>
+                  <Text style={[loginStyles.buttonText,{fontFamily:font_Family}]}>SignUp</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={loginStyles.button}
@@ -111,7 +110,7 @@ export default function StudentData({ navigation }) {
                     Login();
                   }}
                 >
-                  <Text style={loginStyles.buttonText}>Login</Text>
+                  <Text style={[loginStyles.buttonText,{fontFamily:font_Family}]}>Login</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -124,7 +123,7 @@ export default function StudentData({ navigation }) {
                 }}
               >
                 <Icon name="arrow-left" color="black" size={30} />
-                <Text style={loginStyles.backbuttonText}>Go Back</Text>
+                <Text style={[loginStyles.backbuttonText,{fontFamily:font_Family}]}>Go Back</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

@@ -14,7 +14,7 @@ export default function AppRoutes({ navigation }) {
 
   const [display, setDisplay] = useState("flex");
   const [displayRoute, setDisplayRoute] = useState("none");
-  const { bgColor, hColor, cardsColor } = useContext(ColorsContext);
+  const { bgColor, hColor, cardsColor,font_Family } = useContext(ColorsContext);
   const icons = ["user-graduate", "user-lock", "user-check", "user-secret"];
   
   const disp = () => {
@@ -93,7 +93,7 @@ export default function AppRoutes({ navigation }) {
                     }}
                   >
                     <Text
-                      style={[styles.cardtext, { fontFamily: "monospace" }]}
+                      style={[styles.cardtext, { fontFamily: font_Family }]}
                     >
                       {Object.entries(item)[0][1]}
                     </Text>
@@ -125,7 +125,7 @@ export default function AppRoutes({ navigation }) {
               borderRightWidth: 0.5,
               textAlign: "center",
               fontWeight: "bold",
-              fontFamily: "monospace",
+              fontFamily: font_Family,
             }}
           >
             App Settings
@@ -138,7 +138,7 @@ export default function AppRoutes({ navigation }) {
               width: "50%",
               textAlign: "center",
               fontWeight: "bold",
-              fontFamily: "monospace",
+              fontFamily:font_Family,
             }}
           >
             View Mess Menu

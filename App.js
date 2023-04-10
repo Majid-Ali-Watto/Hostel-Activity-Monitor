@@ -54,6 +54,7 @@ export default function App() {
       value={{
         bgColor: load.bgColor|| color.bgColor,
         hColor: color.hColor,
+        hTextColor: color.hTextColor,
         topNav: color.topNav,
         bottomNav: color.bottomNav,
         cardsColor: color.cardsColor,
@@ -61,6 +62,7 @@ export default function App() {
         setBgColor: setBgColor,
         bottomNavsTextColor:color.bottomNavsTextColor,
         topNavsTextColor:color.topNavsTextColor,
+        font_Family:color.fontFamily,
         color
       }}
     >

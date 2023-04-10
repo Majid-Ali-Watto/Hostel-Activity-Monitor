@@ -1,7 +1,4 @@
-export const AppBackGroundColor = {
-  // backgroundColor: "lightgreen",
-};
-export const AppHeader = "green";
+
 export const AppNavigationHeader = {
   backgroundColor: "orange",
   NavigationTextStyle: {
