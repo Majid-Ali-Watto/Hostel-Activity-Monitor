@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import IP from "../Constants/NetworkIP";
-const instance = axios.create();
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { styles } from "../assets/styles/search_lists";
 import { getUserRole } from "../ContextAPI/userContext";
 import { getUserP } from "../ContextAPI/userContext";
+const instance = axios.create();
+
 import {
   Card,
   Divider,
@@ -30,22 +31,28 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useContext } from "react";
 import ColorsContext from "../ContextAPI/ColorsContext";
 import { HEIGHT } from "../Constants/GlobalWidthHeight";
-export default function SList(props) {
+
+function SList(props) {
   const navigation = props.navigation;
   const [names, setNames] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sem, setSem] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [profile, showProfile] = useState(false);
-  const [showAllStud, setShowAllStud] = useState("flex");
+  const [showAllStud, setShowAllStud] = useState(
+    getUserRole() == "Security Supervisor" ? "none" : "flex"
+  );
   const [showRegStud, setShowRegStud] = useState("none");
   const [showAdd, setShowAdd] = useState(false);
   const [tab, setTab] = useState();
   const [uri, setUri] = useState([]);
-  const [isDisabled,setIsDisAbled] = useState(false)
+  const [isDisabled, setIsDisAbled] = useState(false);
   const { bgColor, cardsColor, font_Family } = useContext(ColorsContext);
   const [date, setDate] = React.useState(new Date().getMonth() + 1);
   const [year, setYear] = React.useState(new Date().getFullYear());
+ 
+
+
   let labels = [
     // 'Name',
     "Reg No.",
@@ -57,7 +64,6 @@ export default function SList(props) {
   ];
   useEffect(() => {
     fetchNames();
-    console.log("api called");
     const getData = async () => {
       try {
         let value = await AsyncStorage.getItem("tab");
@@ -103,41 +109,77 @@ export default function SList(props) {
   };
 
   const fetchMenu = async (id, rollno) => {
-    let today = new Date();
-    let time = today.getHours();
+    const today = new Date();
+    const time = today.getHours();
     let session = "";
-    if (time >= 3 && time <= 10) {
+
+    if (time >= 2 && time <= 10) {
       session = "Morning";
-    }
-    if (time >= 18 && time <= 22) {
+    } else if (time >= 18 && time <= 22) {
       session = "Evening";
-    }
-    if (session.length == 0) {
+    } else {
       alert("Not suitable mess timing");
       return;
     }
-    await instance
-      .get(`${IP}/todayMenu/${session}`)
-      .then(function (response) {
-        for (let d of response.data) {
-          if (id == d.daydate) {
-            let p = (d.price * d.units).toFixed(2);
-            let payloadset = {
-              price: p,
-              date: d.daydate,
-              rollno: rollno,
-              time: session,
-            };
-            saveAttendance(payloadset);
-          } else {
-            Alert.alert("Menu", "Today's Menu was not added", [{ text: "OK" }]);
-          }
-        }
-      })
-      .catch(function (error) {
-        alert(error.message.toString());
-      });
+
+    try {
+      const response = await instance.get(`${IP}/todayMenu/${session}`);
+      const menu = response.data.find((item) => item.daydate === id);
+
+      if (menu) {
+        const price = (menu.price * menu.units).toFixed(2);
+        const payloadset = {
+          price: `${price}`,
+          date: menu.daydate,
+          rollno,
+          time: session,
+        };
+        saveAttendance(payloadset);
+      } else {
+        Alert.alert("Menu", "Today's Menu was not added", [{ text: "OK" }]);
+      }
+    } catch (error) {
+      alert(error.message.toString());
+    }
   };
+
+  // const fetchMenu = async (id, rollno) => {
+  //   const today = new Date();
+  //   const time = today.getHours();
+  //   let session = "";
+  //   if (time >= 2 && time <= 10) {
+  //     session = "Morning";
+  //   }
+  //   if (time >= 18 && time <= 22) {
+  //     session = "Evening";
+  //   }
+  //   if (session.length == 0) {
+  //     alert("Not suitable mess timing");
+  //     return;
+  //   }
+  //   await instance
+  //     .get(`${IP}/todayMenu/${session}`)
+  //     .then(function (response) {
+  //       for (let d of response.data) {
+  //         if (id == d.daydate) {
+  //           let p = (d.price * d.units).toFixed(2);
+  //           let payloadset = {
+  //             price: p,
+  //             date: d.daydate,
+  //             rollno: rollno,
+  //             time: session,
+  //           };
+  //           saveAttendance(payloadset);
+  //           break
+  //         } else {
+  //           Alert.alert("Menu", "Today's Menu was not added", [{ text: "OK" }]);
+  //         }
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       alert(error.message.toString());
+  //     });
+  // };
 
   const handleAttendance = async (rollno) => {
     if (rollno.length < 11) {
@@ -181,21 +223,39 @@ export default function SList(props) {
       return true;
   });
 
+  // const handleNamesPress = async (rollno, exen) => {
+  //   if (rollno.length < 11) {
+  //     alert("RegNo is invalid");
+  //     return;
+  //   }
+  //   var today = new Date();
+  //   var date =
+  //     today.getFullYear() +
+  //     "-" +
+  //     (today.getMonth() + 1) +
+  //     "-" +
+  //     today.getDate();
+  //   var time =
+  //     today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  //   var dateTime = date + " " + time;
+  //   const payloadset = {
+  //     rollno,
+  //     sem,
+  //     exen,
+  //     dateTime,
+  //     cnic: getUserP(),
+  //   };
+  //   saveExitEntry(payloadset);
+  // };
+
   const handleNamesPress = async (rollno, exen) => {
     if (rollno.length < 11) {
       alert("RegNo is invalid");
       return;
     }
-    var today = new Date();
-    var date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
-    var time =
-      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    var dateTime = date + " " + time;
+
+    const today = new Date();
+    const dateTime = today.toLocaleString();
     const payloadset = {
       rollno,
       sem,
@@ -203,11 +263,84 @@ export default function SList(props) {
       dateTime,
       cnic: getUserP(),
     };
+
     saveExitEntry(payloadset);
   };
+  // Define a separate function for rendering each card
+  const renderCard = ({ item }) => {
+    const {
+      sname,
+      image,
+      rollno,
+      dname,
+      program,
+      semno,
+      status,
+      hostelfee,
+      mStatus,
+      messfee,
+      cnic,
+    } = item;
+    const fonts = { fontFamily: font_Family };
+    const { titleFont, rollNoFont, programFont, semNoFont, departmentFont } = fonts;
+    const backgroundColor = { backgroundColor: cardsColor };
+    const statusText =
+      (status === false ? "Pending" : "Paid") + "-->" + "Rs. " + hostelfee;
+    const mStatusText =
+      (mStatus === false ? "Pending" : "Paid") + "-->" + "Rs. " + messfee;
 
+    return (
+      <Card
+        key={rollno + cnic}
+        style={[styles.card, backgroundColor]}
+        onPress={() => {
+          setSem(semno);
+          setSearchTerm(rollno);
+        }}
+        onLongPress={() => {
+          setUri([
+            sname,
+            image,
+            rollno,
+            dname,
+            program,
+            semno,
+            statusText,
+            mStatusText,
+          ]);
+          showProfile(true);
+        }}
+      >
+        <View style={styles.cardsItems}>
+          <View>
+            <Image source={{ uri: image }} style={styles.img} />
+          </View>
+
+          <View style={styles.data}>
+            <View>
+              <Text style={[styles.title, titleFont]}>{sname}</Text>
+              <Text style={[styles.rollno, rollNoFont]}>{rollno}</Text>
+              <Text style={[styles.rollno, rollNoFont]}>{cnic}</Text>
+            </View>
+            <View>
+              <Text style={[styles.program, programFont]}>{program}</Text>
+              <Text style={[styles.semno, semNoFont]}>{semno}</Text>
+            </View>
+          </View>
+        </View>
+        <View>
+          <Text style={[styles.department, departmentFont]}>{dname}</Text>
+        </View>
+      </Card>
+    );
+  };
+  function rerun(){
+    console.log('rendered')
+    return true
+  }
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
+    {rerun()}
       <View style={styles.searchbar}>
         <TextInput
           placeholder="Search Student"
@@ -278,8 +411,8 @@ export default function SList(props) {
         </TouchableOpacity>
       </View>
       <Divider style={styles.divider} />
-      <View style={styles.home}>
-        <FlatList
+      {/* <View style={styles.home}>
+         <FlatList
           showsVerticalScrollIndicator={false}
           data={filteredNames}
           renderItem={({ item }) => (
@@ -344,6 +477,17 @@ export default function SList(props) {
               </View>
             </Card>
           )}
+          keyExtractor={(item) => item.rollno}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />    
+      </View> */}
+      <View style={styles.home}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={filteredNames}
+          renderItem={renderCard}
           keyExtractor={(item) => item.rollno}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -451,18 +595,23 @@ export default function SList(props) {
               flex: 0.3,
               backgroundColor: "white",
               justifyContent: "center",
-              padding:10,
-              position:'relative',
-              top:HEIGHT*0.3,
-              borderRadius:20
+              padding: 10,
+              position: "relative",
+              top: HEIGHT * 0.3,
+              borderRadius: 20,
             }}
           >
-          
             <View style={{ flex: 0.8 }}>
-            <Text style={[stylesn.headerConfirm,{fontFamily:font_Family}]}>Student's Mess Confirmation</Text>
-            <Divider style={{padding:0,margin:0,height:1}} />
-              <Text style={{fontFamily:font_Family}}>Are you sure to register   
-              <Text style={{fontWeight:'bold',}}> '{searchTerm}'</Text> as Mess member
+              <Text
+                style={[stylesn.headerConfirm, { fontFamily: font_Family }]}
+              >
+                Student's Mess Confirmation
+              </Text>
+              <Divider style={{ padding: 0, margin: 0, height: 1 }} />
+              <Text style={{ fontFamily: font_Family }}>
+                Are you sure to register
+                <Text style={{ fontWeight: "bold" }}> '{searchTerm}'</Text> as
+                Mess member
               </Text>
             </View>
 
@@ -471,15 +620,24 @@ export default function SList(props) {
             >
               <Button
                 mode="contained"
-                onPress={() => {setShowAdd(false);setIsDisAbled(false)}}
-                style={{ fontFamily: font_Family,backgroundColor:'lightblue' }}
+                onPress={() => {
+                  setShowAdd(false);
+                  setIsDisAbled(false);
+                }}
+                style={{
+                  fontFamily: font_Family,
+                  backgroundColor: "lightblue",
+                }}
               >
                 Cancel
               </Button>
               <Button
                 mode="contained"
-                onPress={() => {setShowAdd(false);setIsDisAbled(false)}}
-                style={{ fontFamily: font_Family,backgroundColor:'blue' }}
+                onPress={() => {
+                  setShowAdd(false);
+                  setIsDisAbled(false);
+                }}
+                style={{ fontFamily: font_Family, backgroundColor: "blue" }}
               >
                 Add
               </Button>
@@ -487,18 +645,25 @@ export default function SList(props) {
           </View>
         </View>
       </Modal>
-      <View style={{ justifyContent: "center", alignItems: "center", display: showRegStud, }}>
-      <FAB
-        icon="plus"
-        disabled={isDisabled}
-        style={stylesn.fabAdd}
-        onPress={() => {
-          if(searchTerm!='' && searchTerm.length==11)
-           { setShowAdd(true);setIsDisAbled(true)}
-          else alert('Enter valid RegNo')
-          // addMessStud()
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          display: showRegStud,
         }}
-      />
+      >
+        <FAB
+          icon="plus"
+          disabled={isDisabled}
+          style={stylesn.fabAdd}
+          onPress={() => {
+            if (searchTerm != "" && searchTerm.length == 11) {
+              setShowAdd(true);
+              setIsDisAbled(true);
+            } else alert("Enter valid RegNo");
+            // addMessStud()
+          }}
+        />
       </View>
       <View
         style={{
@@ -537,6 +702,7 @@ export default function SList(props) {
     </SafeAreaView>
   );
 }
+export default React.memo(SList);
 const stylesn = StyleSheet.create({
   container: {
     height: "100%",
@@ -574,8 +740,6 @@ const stylesn = StyleSheet.create({
     // backgroundColor:'lightgray'
   },
   headerConfirm: {
-    
-   
     fontSize: HEIGHT * 0.025,
     fontWeight: "bold",
     textAlign: "center",

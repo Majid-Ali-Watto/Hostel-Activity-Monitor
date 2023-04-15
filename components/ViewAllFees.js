@@ -19,11 +19,13 @@ import Header from "./Header";
 import axios from "axios";
 import IP from "../Constants/NetworkIP";
 import ColorsContext from "../ContextAPI/ColorsContext";
-
+import LoginOrSignUp from "./generic_components/Login";
 const instance = axios.create();
-export default function ViewAllFees({ navigation }) {
+function ViewAllFees({ navigation }) {
   const [modal, viewModal] = useState(false);
-  const [show, setShow] = useState(true);
+  const [showLogin, setShowLogin] = useState('flex');
+  const [hideLogin, setHideLogin] = useState('none');
+
   const [modalSem, viewModalSem] = useState(false);
   const [title, setTitle] = useState("");
   const [titleSem, setTitleSem] = useState("");
@@ -103,118 +105,129 @@ export default function ViewAllFees({ navigation }) {
         alert(error.message.toString());
       });
   };
-  const Login = async () => {
-    await instance
-      .get(`${IP}/students/${user}`)
-      .then(function (response) {
-        if (response.data.length == 0) alert("Please Register....");
-        else if (
-          response.data[0].rollno == user &&
-          response.data[0].password == password
-        ) {
-          setShow(false);
-          setUserP(user);
-        } else alert("Invalid Password");
-      })
-      .catch(function (error) {
-        alert(error.message.toString());
-      });
-  };
-  const SignUp = async () => {
-    const payloadset = {
-      user,
-      password,
-    };
-    await instance
-      .patch(`${IP}/studRegister`, payloadset)
-      .then(function (response) {
-        let msg =
-          response.data.rowCount > 0
-            ? `User Registered Sucessfully`
-            : "Unable to Register";
-        Alert.alert("SignUp", msg, [{ text: "OK" }]);
-      })
-      .catch(function (error) {
-        alert(error.message.toString());
-      });
-  };
+  // const Login = async () => {
+  //   await instance
+  //     .get(`${IP}/students/${user}`)
+  //     .then(function (response) {
+  //       if (response.data.length == 0) alert("Please Register....");
+  //       else if (
+  //         response.data[0].rollno == user &&
+  //         response.data[0].password == password
+  //       ) {
+  //         setShow(false);
+  //         setUserP(user);
+  //       } else alert("Invalid Password");
+  //     })
+  //     .catch(function (error) {
+  //       alert(error.message.toString());
+  //     });
+  // };
+  // const SignUp = async () => {
+  //   const payloadset = {
+  //     user,
+  //     password,
+  //   };
+  //   await instance
+  //     .patch(`${IP}/studRegister`, payloadset)
+  //     .then(function (response) {
+  //       let msg =
+  //         response.data.rowCount > 0
+  //           ? `User Registered Sucessfully`
+  //           : "Unable to Register";
+  //       Alert.alert("SignUp", msg, [{ text: "OK" }]);
+  //     })
+  //     .catch(function (error) {
+  //       alert(error.message.toString());
+  //     });
+  // };
 
 
-  const modaL = () => {
-    return (
-      <Modal animationType="slide" transparent={false} visible={show}>
-        <View
-          style={[loginStyles.loginContainer, { backgroundColor: bgColor }]}
-        >
-          <View style={{ flex: 1, backgroundColor: hColor }}>
-            <Header />
-          </View>
-          <ScrollView>
-            <View style={loginStyles.textinputs}>
-              <Text style={[loginStyles.loginSignUpText,{fontFamily:font_Family}]}>
-                Login/SignUp for further process
-              </Text>
+  // const modaL = () => {
+  //   return (
+  //     <Modal animationType="slide" transparent={false} visible={show}>
+  //       <View
+  //         style={[loginStyles.loginContainer, { backgroundColor: bgColor }]}
+  //       >
+  //         <View style={{ flex: 1, backgroundColor: hColor }}>
+  //           <Header />
+  //         </View>
+  //         <ScrollView>
+  //           <View style={loginStyles.textinputs}>
+  //             <Text style={[loginStyles.loginSignUpText,{fontFamily:font_Family}]}>
+  //               Login/SignUp for further process
+  //             </Text>
 
-              <TextInput
-                style={loginStyles.inputs}
-                label="RegNo"
-                mode="outlined"
-                keyboardType="number-pad"
-                maxLength={11}
-                value={user}
-                onChangeText={(text) => setUser(text)}
-                activeOutlineColor="green"
-              />
+  //             <TextInput
+  //               style={loginStyles.inputs}
+  //               label="RegNo"
+  //               mode="outlined"
+  //               keyboardType="number-pad"
+  //               maxLength={11}
+  //               value={user}
+  //               onChangeText={(text) => setUser(text)}
+  //               activeOutlineColor="green"
+  //             />
 
-              <TextInput
-                style={loginStyles.inputs}
-                label="Password"
-                mode="outlined"
-                value={password}
-                onChangeText={(text) => setpassword(text)}
-                maxLength={20}
-                activeOutlineColor="green"
-                secureTextEntry={true}
-              />
-              <View style={{ flexDirection: "row" }}>
-                <TouchableOpacity
-                  style={[loginStyles.button, { backgroundColor: "#414FCA" }]}
-                  onPress={() => {
-                    SignUp();
-                  }}
-                >
-                  <Text style={[loginStyles.buttonText,{fontFamily:font_Family}]}>SignUp</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={loginStyles.button}
-                  onPress={() => {
-                    Login();
-                  }}
-                >
-                  <Text style={[loginStyles.buttonText,{fontFamily:font_Family}]}>Login</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={loginStyles.backbutton}
-                onPress={() => {
-                  setShow(false);
-                  navigation.goBack();
-                }}
-              >
-                <Icon name="arrow-left" color="black" size={30} />
-                <Text style={[loginStyles.backbuttonText,{fontFamily:font_Family}]}>Go Back</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </View>
-      </Modal>
-    );
-  };
+  //             <TextInput
+  //               style={loginStyles.inputs}
+  //               label="Password"
+  //               mode="outlined"
+  //               value={password}
+  //               onChangeText={(text) => setpassword(text)}
+  //               maxLength={20}
+  //               activeOutlineColor="green"
+  //               secureTextEntry={true}
+  //             />
+  //             <View style={{ flexDirection: "row" }}>
+  //               <TouchableOpacity
+  //                 style={[loginStyles.button, { backgroundColor: "#414FCA" }]}
+  //                 onPress={() => {
+  //                   SignUp();
+  //                 }}
+  //               >
+  //                 <Text style={[loginStyles.buttonText,{fontFamily:font_Family}]}>SignUp</Text>
+  //               </TouchableOpacity>
+  //               <TouchableOpacity
+  //                 style={loginStyles.button}
+  //                 onPress={() => {
+  //                   Login();
+  //                 }}
+  //               >
+  //                 <Text style={[loginStyles.buttonText,{fontFamily:font_Family}]}>Login</Text>
+  //               </TouchableOpacity>
+  //             </View>
+  //           </View>
+  //           <View>
+  //             <TouchableOpacity
+  //               style={loginStyles.backbutton}
+  //               onPress={() => {
+  //                 setShow(false);
+  //                 navigation.goBack();
+  //               }}
+  //             >
+  //               <Icon name="arrow-left" color="black" size={30} />
+  //               <Text style={[loginStyles.backbuttonText,{fontFamily:font_Family}]}>Go Back</Text>
+  //             </TouchableOpacity>
+  //           </View>
+  //         </ScrollView>
+  //       </View>
+  //     </Modal>
+  //   );
+  // };
+
+  
   return (
     <View style={[styles.mainView, { backgroundColor: bgColor }]}>
-      {modaL()}
+      <View style={{flex:1,display:showLogin}}>
+      <LoginOrSignUp navigation={navigation} 
+      userData={['students','RegNo',11,'Student']}
+       hideLogin={setHideLogin}
+        showLogin={setShowLogin} 
+        setUserData={setUser}
+
+        />
+      </View>
+      <View style={{flex:1,display:hideLogin}}>
       <Modal animationType="slide" transparent={true} visible={modalSem}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -356,6 +369,9 @@ export default function ViewAllFees({ navigation }) {
           <ViewFeesChild title="Entry Exit Status" />
         </TouchableOpacity>
       </View>
+      </View>
+     
     </View>
   );
 }
+export default React.memo(ViewAllFees)

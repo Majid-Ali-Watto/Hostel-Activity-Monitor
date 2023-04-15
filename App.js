@@ -1,7 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-const Stack = createNativeStackNavigator();
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppRoutes from "./components/AppRoutes";
 import SecuritySection from "./components/SecuritySection";
 import HostelwardenSection from "./components/HostelwardenSection";
@@ -18,56 +17,71 @@ import NetInfo from "@react-native-community/netinfo";
 import globalStylings from "./assets/styles/GlobalStyling/GlobalStyling";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-NetInfo.fetch().then(state => {
-  console.log("Connection ", state.isConnected);
-  if(!state.isConnected){
-      // alert('Internet Connection is Required');
-    Alert.alert('Network Status', 'Internet Connection is Required', [
-      {
-        text: 'Cancel',
-        // onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      // {text: 'OK', onPress: () => console.log('OK Pressed')},
-    ])
-  }
-    // console.log("Connection type", state.type);
-   
-});
+const Stack = createNativeStackNavigator();
+
 export default function App() {
-  const [color, setBgColor] = React.useState(globalStylings);
-  const [load,setLoad] =React.useState({})
-  React.useEffect(()=>{
-   
-      try {
-        const value =  AsyncStorage.getItem("settings");
-        if (value !== null) {
-          setLoad(JSON.parse(value));
-        }
-      } catch (error) {
-  
+  const [color, setBgColor] = useState(globalStylings);
+
+  useEffect(() => {
+    const fetchNetInfo = async () => {
+      const state = await NetInfo.fetch();
+      console.log("Connection ", state.isConnected);
+      if (!state.isConnected) {
+        Alert.alert("Network Status", "Internet Connection is Required", [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]);
       }
-    
-  },[])
+    };
+    fetchNetInfo();
+  }, []);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const value = await AsyncStorage.getItem("settings");
+        setBgColor((prevColor) => ({
+          ...prevColor,
+          bgColor: value?.bgColor ?? prevColor.bgColor,
+        }));
+      } catch (error) {}
+    };
+    fetchSettings();
+  }, []);
+
+  const {
+    bgColor,
+    hColor,
+    hTextColor,
+    topNav,
+    bottomNav,
+    cardsColor,
+    cardsTextColor,
+    bottomNavsTextColor,
+    topNavsTextColor,
+    fontFamily,
+  } = color;
+
   return (
     <ColorsContext.Provider
       value={{
-        bgColor: load.bgColor|| color.bgColor,
-        hColor: color.hColor,
-        hTextColor: color.hTextColor,
-        topNav: color.topNav,
-        bottomNav: color.bottomNav,
-        cardsColor: color.cardsColor,
-        cardsTextColor:color.cardsTextColor,
-        setBgColor: setBgColor,
-        bottomNavsTextColor:color.bottomNavsTextColor,
-        topNavsTextColor:color.topNavsTextColor,
-        font_Family:color.fontFamily,
-        color
+        bgColor: bgColor || color.bgColor,
+        hColor,
+        hTextColor,
+        topNav,
+        bottomNav,
+        cardsColor,
+        cardsTextColor,
+        setBgColor,
+        bottomNavsTextColor,
+        topNavsTextColor,
+        fontFamily,
+        color,
       }}
     >
-      {/* <View style={[styles.home, { backgroundColor: getBGcolor() }]}> */}
-      <View style={[styles.home, { backgroundColor: color.bgColor }]}>
+      <View style={[styles.home, { backgroundColor: bgColor }]}>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="AppRoutes">
             <Stack.Screen
@@ -134,4 +148,3 @@ export default function App() {
     </ColorsContext.Provider>
   );
 }
-

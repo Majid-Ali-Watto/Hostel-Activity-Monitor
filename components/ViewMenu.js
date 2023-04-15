@@ -9,15 +9,16 @@ import { getDate } from "../Utils/DaysAndDate";
 import { getdata } from "../Utils/DaysAndDate";
 const instance = axios.create();
 
-function ItemCard({ item }, cardsColor,font_Family) {
+
+const ItemCard = ({ item }, cardsColor, font_Family) => {
   return (
     <View>
       <Card style={[styles.card, { backgroundColor: cardsColor }]}>
         <View style={styles.menuDay}>
-          <Text style={[styles.day, { fontFamily:font_Family}]}>
+          <Text style={[styles.day, { fontFamily: font_Family }]}>
             {item.day}
           </Text>
-          <Text style={[styles.day, { fontFamily:font_Family }]}>
+          <Text style={[styles.day, { fontFamily: font_Family }]}>
             {item.date}
           </Text>
         </View>
@@ -25,8 +26,8 @@ function ItemCard({ item }, cardsColor,font_Family) {
         <Divider />
         {item.hasOwnProperty("Morning") ? (
           <View style={styles.timeStyle}>
-            <Text style={{ fontFamily:font_Family}}>{item.Morning.dish}</Text>
-            <Text style={[styles.timeAM, { fontFamily:font_Family }]}>
+            <Text style={{ fontFamily: font_Family }}>{item.Morning.dish}</Text>
+            <Text style={[styles.timeAM, { fontFamily: font_Family }]}>
               {item.Morning.time}
             </Text>
           </View>
@@ -36,10 +37,10 @@ function ItemCard({ item }, cardsColor,font_Family) {
         <Divider />
         {item.hasOwnProperty("Morning") ? (
           <View style={styles.timeStyle}>
-            <Text style={{ fontFamily:font_Family }}>
+            <Text style={{ fontFamily: font_Family }}>
               Rs.{item.Morning.unitPrice}*{item.Morning.units}
             </Text>
-            <Text style={[styles.total, { fontFamily:font_Family }]}>
+            <Text style={[styles.total, { fontFamily: font_Family }]}>
               Rs. {item.Morning.units * item.Morning.unitPrice}
             </Text>
           </View>
@@ -50,7 +51,7 @@ function ItemCard({ item }, cardsColor,font_Family) {
         <Divider style={{ backgroundColor: "black" }} />
         {item.hasOwnProperty("Evening") ? (
           <View style={styles.timeStyle}>
-            <Text style={{ fontFamily: font_Family}}>{item.Evening.dish}</Text>
+            <Text style={{ fontFamily: font_Family }}>{item.Evening.dish}</Text>
             <Text style={[styles.timePM, { fontFamily: font_Family }]}>
               {item.Evening.time}
             </Text>
@@ -61,10 +62,10 @@ function ItemCard({ item }, cardsColor,font_Family) {
         <Divider />
         {item.hasOwnProperty("Evening") ? (
           <View style={styles.timeStyle}>
-            <Text style={{ fontFamily:font_Family}}>
+            <Text style={{ fontFamily: font_Family }}>
               Rs.{item.Evening.unitPrice}*{item.Evening.units}
             </Text>
-            <Text style={[styles.total, { fontFamily:font_Family }]}>
+            <Text style={[styles.total, { fontFamily: font_Family }]}>
               Rs. {item.Evening.units * item.Evening.unitPrice}
             </Text>
           </View>
@@ -75,6 +76,7 @@ function ItemCard({ item }, cardsColor,font_Family) {
     </View>
   );
 }
+
 
 export default function ViewMenu() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -90,49 +92,113 @@ export default function ViewMenu() {
     try {
       const response = await instance.get(`${IP}/getMenu`);
       menu = response.data;
-      console.log(menu);
       menu = createObject(response.data);
       setMenu(menu);
-      console.log("creted object : ", menus);
     } catch (error) {
       alert(error.message.toString());
     }
   };
 
-  const createObject = () => {
-    let arr = [];
+  // const createObject = () => {
+  //   let arr = [];
+  //   let obj = {};
+  //   for (let i = 0; i < menu.length; i++) {
+  //     const { currDay, fullDate } = getdata(menu[i].daydate);
+
+  //     if (menu[i + 1] == undefined) {
+  //       let key = menu[i].time;
+  //       let inner = {
+  //         dish: menu[i].name,
+  //         unitPrice: menu[i].price,
+  //         units: menu[i].units,
+  //         time:
+  //           key == "Evening"
+  //             ? "7PM-9PM"
+  //             : currDay == "Sunday"
+  //             ? "11AM-12AM"
+  //             : "7AM-9AM",
+  //       };
+  //       obj.day = "" + currDay;
+  //       obj.date = "" + fullDate;
+  //       obj[key] = inner;
+  //       arr.push(obj);
+  //       obj = {};
+  //       inner = {};
+  //     } else if (menu[i].daydate == menu[i + 1].daydate) {
+  //       arr.push({
+  //         day: "" + currDay,
+  //         date: "" + fullDate,
+  //         Morning: {
+  //           dish: menu[i].name,
+  //           unitPrice: menu[i].price,
+  //           units: menu[i].units,
+  //           time: this.day == "Sunday" ? "11AM-12AM" : "7AM-9AM",
+  //         },
+  //         Evening: {
+  //           dish: menu[i + 1].name,
+  //           unitPrice: menu[i + 1].price,
+  //           units: menu[i + 1].units,
+  //           time: "7PM-9PM",
+  //         },
+  //       });
+  //       i = i + 1;
+  //     } else {
+  //       let key = menu[i].time;
+  //       let inner = {
+  //         dish: menu[i].name,
+  //         unitPrice: menu[i].price,
+  //         units: menu[i].units,
+  //         time:
+  //           key == "Evening"
+  //             ? "7PM-9PM"
+  //             : currDay == "Sunday"
+  //             ? "11AM-12AM"
+  //             : "7AM-9AM",
+  //       };
+  //       obj.day = "" + currDay;
+  //       obj.date = "" + fullDate;
+  //       obj[key] = inner;
+  //       arr.push(obj);
+  //       obj = {};
+  //       inner = {};
+  //     }
+  //   }
+  //   return arr;
+  // };
+
+  const createObject = (menu) => {
+    const result = [];
     let obj = {};
     for (let i = 0; i < menu.length; i++) {
       const { currDay, fullDate } = getdata(menu[i].daydate);
-
+      let key = menu[i].time;
+      let inner = {
+        dish: menu[i].name,
+        unitPrice: menu[i].price,
+        units: menu[i].units,
+        time:
+          key == "Evening"
+            ? "7PM-9PM"
+            : currDay == "Sunday"
+            ? "11AM-12AM"
+            : "7AM-9AM",
+      };
       if (menu[i + 1] == undefined) {
-        let key = menu[i].time;
-        let inner = {
-          dish: menu[i].name,
-          unitPrice: menu[i].price,
-          units: menu[i].units,
-          time:
-            key == "Evening"
-              ? "7PM-9PM"
-              : currDay == "Sunday"
-              ? "11AM-12AM"
-              : "7AM-9AM",
+        obj = {
+          day: "" + currDay,
+          date: "" + fullDate,
+          [key]: inner,
         };
-        obj.day = "" + currDay;
-        obj.date = "" + fullDate;
-        obj[key] = inner;
-        arr.push(obj);
-        obj = {};
-        inner = {};
+        result.push(obj);
       } else if (menu[i].daydate == menu[i + 1].daydate) {
-        arr.push({
+        obj = {
           day: "" + currDay,
           date: "" + fullDate,
           Morning: {
             dish: menu[i].name,
             unitPrice: menu[i].price,
             units: menu[i].units,
-            time: this.day == "Sunday" ? "11AM-12AM" : "7AM-9AM",
+            time: currDay == "Sunday" ? "11AM-12AM" : "7AM-9AM",
           },
           Evening: {
             dish: menu[i + 1].name,
@@ -140,45 +206,30 @@ export default function ViewMenu() {
             units: menu[i + 1].units,
             time: "7PM-9PM",
           },
-        });
+        };
+        result.push(obj);
         i = i + 1;
       } else {
-        let key = menu[i].time;
-        let inner = {
-          dish: menu[i].name,
-          unitPrice: menu[i].price,
-          units: menu[i].units,
-          time:
-            key == "Evening"
-              ? "7PM-9PM"
-              : currDay == "Sunday"
-              ? "11AM-12AM"
-              : "7AM-9AM",
+        obj = {
+          day: "" + currDay,
+          date: "" + fullDate,
+          [key]: inner,
         };
-        obj.day = "" + currDay;
-        obj.date = "" + fullDate;
-        obj[key] = inner;
-        arr.push(obj);
-        obj = {};
-        inner = {};
+        result.push(obj);
       }
     }
-    return arr;
+    return result;
   };
 
-  const filteredNames = menus.filter((name) => {
-    if (name.day.toLowerCase().includes(searchTerm.toLowerCase())) return true;
-    else if (name.date.includes(searchTerm)) return true;
-    if (name.hasOwnProperty("Morning")) {
-      if (name.Morning.dish.toLowerCase().includes(searchTerm.toLowerCase()))
-        return true;
-    }
-    if (name.hasOwnProperty("Evening")) {
-      if (name.Evening.dish.toLowerCase().includes(searchTerm.toLowerCase()))
-        return true;
-    }
-    // return name;
+ 
+  const filteredNames =  menus.filter(({ day, date, Morning, Evening }) => {
+    const searchTermLowerCase = searchTerm.toLowerCase();
+    if (day.toLowerCase().includes(searchTermLowerCase)) return true;
+    if (date.includes(searchTerm)) return true;
+    if (Morning && Morning.dish.toLowerCase().includes(searchTermLowerCase)) return true;
+    if (Evening && Evening.dish.toLowerCase().includes(searchTermLowerCase)) return true;
   });
+  
 
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
@@ -190,18 +241,18 @@ export default function ViewMenu() {
       />
 
       <Divider />
-      <Text style={[styles.header, { fontFamily:font_Family }]}>
+      <Text style={[styles.header, { fontFamily: font_Family }]}>
         Today's Menu
       </Text>
       <Divider />
 
       {filteredNames.map((item) => {
         if (item.date == getDate()) {
-          return ItemCard({ item }, cardsColor,font_Family);
+          return ItemCard({ item }, cardsColor, font_Family);
         }
       })}
       <Divider />
-      <Text style={[styles.header, { fontFamily:font_Family }]}>
+      <Text style={[styles.header, { fontFamily: font_Family }]}>
         Complete Menu
       </Text>
       <Divider />
@@ -209,7 +260,7 @@ export default function ViewMenu() {
       <FlatList
         data={filteredNames}
         renderItem={({ item }) => {
-          return ItemCard({ item }, cardsColor,font_Family);
+          return ItemCard({ item }, cardsColor, font_Family);
         }}
         keyExtractor={(item, index) => index + item.day + item.date}
         // onEndReached={fetchNames}

@@ -6,6 +6,8 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
     ...AppBackGroundColor,
+    padding:0,
+    margin:0,
   },
   childViews: {
     // flex: 0.33,

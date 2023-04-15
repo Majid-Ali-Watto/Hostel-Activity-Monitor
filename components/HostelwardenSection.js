@@ -1,12 +1,13 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import React from "react";
 
 import { BottomNavigationStyles } from "../assets/styles/AppBackGroun_Header/AppAndHeaders";
-const Tab = createBottomTabNavigator();
 import StudentData from "./ViewStudentData";
 import RegisterComplaints from "./RegisterComplaints";
 import ViewComplaints from "./ViewComplaints";
 
+const Tab = createBottomTabNavigator();
 
 export default function StudentSection() {
   return (
@@ -14,7 +15,6 @@ export default function StudentSection() {
       <Tab.Screen
         name="View Student Data"
         component={StudentData}
-       
         options={{
           headerShown: false,
           style: { fontSize: 20 },
@@ -43,7 +43,7 @@ export default function StudentSection() {
         }}
       />
       <Tab.Screen
-        name="view Complaint"
+        name="View Complaint"
         component={ViewComplaints}
         options={{
           headerShown: false,

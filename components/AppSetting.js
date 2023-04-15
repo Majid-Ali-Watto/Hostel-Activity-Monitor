@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import {
   Text,
   View,
@@ -18,7 +18,7 @@ export default function AppSettings({ navigation }) {
   LogBox.ignoreLogs([
     "Non-serializable values were found in the navigation state.",
   ]);
-  const [time, setTime] = React.useState();
+  const [option, setOption] = React.useState();
   const {
     color,
     bgColor,
@@ -32,12 +32,7 @@ export default function AppSettings({ navigation }) {
     bottomNavsTextColor,
     setBgColor,
   } = React.useContext(ColorsContext);
-  const storeData = async (colors) => {
-   
-    try {
-      await AsyncStorage.setItem("settings",JSON.stringify(colors));
-    } catch (e) {}
-  };
+
   const [bColor, setBColor] = React.useState(bgColor);
   const [fColor, setFColor] = React.useState("black");
   const [header, setHeaderColor] = React.useState(hColor);
@@ -50,6 +45,13 @@ export default function AppSettings({ navigation }) {
   const [bottomNavColor, setBottomNavColor] = React.useState(bottomNav);
   const [bottomNavTextColor, setBottomNavTextColor] =
     React.useState(bottomNavsTextColor);
+
+  // const storeData = async (colors) => {
+  //   try {
+  //     await AsyncStorage.setItem("settings", JSON.stringify(colors));
+  //   } catch (e) {}
+  // };
+
   const BodyParts = (heading) => {
     return (
       <View
@@ -71,9 +73,9 @@ export default function AppSettings({ navigation }) {
           >
             <RadioButton.Group
               onValueChange={(newValue) => {
-                setTime(newValue);
+                setOption(newValue);
               }}
-              value={time}
+              value={option}
             >
               <View style={styles.radioButtonContainer}>
                 {heading.map((d) => {
@@ -108,8 +110,7 @@ export default function AppSettings({ navigation }) {
           }}
         >
           <FlatList
-            // showsHorizontalScrollIndicator={false}
-
+            showsHorizontalScrollIndicator={false}
             data={colors}
             renderItem={({ item }) => (
               <View>
@@ -117,7 +118,7 @@ export default function AppSettings({ navigation }) {
                   mode="elevated"
                   style={[styles.paragraph, { backgroundColor: item }]}
                   onPress={() => {
-                    if (time == "Body") {
+                    if (option == "Body") {
                       setBColor(item);
                       setBgColor({
                         bgColor: item,
@@ -126,7 +127,7 @@ export default function AppSettings({ navigation }) {
                         bottomNav: bottomNavColor,
                         topNav: topNavColor,
                       });
-                    } else if (time == "Header") {
+                    } else if (option == "Header") {
                       setHeaderColor(item);
                       setBgColor({
                         bgColor: bColor,
@@ -135,18 +136,18 @@ export default function AppSettings({ navigation }) {
                         bottomNav: bottomNavColor,
                         topNav: topNavColor,
                       });
-                    } else if (time == "Body Text") setFColor(item);
-                    else if (time == "Header Text") {
+                    } else if (option == "Body Text") setFColor(item);
+                    else if (option == "Header Text") {
                       setHFColor(item);
                       setBgColor({
                         bgColor: bColor,
                         hColor: header,
-                        hTextColor:item,
+                        hTextColor: item,
                         cardsColor: cardColor,
                         bottomNav: bottomNavColor,
                         topNav: topNavColor,
                       });
-                    } else if (time == "Card") {
+                    } else if (option == "Card") {
                       setCardColor(item);
                       setBgColor({
                         bgColor: bColor,
@@ -155,26 +156,25 @@ export default function AppSettings({ navigation }) {
                         bottomNav: bottomNavColor,
                         topNav: topNavColor,
                       });
-                    } else if (time == "Cards Text") setCardTextColor(item);
-                    else if (time == "Top Nav") setTopNavColor(item);
-                    else if (time == "TopNav Text") setTopNavTextColor(item);
-                    else if (time == "Bottom Nav") setBottomNavColor(item);
-                    else if (time == "BottomNav Text")
+                    } else if (option == "Cards Text") setCardTextColor(item);
+                    else if (option == "Top Nav") setTopNavColor(item);
+                    else if (option == "TopNav Text") setTopNavTextColor(item);
+                    else if (option == "Bottom Nav") setBottomNavColor(item);
+                    else if (option == "BottomNav Text")
                       setBottomNavTextColor(item);
 
-                    storeData(color);
-                    const getData = async () => {
-                      try {
-                        const value = await AsyncStorage.getItem("settings");
-                        if (value !== null) {
-                          console.log(value);
-                          return value;
-                        }
-                      } catch (e) {
-                        // error reading value
-                      }
-                    };
-                    getData();
+                    // storeData(color);
+                    // const getData = async () => {
+                    //   try {
+                    //     const value = await AsyncStorage.getItem("settings");
+                    //     if (value !== null) {
+                    //       return value;
+                    //     }
+                    //   } catch (e) {
+                    //     // error reading value
+                    //   }
+                    // };
+                    // getData();
                   }}
                 >
                   C
@@ -184,6 +184,7 @@ export default function AppSettings({ navigation }) {
             keyExtractor={(item, index) => index.toString()}
             style={{ flex: 1 }}
           />
+
           <Text style={{ flex: 1 }}>Font </Text>
         </View>
         <View

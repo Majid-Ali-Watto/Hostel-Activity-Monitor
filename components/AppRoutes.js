@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, FlatList } from "react-native";
 import { Card } from "react-native-paper";
 import Header from "./Header";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -10,13 +10,23 @@ import { useState } from "react";
 import SplashScreen from "./generic_components/SplashScreen";
 import { useContext } from "react";
 import ColorsContext from "../ContextAPI/ColorsContext";
-export default function AppRoutes({ navigation }) {
+import { useCallback } from "react";
 
+export default function AppRoutes({ navigation }) {
   const [display, setDisplay] = useState("flex");
   const [displayRoute, setDisplayRoute] = useState("none");
-  const { bgColor, hColor, cardsColor,font_Family } = useContext(ColorsContext);
+  const { bgColor, hColor, cardsColor, font_Family } =
+    useContext(ColorsContext);
   const icons = ["user-graduate", "user-lock", "user-check", "user-secret"];
-  
+
+  const handleSettingsPress = useCallback(() => {
+    navigation.navigate("Settings");
+  }, [navigation]);
+
+  const handleMenuPress = useCallback(() => {
+    navigation.navigate("Menu");
+  }, [navigation]);
+
   const disp = () => {
     setTimeout(() => {
       setDisplay("none");
@@ -24,7 +34,7 @@ export default function AppRoutes({ navigation }) {
     }, 5000);
     return (
       <View style={{ height: "100%", width: "100%", display: display }}>
-        <SplashScreen visible={true} />
+        <SplashScreen  />
       </View>
     );
   };
@@ -42,10 +52,11 @@ export default function AppRoutes({ navigation }) {
           <Header />
         </View>
         <View style={styles.cardContainer}>
-          {mainButtons.map(function (item, index) {
-            return (
+          <FlatList
+            data={mainButtons}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
               <Card
-                key={index}
                 style={[styles.card, { backgroundColor: cardsColor }]}
                 onPress={() => {
                   navigation.navigate(Object.entries(item)[0][0]);
@@ -100,8 +111,9 @@ export default function AppRoutes({ navigation }) {
                   </View>
                 </View>
               </Card>
-            );
-          })}
+            )}
+            contentContainerStyle={styles.cardContainer}
+          />
         </View>
         <View
           style={{
@@ -114,12 +126,7 @@ export default function AppRoutes({ navigation }) {
           }}
         >
           <Text
-            onPress={() => {
-              navigation.navigate("Settings", {
-                // setColor: setColor,
-                // setHColor: setHColor,
-              });
-            }}
+            onPress={handleSettingsPress}
             style={{
               width: "50%",
               borderRightWidth: 0.5,
@@ -131,14 +138,12 @@ export default function AppRoutes({ navigation }) {
             App Settings
           </Text>
           <Text
-            onPress={() => {
-              navigation.navigate("Menu");
-            }}
+            onPress={handleMenuPress}
             style={{
               width: "50%",
               textAlign: "center",
               fontWeight: "bold",
-              fontFamily:font_Family,
+              fontFamily: font_Family,
             }}
           >
             View Mess Menu

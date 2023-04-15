@@ -1,11 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-const Tab = createBottomTabNavigator();
 import ViewAllFees from "./ViewAllFees";
 import RegisterComplaints from "./RegisterComplaints";
 import ViewComplaints from "./ViewComplaints";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { BottomNavigationStyles } from "../assets/styles/AppBackGroun_Header/AppAndHeaders";
-export default function StudentSection() {
+import React from "react";
+const Tab = createBottomTabNavigator();
+function StudentSection() {
 
   return (
     <Tab.Navigator
@@ -53,3 +54,5 @@ export default function StudentSection() {
     </Tab.Navigator>
   );
 }
+
+export default React.memo(StudentSection)

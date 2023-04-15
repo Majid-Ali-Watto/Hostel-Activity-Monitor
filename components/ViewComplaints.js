@@ -20,31 +20,28 @@ const instance = axios.create();
 import compStatuses from "../Constants/compStatuses";
 import { getUserP } from "../ContextAPI/userContext";
 import { styles } from "../assets/styles/viewcomplaints";
-import TextBox from "./generic_components/textbox";
 import { HEIGHT } from "../Constants/GlobalWidthHeight";
-export default function ViewComplaints() {
+ function ViewComplaints() {
   const [user, setUser] = useState("");
   const [complaints, setComplaints] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const { bgColor, cardsColor,font_Family } = React.useContext(ColorsContext);
+  const { bgColor, cardsColor, font_Family } = React.useContext(ColorsContext);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchComplaints = async () => {
-    await instance
-      .get(`${IP}/allComplaints`)
-      .then(function (response) {
-        let comps=[]
-        response.data.map((item)=>{
-          if (item.complainer==getUserP()) comps.unshift(item)
-          else comps.push(item)
-        })
-        setComplaints(comps)
-      })
-      .catch(function (error) {
-        alert(error.message.toString());
+    try {
+      const { data } = await instance.get(`${IP}/allComplaints`);
+      let comps = [];
+      data.map((item) => {
+        if (item.complainer == getUserP()) comps.unshift(item);
+        else comps.push(item);
       });
+      setComplaints(comps);
+    } catch (error) {
+      alert(error.message.toString());
+    }
   };
 
   useEffect(() => {
@@ -56,13 +53,19 @@ export default function ViewComplaints() {
     fetchComplaints();
     setRefreshing(false);
   });
+
   const filteredComplaints = complaints.filter((complaint) => {
-    if (complaint.title.toLowerCase().includes(searchTerm.toLowerCase()))
-      return true;
-    else if (complaint.id.includes(searchTerm)) return true;
-    else if (complaint.complainer.includes(searchTerm)) return true;
-    else if (complaint.body.includes(searchTerm.toLowerCase())) return true;
+    switch (true) {
+      case complaint.title.toLowerCase().includes(searchTerm.toLowerCase()):
+      case complaint.id.includes(searchTerm):
+      case complaint.complainer.includes(searchTerm):
+      case complaint.body.includes(searchTerm.toLowerCase()):
+        return true;
+      default:
+        return false;
+    }
   });
+
   const handleDeletePress = (complaintId) => {
     Alert.alert(
       "Confirmation",
@@ -71,24 +74,23 @@ export default function ViewComplaints() {
         { text: "No", style: "cancel" },
         {
           text: "Yes",
-          onPress: async() => {
-
+          onPress: async () => {
             await instance
-            .delete(`${IP}/removeComp/${complaintId}`)
-            .then(function (response) {
-              if(response.data=="Complaint has been removed")
-              setComplaints(
-                complaints.filter((complaint) => complaint.id !== complaintId)
-              )
-              else {
-                alert("Something went wrong")
-              }
-            })
-            .catch(function (error) {
-              alert(error.message.toString());
-            });
-
-           
+              .delete(`${IP}/removeComp/${complaintId}`)
+              .then(function (response) {
+                if (response.data == "Complaint deleted")
+                  setComplaints(
+                    complaints.filter(
+                      (complaint) => complaint.id !== complaintId
+                    )
+                  );
+                else if (response.data == "Complaint not deleted") {
+                  alert("Complaint not deleted");
+                }
+              })
+              .catch(function (error) {
+                alert(error.message.toString());
+              });
           },
         },
       ],
@@ -111,22 +113,12 @@ export default function ViewComplaints() {
           style={styles.searchBar}
         />
       </View>
-      {/* <View style={{ flex: 1 }}> */}
-      {/* <TextBox
-        placeholder="Search complaints"
-        placeholderColor="silver"
-        style={styles.searchInput}
-        iconColor="silver"
-        borderRadius={50}
-        maxLength={11}
-        minLength={5}
-        value={searchTerm}
-        setValue={setSearchTerm}
-      /> */}
-      {/* </View> */}
+
       <Text style={styles.divider}></Text>
       <View style={styles.compCountSec}>
-        <Text style={[styles.compCount,{fontFamily:font_Family}]}>Total: {filteredComplaints.length}</Text>
+        <Text style={[styles.compCount, { fontFamily: font_Family }]}>
+          Total: {filteredComplaints.length}
+        </Text>
       </View>
 
       <View style={{ flex: 1, backgroundColor: bgColor }}>
@@ -141,29 +133,39 @@ export default function ViewComplaints() {
             >
               <TouchableOpacity onPress={() => handleComplaintPress(item)}>
                 {/* <View style={styles.complaintTitle}> */}
-                <View style={{flexDirection:'row',justifyContent:'space-between',fontFamily:font_Family}}>
-                <Text style={[styles.complaintTit,{fontFamily:font_Family}]}>{item.title}</Text>
-
-                {item.complainer == getUserP() && (
-                <Icon
-                  name="trash"
-                  color="red"
-                  size={20}
-                  onPress={() => {
-                    handleDeletePress(item.id);
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    fontFamily: font_Family,
                   }}
-                />
-              )}
+                >
+                  <Text
+                    style={[styles.complaintTit, { fontFamily: font_Family }]}
+                  >
+                    {item.title}
+                  </Text>
+
+                  {item.complainer == getUserP() && (
+                    <Icon
+                      name="trash"
+                      color="red"
+                      size={20}
+                      onPress={() => {
+                        handleDeletePress(item.id);
+                      }}
+                    />
+                  )}
                 </View>
                 <Text style={styles.divider}></Text>
-                <Text style={[styles.id,{fontFamily:font_Family}]}>ComplaintId:{item.id}</Text>
-                <Text style={[styles.complainer,{fontFamily:font_Family}]}>
+                <Text style={[styles.id, { fontFamily: font_Family }]}>
+                  ComplaintId:{item.id}
+                </Text>
+                <Text style={[styles.complainer, { fontFamily: font_Family }]}>
                   Complainer:{item.complainer}
                 </Text>
                 {/* </View> */}
               </TouchableOpacity>
-
-             
             </Card>
           )}
           keyExtractor={(item) => item.id}
@@ -173,6 +175,7 @@ export default function ViewComplaints() {
           style={[styles.complaintsList, { backgroundColor: bgColor }]}
         />
       </View>
+     
       <Modal
         animationType="slide"
         transparent={true}
@@ -181,13 +184,19 @@ export default function ViewComplaints() {
       >
         {selectedComplaint && (
           <View style={[styles.modalContainer, { backgroundColor: bgColor }]}>
+            <Text style={[styles.modalTitle, { fontFamily: font_Family }]}>
+              {selectedComplaint.title}
+            </Text>
             <View style={{ flex: 1 }}>
-              <Text style={[styles.modalTitle,{fontFamily:font_Family}]}>{selectedComplaint.title}</Text>
-            </View>
-            <View style={{ flex: 5 }}>
-              <Text style={{ width: "100%", height: "7%", fontSize: 13,fontFamily:font_Family }}>
-                Complaint ID:
-                {selectedComplaint.id} | Complaint By :{" "}
+              <Text
+                style={{
+                  width: "100%",
+                  height: "7%",
+                  fontSize: 13,
+                  fontFamily: font_Family,
+                }}
+              >
+                Complaint ID: {selectedComplaint.id} | Complaint By :{" "}
                 {selectedComplaint.complainer}
               </Text>
               <Text
@@ -196,28 +205,36 @@ export default function ViewComplaints() {
                   fontWeight: "bold",
                   marginTop: 10,
                   fontSize: HEIGHT * 0.027,
-                  fontFamily:font_Family
+                  fontFamily: font_Family,
                 }}
               >
                 Description
               </Text>
               <ScrollView>
-                <Text style={[styles.modalDescription,{fontFamily:font_Family}]}>
+                <Text
+                  style={[styles.modalDescription, { fontFamily: font_Family }]}
+                >
                   {selectedComplaint.body}
                 </Text>
               </ScrollView>
             </View>
-            <View style={{ flex: 1 }}>
-              <TouchableOpacity
-                style={styles.modalCloseButton}
-                onPress={() => setModalVisible(false)}
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text
+                style={[
+                  styles.modalCloseButtonText,
+                  { fontFamily: font_Family },
+                ]}
               >
-                <Text style={[styles.modalCloseButtonText,{fontFamily:font_Family}]}>Close</Text>
-              </TouchableOpacity>
-            </View>
+                Close
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </Modal>
     </View>
   );
 }
+export default React.memo(ViewComplaints)
