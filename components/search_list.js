@@ -318,7 +318,7 @@ function SList(props) {
 
           <View style={styles.data}>
             <View>
-              <Text style={[styles.title, titleFont]}>{sname}</Text>
+              <Text style={[styles.title, titleFont]}>{sname.toString().toUpperCase()}</Text>
               <Text style={[styles.rollno, rollNoFont]}>{rollno}</Text>
               <Text style={[styles.rollno, rollNoFont]}>{cnic}</Text>
             </View>
@@ -530,7 +530,7 @@ function SList(props) {
                 <Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
                   <View style={stylesn.imageSec}>
                     <Text style={[stylesn.header, { fontFamily: font_Family }]}>
-                      {uri[0]}
+                      {uri[0].toString().toUpperCase()}
                     </Text>
                     <Image source={{ uri: uri[1] }} style={stylesn.img} />
                   </View>

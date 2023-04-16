@@ -75,7 +75,10 @@ const LoginOrSignUp = (props) => {
       };
       const setReg=useCallback((text) => setUser(text),[user.length==11])
     return (
-      <Modal animationType="slide" transparent={false} visible={show}>
+      <Modal animationType="slide"
+       transparent={false}
+       statusBarTranslucent={true}
+       visible={show}>
         <View
           style={[loginStyles.loginContainer, { backgroundColor: bgColor }]}
         >

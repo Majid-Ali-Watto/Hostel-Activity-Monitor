@@ -47,9 +47,9 @@ const styles = StyleSheet.create({
 
   card: {
     shadowColor: 'transparent',
-    ...getWH(0.95, 0.16,false),
+    ...getWH(0.95, 0.15,false),
     paddingTop: 5,
-    elevation: 10,
+    elevation: 50,
     backgroundColor: "white",
     marginTop: WIDTH * 0.03,
   },
@@ -62,15 +62,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   title: {
-    ...getMF(0.05, 0.03),
+    ...getMF(0.05, 0.025),
     fontWeight: "bold",
     // fontStyle: "italic",
   },
   rollno: {
-    ...getMF(0.05, 0.02),
+    ...getMF(0.05, 0.015),
   },
   department: {
     ...getMF(0.05, 0.02),
+    marginTop:5,
     // fontWeight: "bold",
   },
   data: {
@@ -80,11 +81,11 @@ const styles = StyleSheet.create({
   },
   program: {
     marginRight: WIDTH * 0.05,
-    fontSize: HEIGHT * 0.025,
+    fontSize: HEIGHT * 0.015,
   },
   semno: {
     marginRight: WIDTH * 0.05,
-    fontSize: HEIGHT * 0.02,
+    fontSize: HEIGHT * 0.015,
   },
   searchInput: {
     paddingLeft: 5,
