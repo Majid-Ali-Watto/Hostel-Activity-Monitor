@@ -4,7 +4,7 @@ import { StyleSheet, SafeAreaView } from "react-native";
 export default function MarkAttendance({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
-      <SList navigation={navigation} />
+      <SList navigation={navigation} screen='Mark Attendance' />
     </SafeAreaView>
   );
 }

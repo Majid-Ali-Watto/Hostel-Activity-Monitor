@@ -40,7 +40,8 @@ function SList(props) {
   const [refreshing, setRefreshing] = useState(false);
   const [profile, showProfile] = useState(false);
   const [showAllStud, setShowAllStud] = useState(
-    getUserRole() == "Security Supervisor" ? "none" : "flex"
+  props.screen=='Mark Attendance'?'none':
+ getUserRole() == "Security Supervisor" ? "none" : "flex"
   );
   const [showRegStud, setShowRegStud] = useState("none");
   const [showAdd, setShowAdd] = useState(false);
@@ -82,14 +83,34 @@ function SList(props) {
     setRefreshing(false);
   });
   const addMessStud = async () => {
-    // await axios
-    // .post("http://localhost:3000/save", payloadset)
-    // .then((response) => {
-    //   alert(response.data);
-    // })
-    // .catch((error) => {
-    //   alert(error);
-    // });
+    const payloadset={
+      rollno:searchTerm
+    }
+    await axios
+    .post(`${IP}/saveMessStud`, payloadset)
+    .then((response) => {
+      alert(response.data);
+      setSearchTerm('')
+    })
+    .catch((error) => {
+      alert(error);
+    });
+  };
+  const addHostStud= async () => {
+    const payloadset={
+      rollno:searchTerm,
+      status:true
+    }
+    await axios
+    .patch(`${IP}/saveHostStud`, payloadset)
+    .then((response) => {
+      response.data.rowCount > 0?
+      alert('Student Added') : alert('Student not Added')
+      setSearchTerm('')
+    })
+    .catch((error) => {
+      alert(error);
+    });
   };
   const saveAttendance = async (payloadset) => {
     await instance
@@ -189,9 +210,13 @@ function SList(props) {
     fetchMenu(new Date().toString().slice(0, 15), rollno);
   };
 
-  const fetchNames = async () => {
+  const fetchNames = async (option='none') => {
+    // hostelStudents
+    console.log(getUserRole());
+    const endPoint=getUserRole()=='Hostel Supervisor'&&option=='none'?'hostelStudents':option=='none' && getUserRole()=='Mess Supervisor'?'messStudents':'students'
+    console.log(endPoint);
     await instance
-      .get(`${IP}/students`)
+      .get(`${IP}/${endPoint}`)
       .then(function (response) {
         setNames(response.data);
       })
@@ -290,48 +315,7 @@ function SList(props) {
       (mStatus === false ? "Pending" : "Paid") + "-->" + "Rs. " + messfee;
 
     return (
-      <Card
-        key={rollno + cnic}
-        style={[styles.card, backgroundColor]}
-        onPress={() => {
-          setSem(semno);
-          setSearchTerm(rollno);
-        }}
-        onLongPress={() => {
-          setUri([
-            sname,
-            image,
-            rollno,
-            dname,
-            program,
-            semno,
-            statusText,
-            mStatusText,
-          ]);
-          showProfile(true);
-        }}
-      >
-        <View style={styles.cardsItems}>
-          <View>
-            <Image source={{ uri: image }} style={styles.img} />
-          </View>
-
-          <View style={styles.data}>
-            <View>
-              <Text style={[styles.title, titleFont]}>{sname.toString().toUpperCase()}</Text>
-              <Text style={[styles.rollno, rollNoFont]}>{rollno}</Text>
-              <Text style={[styles.rollno, rollNoFont]}>{cnic}</Text>
-            </View>
-            <View>
-              <Text style={[styles.program, programFont]}>{program}</Text>
-              <Text style={[styles.semno, semNoFont]}>{semno}</Text>
-            </View>
-          </View>
-        </View>
-        <View>
-          <Text style={[styles.department, departmentFont]}>{dname}</Text>
-        </View>
-      </Card>
+      renderStudentCard(rollno, cnic, backgroundColor, setSem, semno, setSearchTerm, setUri, sname, image, dname, program, statusText, mStatusText, showProfile, titleFont, rollNoFont, programFont, semNoFont, departmentFont)
     );
   };
   function rerun(){
@@ -494,7 +478,7 @@ function SList(props) {
           }
         />
       </View>
-      <Modal
+      {profile&&<Modal
         animationType="fade"
         transparent={false}
         visible={profile}
@@ -530,7 +514,7 @@ function SList(props) {
                 <Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
                   <View style={stylesn.imageSec}>
                     <Text style={[stylesn.header, { fontFamily: font_Family }]}>
-                      {uri[0].toString().toUpperCase()}
+                      {uri[0]}
                     </Text>
                     <Image source={{ uri: uri[1] }} style={stylesn.img} />
                   </View>
@@ -543,14 +527,12 @@ function SList(props) {
                           <Text
                             style={[stylesn.label, { fontFamily: font_Family }]}
                           >
-                            {" "}
                             {l}
                           </Text>
                           <Text
                             style={[stylesn.value, { fontFamily: font_Family }]}
                           >
-                            {" "}
-                            {uri[index + 2]}
+                            {uri[index + 2] || 0}
                           </Text>
                         </View>
                         <View style={stylesn.dividerInner}></View>
@@ -571,8 +553,8 @@ function SList(props) {
             />
           </View>
         </View>
-      </Modal>
-      <Modal
+      </Modal>}
+      {showAdd&&<Modal
         animationType="fade"
         transparent={false}
         visible={showAdd}
@@ -580,15 +562,6 @@ function SList(props) {
       >
         <View
           style={stylesn.containerMain}
-          // style={{
-          //   backgroundColor: "white",
-          //   width: "80%",
-          //   height: "50%",
-          //  paddingLeft:10,
-          //  paddingRight:10,
-          //   // justifyContent: "center",
-          //   //  alignItems: "center",
-          // }}
         >
           <View
             style={{
@@ -605,13 +578,13 @@ function SList(props) {
               <Text
                 style={[stylesn.headerConfirm, { fontFamily: font_Family }]}
               >
-                Student's Mess Confirmation
+               {getUserRole()=="Mess Supervisor"? "Student's Mess Confirmation": "Student's Residence Confirmation"}
               </Text>
               <Divider style={{ padding: 0, margin: 0, height: 1 }} />
               <Text style={{ fontFamily: font_Family }}>
                 Are you sure to register
                 <Text style={{ fontWeight: "bold" }}> '{searchTerm}'</Text> as
-                Mess member
+                {getUserRole()=='Mess Supervisor'?"Mess member?":" Hostel member and he/she has paid the fee?"}
               </Text>
             </View>
 
@@ -636,6 +609,7 @@ function SList(props) {
                 onPress={() => {
                   setShowAdd(false);
                   setIsDisAbled(false);
+                   getUserRole() =='Mess Supervisor' ?addMessStud():addHostStud()
                 }}
                 style={{ fontFamily: font_Family, backgroundColor: "blue" }}
               >
@@ -644,7 +618,7 @@ function SList(props) {
             </View>
           </View>
         </View>
-      </Modal>
+      </Modal>}
       <View
         style={{
           justifyContent: "center",
@@ -676,9 +650,10 @@ function SList(props) {
           disabled={isDisabled}
           label="All Students"
           style={stylesn.fabStudents}
-          onPress={() => {
+          onPress={async () => {
             setShowRegStud("flex");
             setShowAllStud("none");
+            await fetchNames('flex')
           }}
         />
       </View>
@@ -693,9 +668,10 @@ function SList(props) {
           disabled={isDisabled}
           label="Registered Students"
           style={stylesn.fabStudents}
-          onPress={() => {
+          onPress={async() => {
             setShowRegStud("none");
             setShowAllStud("flex");
+            await fetchNames('none')
           }}
         />
       </View>
@@ -814,3 +790,49 @@ const stylesn = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+function renderStudentCard(rollno, cnic, backgroundColor, setSem, semno, setSearchTerm, setUri, sname, image, dname, program, statusText, mStatusText, showProfile, titleFont, rollNoFont, programFont, semNoFont, departmentFont) {
+ return <Card
+    key={rollno + cnic}
+    style={[styles.card, backgroundColor]}
+    onPress={() => {
+      setSem(semno);
+      setSearchTerm(rollno);
+    } }
+    onLongPress={() => {
+      setUri([
+        sname,
+        image,
+        rollno,
+        dname,
+        program,
+        semno,
+        statusText,
+        mStatusText,
+      ]);
+      showProfile(true);
+    } }
+  >
+    <View style={styles.cardsItems}>
+      <View>
+        <Image source={{ uri: image }} style={styles.img} />
+      </View>
+
+      <View style={styles.data}>
+        <View>
+          <Text style={[styles.title, titleFont]}>{sname}</Text>
+          <Text style={[styles.rollno, rollNoFont]}>{rollno}</Text>
+          <Text style={[styles.rollno, rollNoFont]}>{cnic}</Text>
+        </View>
+        <View>
+          <Text style={[styles.program, programFont]}>{program}</Text>
+          <Text style={[styles.semno, semNoFont]}>{semno}</Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <Text style={[styles.department, departmentFont]}>{dname}</Text>
+    </View>
+  </Card>;
+}
+

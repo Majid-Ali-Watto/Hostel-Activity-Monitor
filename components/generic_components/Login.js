@@ -25,8 +25,10 @@ const LoginOrSignUp = (props) => {
     const { bgColor, hColor, font_Family } = React.useContext(ColorsContext);
     const navigation=props.navigation
     const Login = async () => {
+      const endPoint=props.userData[0]=='students'?'studLogin':props.userData[0]
+      console.log('end',endPoint);
         await instance
-          .get(`${IP}/${props.userData[0]}/${user}`)
+          .get(`${IP}/${endPoint}/${user}`)
           .then(function (response) {
             if (response.data.length == 0) alert("Please Register....");
             else{
