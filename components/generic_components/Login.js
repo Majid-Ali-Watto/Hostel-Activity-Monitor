@@ -26,7 +26,6 @@ const LoginOrSignUp = (props) => {
     const navigation=props.navigation
     const Login = async () => {
       const endPoint=props.userData[0]=='students'?'studLogin':props.userData[0]
-      console.log('end',endPoint);
         await instance
           .get(`${IP}/${endPoint}/${user}`)
           .then(function (response) {
@@ -64,7 +63,6 @@ const LoginOrSignUp = (props) => {
         await instance
           .patch(`${IP}/${regUser}`, payloadset)
           .then(function (response) {
-            console.log(response.data);
             let msg =
               response.data.rowCount > 0
                 ? `User Registered Sucessfully`

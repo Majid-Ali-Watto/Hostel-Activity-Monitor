@@ -127,7 +127,7 @@ export default function ViewStudentDataMess({ navigation }) {
         />
       </View>
       <View style={{ flex: 1, display: hideLogin }}>
-        {hideLogin == "flex" && <SList navigation={navigation} />}
+        {hideLogin == "flex" && <SList navigation={navigation} userRole={'Mess Supervisor'} />}
       </View>
     </SafeAreaView>
   );

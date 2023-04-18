@@ -805,4 +805,3 @@ export { colors };
 // #FEFCFF 	Milk White
 // #FFFEFA 	Half White
 // #FFFFFF"
-// console.log(color);

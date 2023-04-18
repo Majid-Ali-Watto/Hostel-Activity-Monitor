@@ -132,7 +132,7 @@ export default function StudentData({ navigation }) {
       />
     </View>
     <View style={{ flex: 1, display: hideLogin }}>
-      {hideLogin == "flex" && <SList navigation={navigation} />}
+      {hideLogin == "flex" && <SList navigation={navigation} userRole={'Hostel Supervisor'}/>}
     </View>
   </SafeAreaView>
   );

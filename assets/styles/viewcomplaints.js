@@ -5,49 +5,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 0,
-    paddingLeft: 10,
-    paddingRight: 10,
-    // marginTop: StatusBar.currentHeight,
+    padding:10,
+    paddingTop:0,
     ...AppBackGroundColor,
-    // justifyContent: "center",
-    // alignItems: "center",
+
   },
   searchBar: {
-    marginVertical: 10,
-    // padding: 5,
+    marginVertical: 5,
     backgroundColor: "#fff",
     borderRadius: 5,
     width: WIDTH * 0.94,
     height: HEIGHT * 0.06,
   },
-  // searchInput: {
-  //   // padding: 1,
-  //   backgroundColor: "#fff",
-  //   // borderBottomWidth: 0.1,
-  //   // borderBottomColor: "blue",
-  //   margin: 5,
 
-  //   width: WIDTH * 0.42,
-  //   height: HEIGHT * 0.06,
-  // },
-  searchInput: {
-    paddingLeft: 5,
-    backgroundColor: "#fff",
-    margin: 5,
-    width: WIDTH * 0.9,
-    height: HEIGHT * 0.06,
-  },
   divider: {
     height: 1,
     backgroundColor: "silver",
-    width: WIDTH,
+    width: WIDTH * 0.94,
   },
   compCountSec: {
     alignItems: "flex-end",
   },
   compCount: {
     fontStyle: "italic",
-    fontSize: 11,
+    fontSize:  HEIGHT*0.015,
     marginRight: 10,
   },
   complaintsList: {
@@ -55,39 +36,27 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   complaintTit: {
-    fontSize: 18,
+    fontSize:  HEIGHT*0.025,
+    fontWeight:'bold',
   },
-  // complaintTitle: {
-  //   marginVertical: 10,
-  //   color: "black",
-  //   padding: 8,
-  //   display: "flex",
-  //   backgroundColor: "white",
-  //   flexDirection: "column",
-  //   fontWeight: "normal",
-  //   width: WIDTH,
-  // },
+  
   modalContainer: {
     flex: 1,
-    // alignItems: "center",
-    // justifyContent: "center",
-    // backgroundColor: "lightgreen",
     padding: 20,
   },
   modalTitle: {
-    fontSize: 24,
+    fontSize: HEIGHT*0.03,
     fontWeight: "bold",
     backgroundColor: "green",
-    // justifyContent: "center",
-    // alignContent: "center",
     textAlign: "center",
     color: "white",
     padding: 20,
+    textTransform:"uppercase"
+
   },
   modalDescription: {
     fontSize: HEIGHT*0.020,
     marginBottom: 10,
-    // textAlign: "center",
     fontWeight:'normal'
   },
   modalCloseButton: {
@@ -96,21 +65,29 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: "center",
     marginTop: 20,
+    width:WIDTH*0.9,
+    justifyContent:'center',
+    alignItems:'center'
   },
   modalCloseButtonText: {
     color: "#fff",
     fontWeight: "bold",
+    fontSize:HEIGHT*0.024,
+    textTransform:"uppercase"
+    
   },
   complaintContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: 5,
     padding: 8,
+    elevation:20,
     display: "flex",
   },
-  id: { fontSize: 11 },
-  complainer: { fontSize: 11 },
+  id: { fontSize: HEIGHT*0.015, width:WIDTH*0.9 },
+  complainer:{ fontSize: HEIGHT*0.015, width:WIDTH*0.9 },
 });
 
 export { styles };
+

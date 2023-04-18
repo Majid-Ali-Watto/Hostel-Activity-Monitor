@@ -9,19 +9,20 @@ import {
   ScrollView,
   RefreshControl,
 } from "react-native";
-import { Card, TextInput } from "react-native-paper";
+import { Card, Divider, TextInput } from "react-native-paper";
 import IP from "../Constants/NetworkIP";
 import ColorsContext from "../ContextAPI/ColorsContext";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { SelectList } from "react-native-dropdown-select-list";
 
 // import SelectDropdown from "react-native-select-dropdown";
 import axios from "axios";
 const instance = axios.create();
 import compStatuses from "../Constants/compStatuses";
-import { getUserP } from "../ContextAPI/userContext";
+import { getUserP, getUserRole } from "../ContextAPI/userContext";
 import { styles } from "../assets/styles/viewcomplaints";
-import { HEIGHT } from "../Constants/GlobalWidthHeight";
- function ViewComplaints() {
+import { HEIGHT, WIDTH } from "../Constants/GlobalWidthHeight";
+function ViewComplaints() {
   const [user, setUser] = useState("");
   const [complaints, setComplaints] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -65,7 +66,21 @@ import { HEIGHT } from "../Constants/GlobalWidthHeight";
         return false;
     }
   });
+  const updateComp = async (status, id) => {
+    const payloadset = {
+      status,
+      compID: id,
+    };
 
+    await instance
+      .patch(`${IP}/updateCompStatus`, payloadset)
+      .then(function (response) {
+        alert(response.data);
+      })
+      .catch(function (error) {
+        alert(error.message.toString());
+      });
+  };
   const handleDeletePress = (complaintId) => {
     Alert.alert(
       "Confirmation",
@@ -114,7 +129,8 @@ import { HEIGHT } from "../Constants/GlobalWidthHeight";
         />
       </View>
 
-      <Text style={styles.divider}></Text>
+      {/* <Text style={styles.divider}></Text> */}
+      <Divider style={styles.divider} />
       <View style={styles.compCountSec}>
         <Text style={[styles.compCount, { fontFamily: font_Family }]}>
           Total: {filteredComplaints.length}
@@ -138,6 +154,7 @@ import { HEIGHT } from "../Constants/GlobalWidthHeight";
                     flexDirection: "row",
                     justifyContent: "space-between",
                     fontFamily: font_Family,
+                    width: WIDTH * 0.9,
                   }}
                 >
                   <Text
@@ -157,7 +174,8 @@ import { HEIGHT } from "../Constants/GlobalWidthHeight";
                     />
                   )}
                 </View>
-                <Text style={styles.divider}></Text>
+                <Divider />
+                {/* <Text style={styles.divider}></Text> */}
                 <Text style={[styles.id, { fontFamily: font_Family }]}>
                   ComplaintId:{item.id}
                 </Text>
@@ -175,7 +193,7 @@ import { HEIGHT } from "../Constants/GlobalWidthHeight";
           style={[styles.complaintsList, { backgroundColor: bgColor }]}
         />
       </View>
-     
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -184,7 +202,17 @@ import { HEIGHT } from "../Constants/GlobalWidthHeight";
       >
         {selectedComplaint && (
           <View style={[styles.modalContainer, { backgroundColor: bgColor }]}>
-            <Text style={[styles.modalTitle, { fontFamily: font_Family }]}>
+            {console.log(selectedComplaint)}
+            <Text
+              style={[
+                styles.modalTitle,
+                {
+                  fontFamily: font_Family,
+                  backgroundColor: cardsColor,
+                  color: "black",
+                },
+              ]}
+            >
               {selectedComplaint.title}
             </Text>
             <View style={{ flex: 1 }}>
@@ -192,24 +220,62 @@ import { HEIGHT } from "../Constants/GlobalWidthHeight";
                 style={{
                   width: "100%",
                   height: "7%",
-                  fontSize: 13,
+                  fontSize: HEIGHT * 0.018,
                   fontFamily: font_Family,
+                  marginTop: 2,
                 }}
               >
                 Complaint ID: {selectedComplaint.id} | Complaint By :{" "}
                 {selectedComplaint.complainer}
               </Text>
-              <Text
+              <View
                 style={{
-                  textAlign: "left",
-                  fontWeight: "bold",
-                  marginTop: 10,
-                  fontSize: HEIGHT * 0.027,
-                  fontFamily: font_Family,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                 }}
               >
-                Description
-              </Text>
+                <Text
+                  style={{
+                    textAlign: "left",
+                    fontWeight: "bold",
+                    // marginTop: 10,
+                    fontSize: HEIGHT * 0.027,
+                    fontFamily: font_Family,
+                  }}
+                >
+                  DESCRIPTION
+                </Text>
+                <View
+                  // pointerEvents={
+                  //   getUserRole() == "Hostel Supervisor" ? "auto" : "none"
+                  // }
+                >
+                  <SelectList
+                  
+                    search={false}
+                    setSelected={(val) => {
+                      updateComp(val, selectedComplaint.id);
+                    }}
+                    data={compStatuses}
+                    save="value"
+                    // maxHeight={getUserRole() == "Hostel Supervisor" ? 150:0}
+                    boxStyles={{
+                      height: 44,
+                      width: 120,
+                      backgroundColor: bgColor,
+                      position: "relative",
+                    }}
+                    dropdownStyles={{
+                      backgroundColor: bgColor,
+                      fontFamily: font_Family,
+                      height:getUserRole() == "Hostel Supervisor" ? 150:0,
+                      borderWidth:getUserRole() == "Hostel Supervisor" ? 1:0,
+                    }}
+                    // defaultOption={selectedComplaint.status}
+                    placeholder={selectedComplaint.status}
+                  />
+                </View>
+              </View>
               <ScrollView>
                 <Text
                   style={[styles.modalDescription, { fontFamily: font_Family }]}
@@ -237,4 +303,4 @@ import { HEIGHT } from "../Constants/GlobalWidthHeight";
     </View>
   );
 }
-export default React.memo(ViewComplaints)
+export default React.memo(ViewComplaints);

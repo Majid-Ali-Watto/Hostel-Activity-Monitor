@@ -40,8 +40,11 @@ function SList(props) {
   const [refreshing, setRefreshing] = useState(false);
   const [profile, showProfile] = useState(false);
   const [showAllStud, setShowAllStud] = useState(
-  props.screen=='Mark Attendance'?'none':
- getUserRole() == "Security Supervisor" ? "none" : "flex"
+    props.screen == "Mark Attendance"
+      ? "none"
+      :props.userRole == "Security Supervisor"
+      ? "none"
+      : "flex"
   );
   const [showRegStud, setShowRegStud] = useState("none");
   const [showAdd, setShowAdd] = useState(false);
@@ -51,8 +54,6 @@ function SList(props) {
   const { bgColor, cardsColor, font_Family } = useContext(ColorsContext);
   const [date, setDate] = React.useState(new Date().getMonth() + 1);
   const [year, setYear] = React.useState(new Date().getFullYear());
- 
-
 
   let labels = [
     // 'Name',
@@ -83,34 +84,35 @@ function SList(props) {
     setRefreshing(false);
   });
   const addMessStud = async () => {
-    const payloadset={
-      rollno:searchTerm
-    }
+    const payloadset = {
+      rollno: searchTerm,
+    };
     await axios
-    .post(`${IP}/saveMessStud`, payloadset)
-    .then((response) => {
-      alert(response.data);
-      setSearchTerm('')
-    })
-    .catch((error) => {
-      alert(error);
-    });
+      .post(`${IP}/saveMessStud`, payloadset)
+      .then((response) => {
+        alert(response.data);
+        setSearchTerm("");
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
-  const addHostStud= async () => {
-    const payloadset={
-      rollno:searchTerm,
-      status:true
-    }
+  const addHostStud = async () => {
+    const payloadset = {
+      rollno: searchTerm,
+      status: true,
+    };
     await axios
-    .patch(`${IP}/saveHostStud`, payloadset)
-    .then((response) => {
-      response.data.rowCount > 0?
-      alert('Student Added') : alert('Student not Added')
-      setSearchTerm('')
-    })
-    .catch((error) => {
-      alert(error);
-    });
+      .patch(`${IP}/saveHostStud`, payloadset)
+      .then((response) => {
+        response.data.rowCount > 0
+          ? alert("Student Added")
+          : alert("Student not Added");
+        setSearchTerm("");
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
   const saveAttendance = async (payloadset) => {
     await instance
@@ -210,11 +212,15 @@ function SList(props) {
     fetchMenu(new Date().toString().slice(0, 15), rollno);
   };
 
-  const fetchNames = async (option='none') => {
+  const fetchNames = async (option = "none") => {
     // hostelStudents
-    console.log(getUserRole());
-    const endPoint=getUserRole()=='Hostel Supervisor'&&option=='none'?'hostelStudents':option=='none' && getUserRole()=='Mess Supervisor'?'messStudents':'students'
-    console.log(endPoint);
+    const endPoint =
+      props.userRole == "Hostel Supervisor" && option == "none"
+        ? "hostelStudents"
+        : option == "none" && props.userRole == "Mess Supervisor"
+        ? "messStudents"
+        : "students";
+
     await instance
       .get(`${IP}/${endPoint}`)
       .then(function (response) {
@@ -248,30 +254,6 @@ function SList(props) {
       return true;
   });
 
-  // const handleNamesPress = async (rollno, exen) => {
-  //   if (rollno.length < 11) {
-  //     alert("RegNo is invalid");
-  //     return;
-  //   }
-  //   var today = new Date();
-  //   var date =
-  //     today.getFullYear() +
-  //     "-" +
-  //     (today.getMonth() + 1) +
-  //     "-" +
-  //     today.getDate();
-  //   var time =
-  //     today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  //   var dateTime = date + " " + time;
-  //   const payloadset = {
-  //     rollno,
-  //     sem,
-  //     exen,
-  //     dateTime,
-  //     cnic: getUserP(),
-  //   };
-  //   saveExitEntry(payloadset);
-  // };
 
   const handleNamesPress = async (rollno, exen) => {
     if (rollno.length < 11) {
@@ -307,24 +289,42 @@ function SList(props) {
       cnic,
     } = item;
     const fonts = { fontFamily: font_Family };
-    const { titleFont, rollNoFont, programFont, semNoFont, departmentFont } = fonts;
+    const { titleFont, rollNoFont, programFont, semNoFont, departmentFont } =
+      fonts;
     const backgroundColor = { backgroundColor: cardsColor };
     const statusText =
       (status === false ? "Pending" : "Paid") + "-->" + "Rs. " + hostelfee;
     const mStatusText =
       (mStatus === false ? "Pending" : "Paid") + "-->" + "Rs. " + messfee;
 
-    return (
-      renderStudentCard(rollno, cnic, backgroundColor, setSem, semno, setSearchTerm, setUri, sname, image, dname, program, statusText, mStatusText, showProfile, titleFont, rollNoFont, programFont, semNoFont, departmentFont)
+    return renderStudentCard(
+      rollno,
+      cnic,
+      backgroundColor,
+      setSem,
+      semno,
+      setSearchTerm,
+      setUri,
+      sname,
+      image,
+      dname,
+      program,
+      statusText,
+      mStatusText,
+      showProfile,
+      titleFont,
+      rollNoFont,
+      programFont,
+      semNoFont,
+      departmentFont
     );
   };
-  function rerun(){
-    console.log('rendered')
-    return true
+  function rerun() {
+    return true;
   }
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
-    {rerun()}
+      {rerun()}
       <View style={styles.searchbar}>
         <TextInput
           placeholder="Search Student"
@@ -478,147 +478,168 @@ function SList(props) {
           }
         />
       </View>
-      {profile&&<Modal
-        animationType="fade"
-        transparent={false}
-        visible={profile}
-        // onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={stylesn.containerMain}>
-          <View
-            style={{
-              display: getUserRole() == "Security Supervisor" ? "flex" : "none",
-              flex: 1,
-            }}
-          >
-            <Image
-              source={{ uri: uri[1] }}
-              style={{ width: "100%", height: "100%" }}
-            />
-          </View>
-          <View
-            style={{
-              display: getUserRole() != "Security Supervisor" ? "flex" : "none",
-              flex: 1,
-            }}
-          >
-            {uri && (
-              <View style={stylesn.container}>
-                <MonthYear
-                  bgColor={cardsColor}
-                  iconSize={15}
-                  setMonth={setDate}
-                  setYear={setYear}
-                  width={"100%"}
-                />
-                <Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
-                  <View style={stylesn.imageSec}>
-                    <Text style={[stylesn.header, { fontFamily: font_Family }]}>
-                      {uri[0]}
-                    </Text>
-                    <Image source={{ uri: uri[1] }} style={stylesn.img} />
-                  </View>
-
-                  <Text style={stylesn.divider}></Text>
-                  {labels.map((l, index) => {
-                    return (
-                      <View>
-                        <View style={stylesn.row}>
-                          <Text
-                            style={[stylesn.label, { fontFamily: font_Family }]}
-                          >
-                            {l}
-                          </Text>
-                          <Text
-                            style={[stylesn.value, { fontFamily: font_Family }]}
-                          >
-                            {uri[index + 2] || 0}
-                          </Text>
-                        </View>
-                        <View style={stylesn.dividerInner}></View>
-                      </View>
-                    );
-                  })}
-                </Card>
-              </View>
-            )}
-          </View>
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <FAB
-              icon="close"
-              style={stylesn.fab}
-              onPress={() => {
-                showProfile(false);
-              }}
-            />
-          </View>
-        </View>
-      </Modal>}
-      {showAdd&&<Modal
-        animationType="fade"
-        transparent={false}
-        visible={showAdd}
-        // onRequestClose={() => setModalVisible(false)}
-      >
-        <View
-          style={stylesn.containerMain}
+      {profile && (
+        <Modal
+          animationType="fade"
+          transparent={false}
+          visible={profile}
+          // onRequestClose={() => setModalVisible(false)}
         >
-          <View
-            style={{
-              flex: 0.3,
-              backgroundColor: "white",
-              justifyContent: "center",
-              padding: 10,
-              position: "relative",
-              top: HEIGHT * 0.3,
-              borderRadius: 20,
-            }}
-          >
-            <View style={{ flex: 0.8 }}>
-              <Text
-                style={[stylesn.headerConfirm, { fontFamily: font_Family }]}
-              >
-               {getUserRole()=="Mess Supervisor"? "Student's Mess Confirmation": "Student's Residence Confirmation"}
-              </Text>
-              <Divider style={{ padding: 0, margin: 0, height: 1 }} />
-              <Text style={{ fontFamily: font_Family }}>
-                Are you sure to register
-                <Text style={{ fontWeight: "bold" }}> '{searchTerm}'</Text> as
-                {getUserRole()=='Mess Supervisor'?"Mess member?":" Hostel member and he/she has paid the fee?"}
-              </Text>
-            </View>
-
+          <View style={stylesn.containerMain}>
             <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
+              style={{
+                display:
+                  getUserRole() == "Security Supervisor" ? "flex" : "none",
+                flex: 1,
+              }}
             >
-              <Button
-                mode="contained"
+              <Image
+                source={{ uri: uri[1] }}
+                style={{ width: "100%", height: "100%" }}
+              />
+            </View>
+            <View
+              style={{
+                display:
+                  getUserRole() != "Security Supervisor" ? "flex" : "none",
+                flex: 1,
+              }}
+            >
+              {uri && (
+                <View style={stylesn.container}>
+                  <MonthYear
+                    bgColor={cardsColor}
+                    iconSize={15}
+                    setMonth={setDate}
+                    setYear={setYear}
+                    width={"100%"}
+                  />
+                  <Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
+                    <View style={stylesn.imageSec}>
+                      <Text
+                        style={[stylesn.header, { fontFamily: font_Family }]}
+                      >
+                        {uri[0]}
+                      </Text>
+                      <Image source={{ uri: uri[1] }} style={stylesn.img} />
+                    </View>
+
+                    <Text style={stylesn.divider}></Text>
+                    {labels.map((l, index) => {
+                      return (
+                        <View>
+                          <View style={stylesn.row}>
+                            <Text
+                              style={[
+                                stylesn.label,
+                                { fontFamily: font_Family },
+                              ]}
+                            >
+                              {l}
+                            </Text>
+                            <Text
+                              style={[
+                                stylesn.value,
+                                { fontFamily: font_Family },
+                              ]}
+                            >
+                              {uri[index + 2] || 0}
+                            </Text>
+                          </View>
+                          <View style={stylesn.dividerInner}></View>
+                        </View>
+                      );
+                    })}
+                  </Card>
+                </View>
+              )}
+            </View>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <FAB
+                icon="close"
+                style={stylesn.fab}
                 onPress={() => {
-                  setShowAdd(false);
-                  setIsDisAbled(false);
+                  showProfile(false);
                 }}
-                style={{
-                  fontFamily: font_Family,
-                  backgroundColor: "lightblue",
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                mode="contained"
-                onPress={() => {
-                  setShowAdd(false);
-                  setIsDisAbled(false);
-                   getUserRole() =='Mess Supervisor' ?addMessStud():addHostStud()
-                }}
-                style={{ fontFamily: font_Family, backgroundColor: "blue" }}
-              >
-                Add
-              </Button>
+              />
             </View>
           </View>
-        </View>
-      </Modal>}
+        </Modal>
+      )}
+      {showAdd && (
+        <Modal
+          animationType="fade"
+          transparent={false}
+          visible={showAdd}
+          // onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={stylesn.containerMain}>
+            <View
+              style={{
+                flex: 0.3,
+                backgroundColor: "white",
+                justifyContent: "center",
+                padding: 10,
+                position: "relative",
+                top: HEIGHT * 0.3,
+                borderRadius: 20,
+              }}
+            >
+              <View style={{ flex: 0.8 }}>
+                <Text
+                  style={[stylesn.headerConfirm, { fontFamily: font_Family }]}
+                >
+                  {getUserRole() == "Mess Supervisor"
+                    ? "Student's Mess Confirmation"
+                    : "Student's Residence Confirmation"}
+                </Text>
+                <Divider style={{ padding: 0, margin: 0, height: 1 }} />
+                <Text style={{ fontFamily: font_Family }}>
+                  Are you sure to register
+                  <Text style={{ fontWeight: "bold" }}> '{searchTerm}'</Text> as
+                  {getUserRole() == "Mess Supervisor"
+                    ? "Mess member?"
+                    : " Hostel member and he/she has paid the fee?"}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  mode="contained"
+                  onPress={() => {
+                    setShowAdd(false);
+                    setIsDisAbled(false);
+                  }}
+                  style={{
+                    fontFamily: font_Family,
+                    backgroundColor: "lightblue",
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  mode="contained"
+                  onPress={() => {
+                    setShowAdd(false);
+                    setIsDisAbled(false);
+                    getUserRole() == "Mess Supervisor"
+                      ? addMessStud()
+                      : addHostStud();
+                  }}
+                  style={{ fontFamily: font_Family, backgroundColor: "blue" }}
+                >
+                  Add
+                </Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
       <View
         style={{
           justifyContent: "center",
@@ -653,7 +674,7 @@ function SList(props) {
           onPress={async () => {
             setShowRegStud("flex");
             setShowAllStud("none");
-            await fetchNames('flex')
+            await fetchNames("flex");
           }}
         />
       </View>
@@ -668,10 +689,10 @@ function SList(props) {
           disabled={isDisabled}
           label="Registered Students"
           style={stylesn.fabStudents}
-          onPress={async() => {
+          onPress={async () => {
             setShowRegStud("none");
             setShowAllStud("flex");
-            await fetchNames('none')
+            await fetchNames("none");
           }}
         />
       </View>
@@ -791,48 +812,69 @@ const stylesn = StyleSheet.create({
   },
 });
 
-function renderStudentCard(rollno, cnic, backgroundColor, setSem, semno, setSearchTerm, setUri, sname, image, dname, program, statusText, mStatusText, showProfile, titleFont, rollNoFont, programFont, semNoFont, departmentFont) {
- return <Card
-    key={rollno + cnic}
-    style={[styles.card, backgroundColor]}
-    onPress={() => {
-      setSem(semno);
-      setSearchTerm(rollno);
-    } }
-    onLongPress={() => {
-      setUri([
-        sname,
-        image,
-        rollno,
-        dname,
-        program,
-        semno,
-        statusText,
-        mStatusText,
-      ]);
-      showProfile(true);
-    } }
-  >
-    <View style={styles.cardsItems}>
+function renderStudentCard(
+  rollno,
+  cnic,
+  backgroundColor,
+  setSem,
+  semno,
+  setSearchTerm,
+  setUri,
+  sname,
+  image,
+  dname,
+  program,
+  statusText,
+  mStatusText,
+  showProfile,
+  titleFont,
+  rollNoFont,
+  programFont,
+  semNoFont,
+  departmentFont
+) {
+  return (
+    <Card
+      key={rollno + cnic}
+      style={[styles.card, backgroundColor]}
+      onPress={() => {
+        setSem(semno);
+        setSearchTerm(rollno);
+      }}
+      onLongPress={() => {
+        setUri([
+          sname,
+          image,
+          rollno,
+          dname,
+          program,
+          semno,
+          statusText,
+          mStatusText,
+        ]);
+        showProfile(true);
+      }}
+    >
+      <View style={styles.cardsItems}>
+        <View>
+          <Image source={{ uri: image }} style={styles.img} />
+        </View>
+
+        <View style={styles.data}>
+          <View>
+            <Text style={[styles.title, titleFont]}>{sname}</Text>
+            <Text style={[styles.rollno, rollNoFont]}>{rollno}</Text>
+            <Text style={[styles.rollno, rollNoFont]}>{cnic}</Text>
+          </View>
+          <View>
+            <Text style={[styles.program, programFont]}>{program}</Text>
+            <Text style={[styles.semno, semNoFont]}>{semno}</Text>
+          </View>
+        </View>
+      </View>
       <View>
-        <Image source={{ uri: image }} style={styles.img} />
+        <Text style={[styles.department, departmentFont]}>{dname}</Text>
       </View>
-
-      <View style={styles.data}>
-        <View>
-          <Text style={[styles.title, titleFont]}>{sname}</Text>
-          <Text style={[styles.rollno, rollNoFont]}>{rollno}</Text>
-          <Text style={[styles.rollno, rollNoFont]}>{cnic}</Text>
-        </View>
-        <View>
-          <Text style={[styles.program, programFont]}>{program}</Text>
-          <Text style={[styles.semno, semNoFont]}>{semno}</Text>
-        </View>
-      </View>
-    </View>
-    <View>
-      <Text style={[styles.department, departmentFont]}>{dname}</Text>
-    </View>
-  </Card>;
+    </Card>
+  );
 }
-

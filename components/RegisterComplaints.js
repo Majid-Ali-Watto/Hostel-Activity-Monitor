@@ -25,12 +25,14 @@ const instance = axios.create();
         body: textArea.toLowerCase(),
         id,
         user,
+        status:'New'
       });
       const msg =
         response.data.rowCount > 0
           ? `Complaint with ID ${id} registered sucessfully`
           : "Complaint not registered sucessfully";
       Alert.alert("Complaint", msg, [{ text: "OK" }]);
+      setText('');setTextArea('')
     } catch (error) {
       Alert.alert("Error", error.message.toString(), [{ text: "OK" }]);
     }

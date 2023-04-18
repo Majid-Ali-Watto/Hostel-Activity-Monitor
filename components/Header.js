@@ -20,7 +20,6 @@ function Header() {
 
   return (
     <View style={styles.header}>
-    {console.log('h render')}
       <Text style={headerTextStyle}>HOSTEL ACTIVITY MONITOR</Text>
       <View style={styles.lineStyle} />
       <Text style={subheaderTextStyle}>QAU ISLAMABAD</Text>
