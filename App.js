@@ -6,7 +6,7 @@ import SecuritySection from "./components/SecuritySection";
 import HostelwardenSection from "./components/HostelwardenSection";
 import MessSection from "./components/MessSection";
 import StudentSection from "./components/StudentSection";
-import QRScanner from "./components/QRScanner";
+import QRScanner from "./components/generic_components/QRScanner";
 import ViewMenu from "./components/ViewMenu";
 import SList from "./components/search_list";
 import AppSettings from "./components/AppSetting";
@@ -23,6 +23,7 @@ export default function App() {
   const [color, setBgColor] = useState(globalStylings);
 
   useEffect(() => {
+    console.log(bottomNav);
     const fetchNetInfo = async () => {
       const state = await NetInfo.fetch();
       console.log("Connection ", state.isConnected);
@@ -59,9 +60,7 @@ export default function App() {
     bottomNav,
     cardsColor,
     cardsTextColor,
-    bottomNavsTextColor,
-    topNavsTextColor,
-    fontFamily,
+    font_Family,
   } = color;
 
   return (
@@ -75,9 +74,7 @@ export default function App() {
         cardsColor,
         cardsTextColor,
         setBgColor,
-        bottomNavsTextColor,
-        topNavsTextColor,
-        fontFamily,
+        font_Family,
         color,
       }}
     >
@@ -95,40 +92,40 @@ export default function App() {
 
             <Stack.Screen
               name="Student Section"
-              options={styles.headerStyle}
+              options={{ ...topNav }}
               component={StudentSection}
               initialParams={{ user: "Student" }}
             />
 
             <Stack.Screen
               name="Security Supervisor"
-              options={styles.headerStyle}
+              options={{ ...topNav }}
               component={SecuritySection}
               initialParams={{ user: "Security" }}
             />
 
             <Stack.Screen
               name="Hostel Supervisor"
-              options={styles.headerStyle}
+              options={{ ...topNav }}
               component={HostelwardenSection}
               initialParams={{ user: "Hostel" }}
             />
 
             <Stack.Screen
               name="Mess Supervisor"
-              options={styles.headerStyle}
+              options={{ ...topNav }}
               component={MessSection}
               initialParams={{ user: "Mess" }}
             />
 
             <Stack.Screen
               name="QRScanner"
-              options={styles.headerStyle}
+              options={{ ...topNav }}
               component={QRScanner}
             />
             <Stack.Screen
               name="Menu"
-              options={styles.headerStyle}
+              options={{ ...topNav }}
               component={ViewMenu}
             />
             <Stack.Screen
@@ -139,7 +136,7 @@ export default function App() {
 
             <Stack.Screen
               name="Student's List"
-              options={styles.headerStyle}
+              options={{ ...topNav }}
               component={SList}
             />
           </Stack.Navigator>

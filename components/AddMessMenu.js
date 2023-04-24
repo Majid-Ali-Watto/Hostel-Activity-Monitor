@@ -10,7 +10,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { dishUnits } from "../Constants/dishUnits";
 import ColorsContext from "../ContextAPI/ColorsContext";
 export default function AddMessMenu() {
-  const { bgColor,font_Family } = React.useContext(ColorsContext);
+  const { bgColor, font_Family } = React.useContext(ColorsContext);
 
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
@@ -64,7 +64,9 @@ export default function AddMessMenu() {
   };
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
-      <Text style={[styles.addMenuHeader,{fontFamily:font_Family}]}>Add Mess Menu</Text>
+      <Text style={[styles.addMenuHeader, { fontFamily: font_Family }]}>
+        Add Mess Menu
+      </Text>
       <ScrollView>
         <View style={styles.textinputs}>
           <TextInput
@@ -88,7 +90,6 @@ export default function AddMessMenu() {
             keyboardType="numeric"
             activeOutlineColor="green"
             textColor="black"
-
           />
           <View style={styles.dateContainer}>
             <TextInput
@@ -99,8 +100,13 @@ export default function AddMessMenu() {
               editable={false}
               activeOutlineColor="green"
             />
-            <TouchableOpacity onPress={showDatePicker} style={[styles.select,{fontFamily:font_Family}]}>
-              <Text style={[styles.selectText,{fontFamily:font_Family}]}>Select</Text>
+            <TouchableOpacity
+              onPress={showDatePicker}
+              style={[styles.select, { fontFamily: font_Family }]}
+            >
+              <Text style={[styles.selectText, { fontFamily: font_Family }]}>
+                Select
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -126,7 +132,9 @@ export default function AddMessMenu() {
               defaultOption={dishUnits[0]}
             />
           </View>
-          <Text style={[styles.radiobuttonLabel,{fontFamily:font_Family}]}>Select Mess Shift</Text>
+          <Text style={[styles.radiobuttonLabel, { fontFamily: font_Family }]}>
+            Select Mess Shift
+          </Text>
           <RadioButton.Group
             onValueChange={(newValue) => {
               setTime(newValue);
@@ -137,7 +145,7 @@ export default function AddMessMenu() {
               {data.map((d) => {
                 return (
                   <View key={d.label} style={styles.radioButton}>
-                    <Text style={{fontFamily:font_Family}}>{d.label}</Text>
+                    <Text style={{ fontFamily: font_Family }}>{d.label}</Text>
                     <RadioButton value={d.label} />
                   </View>
                 );
@@ -155,7 +163,9 @@ export default function AddMessMenu() {
 
           <View style={styles.addDishContainer}>
             <TouchableOpacity style={styles.button} onPress={addMenu}>
-              <Text style={[styles.buttonText,{fontFamily:font_Family}]}>Add Dish</Text>
+              <Text style={[styles.buttonText, { fontFamily: font_Family }]}>
+                Add Dish
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

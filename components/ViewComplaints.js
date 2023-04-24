@@ -14,8 +14,6 @@ import IP from "../Constants/NetworkIP";
 import ColorsContext from "../ContextAPI/ColorsContext";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { SelectList } from "react-native-dropdown-select-list";
-
-// import SelectDropdown from "react-native-select-dropdown";
 import axios from "axios";
 const instance = axios.create();
 import compStatuses from "../Constants/compStatuses";
@@ -23,12 +21,13 @@ import { getUserP, getUserRole } from "../ContextAPI/userContext";
 import { styles } from "../assets/styles/viewcomplaints";
 import { HEIGHT, WIDTH } from "../Constants/GlobalWidthHeight";
 function ViewComplaints() {
-  const [user, setUser] = useState("");
+  const [, setUser] = useState("");
   const [complaints, setComplaints] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const { bgColor, cardsColor, font_Family } = React.useContext(ColorsContext);
+  const { bgColor, cardsColor, cardsTextColor, font_Family } =
+    React.useContext(ColorsContext);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchComplaints = async () => {
@@ -158,7 +157,10 @@ function ViewComplaints() {
                   }}
                 >
                   <Text
-                    style={[styles.complaintTit, { fontFamily: font_Family }]}
+                    style={[
+                      styles.complaintTit,
+                      { fontFamily: font_Family, color: cardsTextColor },
+                    ]}
                   >
                     {item.title}
                   </Text>
@@ -176,10 +178,20 @@ function ViewComplaints() {
                 </View>
                 <Divider />
                 {/* <Text style={styles.divider}></Text> */}
-                <Text style={[styles.id, { fontFamily: font_Family }]}>
+                <Text
+                  style={[
+                    styles.id,
+                    { fontFamily: font_Family, color: cardsTextColor },
+                  ]}
+                >
                   ComplaintId:{item.id}
                 </Text>
-                <Text style={[styles.complainer, { fontFamily: font_Family }]}>
+                <Text
+                  style={[
+                    styles.complainer,
+                    { fontFamily: font_Family, color: cardsTextColor },
+                  ]}
+                >
                   Complainer:{item.complainer}
                 </Text>
                 {/* </View> */}
@@ -209,7 +221,7 @@ function ViewComplaints() {
                 {
                   fontFamily: font_Family,
                   backgroundColor: cardsColor,
-                  color: "black",
+                  color: cardsTextColor,
                 },
               ]}
             >
@@ -246,12 +258,11 @@ function ViewComplaints() {
                   DESCRIPTION
                 </Text>
                 <View
-                  // pointerEvents={
-                  //   getUserRole() == "Hostel Supervisor" ? "auto" : "none"
-                  // }
+                // pointerEvents={
+                //   getUserRole() == "Hostel Supervisor" ? "auto" : "none"
+                // }
                 >
                   <SelectList
-                  
                     search={false}
                     setSelected={(val) => {
                       updateComp(val, selectedComplaint.id);
@@ -268,8 +279,8 @@ function ViewComplaints() {
                     dropdownStyles={{
                       backgroundColor: bgColor,
                       fontFamily: font_Family,
-                      height:getUserRole() == "Hostel Supervisor" ? 150:0,
-                      borderWidth:getUserRole() == "Hostel Supervisor" ? 1:0,
+                      height: getUserRole() == "Hostel Supervisor" ? 150 : 0,
+                      borderWidth: getUserRole() == "Hostel Supervisor" ? 1 : 0,
                     }}
                     // defaultOption={selectedComplaint.status}
                     placeholder={selectedComplaint.status}

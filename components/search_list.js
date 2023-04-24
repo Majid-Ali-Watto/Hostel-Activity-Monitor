@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { styles } from "../assets/styles/search_lists";
 import { getUserRole } from "../ContextAPI/userContext";
 import { getUserP } from "../ContextAPI/userContext";
+
 const instance = axios.create();
 
 import {
@@ -31,6 +32,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useContext } from "react";
 import ColorsContext from "../ContextAPI/ColorsContext";
 import { HEIGHT } from "../Constants/GlobalWidthHeight";
+import renderStudentCard from "./renderStudentCard";
 
 function SList(props) {
   const navigation = props.navigation;
@@ -42,7 +44,7 @@ function SList(props) {
   const [showAllStud, setShowAllStud] = useState(
     props.screen == "Mark Attendance"
       ? "none"
-      :props.userRole == "Security Supervisor"
+      : props.userRole == "Security Supervisor"
       ? "none"
       : "flex"
   );
@@ -51,12 +53,12 @@ function SList(props) {
   const [tab, setTab] = useState();
   const [uri, setUri] = useState([]);
   const [isDisabled, setIsDisAbled] = useState(false);
-  const { bgColor, cardsColor, font_Family } = useContext(ColorsContext);
-  const [date, setDate] = React.useState(new Date().getMonth() + 1);
-  const [year, setYear] = React.useState(new Date().getFullYear());
+  const { bgColor, cardsColor, cardsTextColor, font_Family } =
+    useContext(ColorsContext);
+  const [, setDate] = React.useState(new Date().getMonth() + 1);
+  const [, setYear] = React.useState(new Date().getFullYear());
 
   let labels = [
-    // 'Name',
     "Reg No.",
     "Dept",
     "Program",
@@ -72,9 +74,7 @@ function SList(props) {
         if (value !== null) {
           setTab(value);
         }
-      } catch (e) {
-        // error reading value
-      }
+      } catch (e) {}
     };
     getData();
   }, []);
@@ -136,7 +136,7 @@ function SList(props) {
     const time = today.getHours();
     let session = "";
 
-    if (time >= 2 && time <= 10) {
+    if (time >= 1 && time <= 10) {
       session = "Morning";
     } else if (time >= 18 && time <= 22) {
       session = "Evening";
@@ -166,44 +166,6 @@ function SList(props) {
     }
   };
 
-  // const fetchMenu = async (id, rollno) => {
-  //   const today = new Date();
-  //   const time = today.getHours();
-  //   let session = "";
-  //   if (time >= 2 && time <= 10) {
-  //     session = "Morning";
-  //   }
-  //   if (time >= 18 && time <= 22) {
-  //     session = "Evening";
-  //   }
-  //   if (session.length == 0) {
-  //     alert("Not suitable mess timing");
-  //     return;
-  //   }
-  //   await instance
-  //     .get(`${IP}/todayMenu/${session}`)
-  //     .then(function (response) {
-  //       for (let d of response.data) {
-  //         if (id == d.daydate) {
-  //           let p = (d.price * d.units).toFixed(2);
-  //           let payloadset = {
-  //             price: p,
-  //             date: d.daydate,
-  //             rollno: rollno,
-  //             time: session,
-  //           };
-  //           saveAttendance(payloadset);
-  //           break
-  //         } else {
-  //           Alert.alert("Menu", "Today's Menu was not added", [{ text: "OK" }]);
-  //         }
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       alert(error.message.toString());
-  //     });
-  // };
-
   const handleAttendance = async (rollno) => {
     if (rollno.length < 11) {
       alert("RegNo is invalid");
@@ -213,11 +175,11 @@ function SList(props) {
   };
 
   const fetchNames = async (option = "none") => {
-    // hostelStudents
     const endPoint =
       props.userRole == "Hostel Supervisor" && option == "none"
         ? "hostelStudents"
-        : option == "none" && props.userRole == "Mess Supervisor"
+        : (option == "none" && props.userRole == "Mess Supervisor") ||
+          props.screen == "Mark Attendance"
         ? "messStudents"
         : "students";
 
@@ -254,7 +216,6 @@ function SList(props) {
       return true;
   });
 
-
   const handleNamesPress = async (rollno, exen) => {
     if (rollno.length < 11) {
       alert("RegNo is invalid");
@@ -273,7 +234,6 @@ function SList(props) {
 
     saveExitEntry(payloadset);
   };
-  // Define a separate function for rendering each card
   const renderCard = ({ item }) => {
     const {
       sname,
@@ -292,10 +252,17 @@ function SList(props) {
     const { titleFont, rollNoFont, programFont, semNoFont, departmentFont } =
       fonts;
     const backgroundColor = { backgroundColor: cardsColor };
+    const textColor = { color: cardsTextColor };
     const statusText =
-      (status === false ? "Pending" : "Paid") + "-->" + "Rs. " + hostelfee;
+      (status === false || status === undefined ? "Pending" : "Paid") +
+      "-->" +
+      "Rs. " +
+      hostelfee;
     const mStatusText =
-      (mStatus === false ? "Pending" : "Paid") + "-->" + "Rs. " + messfee;
+      (mStatus === false || mStatus === undefined ? "Pending" : "Paid") +
+        "-->" +
+        "Rs. " +
+        messfee || 0;
 
     return renderStudentCard(
       rollno,
@@ -316,11 +283,12 @@ function SList(props) {
       rollNoFont,
       programFont,
       semNoFont,
-      departmentFont
+      departmentFont,
+      textColor
     );
   };
   function rerun() {
-    return true;
+    console.log("I am rendered from SList");
   }
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
@@ -395,78 +363,7 @@ function SList(props) {
         </TouchableOpacity>
       </View>
       <Divider style={styles.divider} />
-      {/* <View style={styles.home}>
-         <FlatList
-          showsVerticalScrollIndicator={false}
-          data={filteredNames}
-          renderItem={({ item }) => (
-            <Card
-              key={item.rollno + item.cnic}
-              style={[styles.card, { backgroundColor: cardsColor }]}
-              onPress={() => {
-                setSem(item.semno);
-                setSearchTerm(item.rollno);
-              }}
-              onLongPress={() => {
-                setUri([
-                  item.sname,
-                  item.image,
-                  item.rollno,
-                  item.dname,
-                  item.program,
-                  item.semno,
-                  (item.status == false ? "Pending" : "Paid") +
-                    "-->" +
-                    "Rs. " +
-                    item.hostelfee,
-                  (item.mStatus == false ? "Pending" : "Paid") +
-                    "-->" +
-                    "Rs. " +
-                    item.messfee,
-                ]);
-                showProfile(true);
-              }}
-            >
-              <View style={styles.cardsItems}>
-                <View>
-                  <Image source={{ uri: item.image }} style={styles.img} />
-                </View>
 
-                <View style={styles.data}>
-                  <View>
-                    <Text style={[styles.title, { fontFamily: font_Family }]}>
-                      {item.sname}
-                    </Text>
-                    <Text style={[styles.rollno, { fontFamily: font_Family }]}>
-                      {item.rollno}
-                    </Text>
-                    <Text style={[styles.rollno, { fontFamily: font_Family }]}>
-                      {item.cnic}
-                    </Text>
-                  </View>
-                  <View>
-                    <Text style={[styles.program, { fontFamily: font_Family }]}>
-                      {item.program}
-                    </Text>
-                    <Text style={[styles.semno, { fontFamily: font_Family }]}>
-                      {item.semno}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <View>
-                <Text style={[styles.department, { fontFamily: font_Family }]}>
-                  {item.dname}
-                </Text>
-              </View>
-            </Card>
-          )}
-          keyExtractor={(item) => item.rollno}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />    
-      </View> */}
       <View style={styles.home}>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -483,6 +380,7 @@ function SList(props) {
           animationType="fade"
           transparent={false}
           visible={profile}
+          statusBarTranslucent={true}
           // onRequestClose={() => setModalVisible(false)}
         >
           <View style={stylesn.containerMain}>
@@ -495,7 +393,10 @@ function SList(props) {
             >
               <Image
                 source={{ uri: uri[1] }}
-                style={{ width: "100%", height: "100%" }}
+                style={{
+                  //  width: "100%", height: "100%",
+                  flex: 1,
+                }}
               />
             </View>
             <View
@@ -517,7 +418,10 @@ function SList(props) {
                   <Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
                     <View style={stylesn.imageSec}>
                       <Text
-                        style={[stylesn.header, { fontFamily: font_Family }]}
+                        style={[
+                          stylesn.header,
+                          { fontFamily: font_Family, color: cardsTextColor },
+                        ]}
                       >
                         {uri[0]}
                       </Text>
@@ -532,7 +436,10 @@ function SList(props) {
                             <Text
                               style={[
                                 stylesn.label,
-                                { fontFamily: font_Family },
+                                {
+                                  fontFamily: font_Family,
+                                  color: cardsTextColor,
+                                },
                               ]}
                             >
                               {l}
@@ -540,7 +447,10 @@ function SList(props) {
                             <Text
                               style={[
                                 stylesn.value,
-                                { fontFamily: font_Family },
+                                {
+                                  fontFamily: font_Family,
+                                  color: cardsTextColor,
+                                },
                               ]}
                             >
                               {uri[index + 2] || 0}
@@ -702,22 +612,22 @@ function SList(props) {
 export default React.memo(SList);
 const stylesn = StyleSheet.create({
   container: {
-    height: "100%",
-    width: "100%",
-    // flex:1,
+    // height: "100%",
+    // width: "100%",
+    flex: 1,
     // justifyContent: "center",
     // alignItems:'center',
-    paddingLeft: 5,
-    paddingRight: 5,
+    // paddingLeft: 5,
+    // paddingRight: 5,
   },
   containerMain: {
     height: "100%",
     width: "100%",
     // justifyContent: "center",
-    paddingLeft: 5,
-    paddingRight: 5,
-    position: "relative",
-    top: -10,
+    // paddingLeft: 5,
+    // paddingRight: 5,
+    // position: "relative",
+    // top: -10,
   },
   card: {
     flex: 1,
@@ -811,70 +721,3 @@ const stylesn = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-function renderStudentCard(
-  rollno,
-  cnic,
-  backgroundColor,
-  setSem,
-  semno,
-  setSearchTerm,
-  setUri,
-  sname,
-  image,
-  dname,
-  program,
-  statusText,
-  mStatusText,
-  showProfile,
-  titleFont,
-  rollNoFont,
-  programFont,
-  semNoFont,
-  departmentFont
-) {
-  return (
-    <Card
-      key={rollno + cnic}
-      style={[styles.card, backgroundColor]}
-      onPress={() => {
-        setSem(semno);
-        setSearchTerm(rollno);
-      }}
-      onLongPress={() => {
-        setUri([
-          sname,
-          image,
-          rollno,
-          dname,
-          program,
-          semno,
-          statusText,
-          mStatusText,
-        ]);
-        showProfile(true);
-      }}
-    >
-      <View style={styles.cardsItems}>
-        <View>
-          <Image source={{ uri: image }} style={styles.img} />
-        </View>
-
-        <View style={styles.data}>
-          <View>
-            <Text style={[styles.title, titleFont]}>{sname}</Text>
-            <Text style={[styles.rollno, rollNoFont]}>{rollno}</Text>
-            <Text style={[styles.rollno, rollNoFont]}>{cnic}</Text>
-          </View>
-          <View>
-            <Text style={[styles.program, programFont]}>{program}</Text>
-            <Text style={[styles.semno, semNoFont]}>{semno}</Text>
-          </View>
-        </View>
-      </View>
-      <View>
-        <Text style={[styles.department, departmentFont]}>{dname}</Text>
-      </View>
-    </Card>
-  );
-}

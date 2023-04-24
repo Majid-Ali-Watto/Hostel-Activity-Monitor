@@ -15,7 +15,7 @@ import { useCallback } from "react";
 export default function AppRoutes({ navigation }) {
   const [display, setDisplay] = useState("flex");
   const [displayRoute, setDisplayRoute] = useState("none");
-  const { bgColor, hColor, cardsColor, font_Family } =
+  const { bgColor, hColor, cardsColor, cardsTextColor, font_Family } =
     useContext(ColorsContext);
   const icons = ["user-graduate", "user-lock", "user-check", "user-secret"];
 
@@ -34,7 +34,7 @@ export default function AppRoutes({ navigation }) {
     }, 5000);
     return (
       <View style={{ height: "100%", width: "100%", display: display }}>
-        <SplashScreen  />
+        <SplashScreen />
       </View>
     );
   };
@@ -104,7 +104,10 @@ export default function AppRoutes({ navigation }) {
                     }}
                   >
                     <Text
-                      style={[styles.cardtext, { fontFamily: font_Family }]}
+                      style={[
+                        styles.cardtext,
+                        { fontFamily: font_Family, color: cardsTextColor },
+                      ]}
                     >
                       {Object.entries(item)[0][1]}
                     </Text>

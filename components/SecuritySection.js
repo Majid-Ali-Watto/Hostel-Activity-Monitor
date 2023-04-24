@@ -4,7 +4,7 @@ import { styles } from "../assets/styles/securitysection";
 import { View, SafeAreaView } from "react-native";
 import LoginOrSignUp from "./generic_components/Login";
 export default function SecuritySection({ navigation }) {
-  const [user, setUser] = useState("");
+  const [, setUser] = useState("");
   const [hideLogin, setHideLogin] = useState("none");
   const [showLogin, setShowLogin] = useState("flex");
 
@@ -20,7 +20,9 @@ export default function SecuritySection({ navigation }) {
         />
       </View>
       <View style={{ flex: 1, display: hideLogin }}>
-        {hideLogin == "flex" && <SList navigation={navigation} userRole={'Security Supervisor'} />}
+        {hideLogin == "flex" && (
+          <SList navigation={navigation} userRole={"Security Supervisor"} />
+        )}
       </View>
     </SafeAreaView>
   );

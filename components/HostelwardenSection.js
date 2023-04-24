@@ -6,12 +6,13 @@ import { BottomNavigationStyles } from "../assets/styles/AppBackGroun_Header/App
 import StudentData from "./ViewStudentData";
 import RegisterComplaints from "./RegisterComplaints";
 import ViewComplaints from "./ViewComplaints";
-
+import ColorsContext from "../ContextAPI/ColorsContext";
 const Tab = createBottomTabNavigator();
 
 export default function StudentSection() {
+  const { bottomNav } = React.useContext(ColorsContext);
   return (
-    <Tab.Navigator screenOptions={{ ...BottomNavigationStyles }}>
+    <Tab.Navigator screenOptions={{ ...bottomNav }}>
       <Tab.Screen
         name="View Student Data"
         component={StudentData}

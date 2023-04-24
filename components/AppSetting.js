@@ -3,16 +3,17 @@ import {
   Text,
   View,
   StyleSheet,
-  FlatList,
+  ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { Button, RadioButton } from "react-native-paper";
+import { RadioButton } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { colors } from "../assets/styles/Colors/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Divider } from "react-native-paper";
 import { HEIGHT } from "../Constants/GlobalWidthHeight";
 import { LogBox } from "react-native";
+import ColorPalette from "react-native-color-palette";
 import ColorsContext from "../ContextAPI/ColorsContext";
 export default function AppSettings({ navigation }) {
   LogBox.ignoreLogs([
@@ -20,7 +21,7 @@ export default function AppSettings({ navigation }) {
   ]);
   const [option, setOption] = React.useState();
   const {
-    color,
+    // color,
     bgColor,
     hColor,
     hTextColor,
@@ -39,13 +40,16 @@ export default function AppSettings({ navigation }) {
   const [HfColor, setHFColor] = React.useState(hTextColor);
   const [cardColor, setCardColor] = React.useState(cardsColor);
   const [cardTextColor, setCardTextColor] = React.useState(cardsTextColor);
-  const [topNavColor, setTopNavColor] = React.useState(topNav);
+  const [topNavColor, setTopNavColor] = React.useState(
+    topNav.headerStyle.backgroundColor
+  );
   const [topNavTextColor, setTopNavTextColor] =
     React.useState(topNavsTextColor);
   const [bottomNavColor, setBottomNavColor] = React.useState(bottomNav);
-  const [bottomNavTextColor, setBottomNavTextColor] =
-    React.useState(bottomNavsTextColor);
-
+  const [bottomNavActiveTextColor, setBottomNavActiveTextColor] =
+    React.useState(bottomNav.tabBarActiveTintColor);
+  const [bottomNavInActiveTextColor, setBottomNavInActiveTextColor] =
+    React.useState(bottomNav.tabBarInActiveTintColor);
   // const storeData = async (colors) => {
   //   try {
   //     await AsyncStorage.setItem("settings", JSON.stringify(colors));
@@ -103,88 +107,129 @@ export default function AppSettings({ navigation }) {
         </View>
         <View
           style={{
-            height: "40%",
+            height: "42%",
             borderWidth: 0.5,
             borderColor: "silver",
             flexDirection: "row",
           }}
         >
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            data={colors}
-            renderItem={({ item }) => (
-              <View>
-                <Button
-                  mode="elevated"
-                  style={[styles.paragraph, { backgroundColor: item }]}
-                  onPress={() => {
-                    if (option == "Body") {
-                      setBColor(item);
-                      setBgColor({
-                        bgColor: item,
-                        hColor: header,
-                        cardsColor: cardColor,
-                        bottomNav: bottomNavColor,
-                        topNav: topNavColor,
-                      });
-                    } else if (option == "Header") {
-                      setHeaderColor(item);
-                      setBgColor({
-                        bgColor: bColor,
-                        hColor: item,
-                        cardsColor: cardColor,
-                        bottomNav: bottomNavColor,
-                        topNav: topNavColor,
-                      });
-                    } else if (option == "Body Text") setFColor(item);
-                    else if (option == "Header Text") {
-                      setHFColor(item);
-                      setBgColor({
-                        bgColor: bColor,
-                        hColor: header,
-                        hTextColor: item,
-                        cardsColor: cardColor,
-                        bottomNav: bottomNavColor,
-                        topNav: topNavColor,
-                      });
-                    } else if (option == "Card") {
-                      setCardColor(item);
-                      setBgColor({
-                        bgColor: bColor,
-                        hColor: header,
-                        cardsColor: item,
-                        bottomNav: bottomNavColor,
-                        topNav: topNavColor,
-                      });
-                    } else if (option == "Cards Text") setCardTextColor(item);
-                    else if (option == "Top Nav") setTopNavColor(item);
-                    else if (option == "TopNav Text") setTopNavTextColor(item);
-                    else if (option == "Bottom Nav") setBottomNavColor(item);
-                    else if (option == "BottomNav Text")
-                      setBottomNavTextColor(item);
-
-                    // storeData(color);
-                    // const getData = async () => {
-                    //   try {
-                    //     const value = await AsyncStorage.getItem("settings");
-                    //     if (value !== null) {
-                    //       return value;
-                    //     }
-                    //   } catch (e) {
-                    //     // error reading value
-                    //   }
-                    // };
-                    // getData();
-                  }}
-                >
-                  C
-                </Button>
-              </View>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-            style={{ flex: 1 }}
-          />
-
+          <ScrollView
+            style={{
+              width: "30%",
+              borderWidth: 0.5,
+              borderColor: "silver",
+            }}
+          >
+            <ColorPalette
+              defaultColor={bColor}
+              colors={[...new Set(colors)]}
+              title={""}
+              onChange={(color) => {
+                const item = color;
+                if (option == "Body") {
+                  setBColor(item);
+                  setBgColor({
+                    bgColor: item,
+                    hColor: header,
+                    cardsColor: cardColor,
+                    bottomNav: bottomNavColor,
+                    topNav: { ...topNav },
+                  });
+                } else if (option == "Header") {
+                  setHeaderColor(item);
+                  setBgColor({
+                    bgColor: bColor,
+                    hColor: item,
+                    cardsColor: cardColor,
+                    bottomNav: bottomNavColor,
+                    topNav: { ...topNav },
+                  });
+                } else if (option == "Body Text") setFColor(item);
+                else if (option == "Header Text") {
+                  setHFColor(item);
+                  setBgColor({
+                    bgColor: bColor,
+                    hColor: header,
+                    hTextColor: item,
+                    cardsColor: cardColor,
+                    bottomNav: bottomNavColor,
+                    topNav: { ...topNav },
+                  });
+                } else if (option == "Card") {
+                  setCardColor(item);
+                  setBgColor({
+                    bgColor: bColor,
+                    hColor: header,
+                    cardsColor: item,
+                    bottomNav: bottomNavColor,
+                    topNav: { ...topNav },
+                  });
+                } else if (option == "Cards Text") {
+                  setCardTextColor(item);
+                  setBgColor({
+                    bgColor: bColor,
+                    hColor: header,
+                    cardsColor: cardColor,
+                    bottomNav: bottomNavColor,
+                    topNav: { ...topNav },
+                    cardsTextColor: item,
+                  });
+                } else if (option == "Top Nav") {
+                  setTopNavColor(item);
+                  setBgColor({
+                    bgColor: bColor,
+                    hColor: header,
+                    cardsColor: cardColor,
+                    bottomNav: bottomNavColor,
+                    topNav: {
+                      ...topNav,
+                      headerStyle: { backgroundColor: item },
+                    },
+                    cardsTextColor: cardTextColor,
+                  });
+                } else if (option == "TopNav Text") {
+                  setTopNavTextColor(item);
+                  setBgColor({
+                    bgColor: bColor,
+                    hColor: header,
+                    cardsColor: cardColor,
+                    bottomNav: bottomNavColor,
+                    topNav: {
+                      ...topNav,
+                      headerTintColor: item,
+                    },
+                    cardsTextColor: cardTextColor,
+                  });
+                } else if (option == "Bottom Nav") {
+                  setBottomNavColor(item);
+                  setBgColor({
+                    bgColor: bColor,
+                    hColor: header,
+                    cardsColor: cardColor,
+                    bottomNav: {
+                      ...bottomNav,
+                      tabBarActiveBackgroundColor: item,
+                      tabBarStyle: { backgroundColor: item },
+                    },
+                    topNav: { ...topNav },
+                  });
+                } else if (option == "BottomNav Text") {
+                  setBottomNavTextColor(item);
+                  setBgColor({
+                    bgColor: bColor,
+                    hColor: header,
+                    cardsColor: cardColor,
+                    bottomNav: {
+                      ...bottomNav,
+                      tabBarInactiveTintColor: item,
+                    },
+                    topNav: { ...topNav },
+                  });
+                }
+              }}
+              style={{ flex: 1 }}
+            />
+          </ScrollView>
           <Text style={{ flex: 1 }}>Font </Text>
         </View>
         <View
@@ -196,10 +241,27 @@ export default function AppSettings({ navigation }) {
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: bottomNavColor,
+            flexDirection: "row",
+            justifyContent: "space-around   ",
           }}
         >
-          <Text style={{ textAlign: "center", color: bottomNavTextColor }}>
-            BottomNav
+          <Text
+            style={{
+              textAlign: "center",
+              color: bottomNavActiveTextColor,
+              backgroundColor: tabBarActiveBackgroundColor,
+            }}
+          >
+            BottomNavActive
+          </Text>
+          <Text
+            style={{
+              textAlign: "center",
+              color: bottomNavInActiveTextColor,
+              backgroundColor: tabBarInactiveBackgroundColor,
+            }}
+          >
+            BottomNavInactive
           </Text>
         </View>
       </View>
@@ -280,9 +342,11 @@ export default function AppSettings({ navigation }) {
           "Card",
           "Cards Text",
           "Top Nav",
-          "Bottom Nav",
           "TopNav Text",
-          "BottomNav Text",
+          "BottomNav Active",
+          "BottomNav InActive",
+          "BottomNavActive Text",
+          "BottomNavInActive Text",
         ])}
       </View>
     </View>

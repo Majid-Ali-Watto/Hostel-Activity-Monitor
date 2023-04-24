@@ -1,9 +1,8 @@
-
 export const AppNavigationHeader = {
   backgroundColor: "orange",
   NavigationTextStyle: {
     headerTitleAlign: "center",
-    headerTintColor: "black",
+    headerTintColor: "red",
     fontFamily: "monospace",
   },
 };
@@ -17,7 +16,7 @@ export const BottomNavigationStyles = {
     // borderTopLeftRadius: 0,
     // borderTopRightRadius: 0,
     // borderRadius: 20,
-    backgroundColor: "orange",
+    backgroundColor: "red",
     position: "relative",
     height: 50,
   },

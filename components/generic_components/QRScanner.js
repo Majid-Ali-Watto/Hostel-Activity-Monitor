@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, LogBox } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { styles } from "../assets/styles/qrcode";
-import ColorsContext from "../ContextAPI/ColorsContext";
+import { styles } from "../../assets/styles/qrcode";
+import ColorsContext from "../../ContextAPI/ColorsContext";
 export default function QRScanner({ navigation, route }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -25,22 +25,16 @@ export default function QRScanner({ navigation, route }) {
   };
 
   if (hasPermission === null) {
-    return <Text style={{fontFamily:font_Family}}>Requesting for camera permission</Text>;
+    return (
+      <Text style={{ fontFamily: font_Family }}>
+        Requesting for camera permission
+      </Text>
+    );
   }
   if (hasPermission === false) {
-    return <Text style={{fontFamily:font_Family}}>No access to camera</Text>;
+    return <Text style={{ fontFamily: font_Family }}>No access to camera</Text>;
   }
-  function createObject() {
-    let arr = [],
-      char = "a";
-    for (var i = 0; i < 26; i++) {
-      arr.push({ ["key" + i]: char });
-      char = "" + char.charCodeAt(0);
-      char++;
-      char = String.fromCharCode(parseInt(char));
-    }
-    return arr;
-  }
+
   function getBase64DecodedRegNo(coded) {
     coded = coded.split("");
     coded = coded.map((ch) => {
@@ -72,9 +66,20 @@ export default function QRScanner({ navigation, route }) {
     for (let i = 0; i < decoded.length; i++) decoded = decoded.replace(",", "");
     return decoded;
   }
+
+  function createObject() {
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    return Array.from(alphabet, (letter, index) => ({
+      [`key${index}`]: letter,
+    }));
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
-      <Text style={{fontFamily:font_Family}}>Scan QR Code given on student's card</Text>
+      {console.log("qr rendered")}
+      <Text style={{ fontFamily: font_Family }}>
+        Scan QR Code given on student's card
+      </Text>
       <View style={{ margin: 20 }}></View>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}

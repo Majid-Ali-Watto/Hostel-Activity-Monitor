@@ -2,20 +2,18 @@ import { StyleSheet } from "react-native";
 import { WIDTH } from "../../Constants/GlobalWidthHeight";
 import { HEIGHT } from "../../Constants/GlobalWidthHeight";
 import { AppBackGroundColor } from "./AppBackGroun_Header/AppAndHeaders";
-const getWH = (w, h,img) => {
-  if(!img)
-    {return {
+const getWH = (w, h, img) => {
+  if (!img) {
+    return {
       width: WIDTH * w,
       height: HEIGHT * h,
-    };}
-    else{
-      return {
-        width: HEIGHT * w,
-        height: HEIGHT * h,
-      };
-    }
-  
- 
+    };
+  } else {
+    return {
+      width: HEIGHT * w,
+      height: HEIGHT * h,
+    };
+  }
 };
 const getAlignment = (a, j) => {
   return {
@@ -46,17 +44,18 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    shadowColor: 'transparent',
-    ...getWH(0.95, 0.15,false),
+    shadowColor: "transparent",
+    ...getWH(0.95, 0.15, false),
     paddingTop: 5,
     elevation: 50,
     backgroundColor: "white",
     marginTop: WIDTH * 0.03,
   },
   img: {
-     ...getWH(0.08, 0.08,true),
-    borderRadius: 50,
-    margin: WIDTH * 0.01,
+    ...getWH(0.08, 0.14, true),
+    borderRadius: 10,
+    margin: HEIGHT * 0.01,
+    marginTop: 0,
   },
   cardsItems: {
     flexDirection: "row",
@@ -71,7 +70,9 @@ const styles = StyleSheet.create({
   },
   department: {
     ...getMF(0.05, 0.02),
-    marginTop:5,
+    marginTop: 5,
+    display: "flex",
+    flexWrap: "wrap",
     // fontWeight: "bold",
   },
   data: {
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     backgroundColor: "#fff",
     margin: 5,
-    ...getWH(0.85, 0.06,false),
+    ...getWH(0.85, 0.06, false),
   },
   divider: {
     height: 1,
