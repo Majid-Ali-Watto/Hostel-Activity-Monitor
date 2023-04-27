@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import { WIDTH } from "../../Constants/GlobalWidthHeight";
 import { HEIGHT } from "../../Constants/GlobalWidthHeight";
-import { AppBackGroundColor } from "./AppBackGroun_Header/AppAndHeaders";
 const getWH = (w, h, img) => {
   if (!img) {
     return {
@@ -32,8 +31,7 @@ const getMF = (m, f) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 20,
-    ...AppBackGroundColor,
+ 
   },
   home: {
     elevation: 10,

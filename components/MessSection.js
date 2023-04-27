@@ -1,15 +1,17 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { BottomNavigationStyles } from "../assets/styles/AppBackGroun_Header/AppAndHeaders";
-
+import ColorsContext from "../ContextAPI/ColorsContext";
+import React from "react";
 const Tab = createBottomTabNavigator();
 import ViewStudentDataMess from "../components/ViewStudentDataMess";
 import MarkAttendance from "./MarkAttendance";
 import AddMessMenu from "./AddMessMenu";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function MessSection() {
+  const { bottomNav } = React.useContext(ColorsContext);
+
   return (
-    <Tab.Navigator screenOptions={{ ...BottomNavigationStyles }}>
+    <Tab.Navigator screenOptions={{ ...bottomNav }}>
       <Tab.Screen
         name="View Student's Mess Fee"
         listeners={() => {
@@ -27,8 +29,8 @@ export default function MessSection() {
           tabBarIcon: () => (
             <Icon
               name="list-alt"
-              color={BottomNavigationStyles.tabBarIconStyles.color}
-              size={BottomNavigationStyles.tabBarIconStyles.size}
+              color={bottomNav.tabBarIconStyles.color}
+              size={bottomNav.tabBarIconStyles.size}
             />
           ),
         }}
@@ -50,8 +52,8 @@ export default function MessSection() {
           tabBarIcon: () => (
             <Icon
               name="list"
-              color={BottomNavigationStyles.tabBarIconStyles.color}
-              size={BottomNavigationStyles.tabBarIconStyles.size}
+              color={bottomNav.tabBarIconStyles.color}
+              size={bottomNav.tabBarIconStyles.size}
             />
           ),
         }}
@@ -73,8 +75,8 @@ export default function MessSection() {
           tabBarIcon: () => (
             <Icon
               name="calendar-check"
-              color={BottomNavigationStyles.tabBarIconStyles.color}
-              size={BottomNavigationStyles.tabBarIconStyles.size}
+              color={bottomNav.tabBarIconStyles.color}
+              size={bottomNav.tabBarIconStyles.size}
             />
           ),
         }}

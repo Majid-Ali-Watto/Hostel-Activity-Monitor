@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import { WIDTH } from "../../Constants/GlobalWidthHeight";
 import { HEIGHT } from "../../Constants/GlobalWidthHeight";
-import { AppBackGroundColor } from "./AppBackGroun_Header/AppAndHeaders";
 const getCommonStyles = (fw, ta, fs, pos, l, fstyle) => {
   return {
     fontWeight: fw,
@@ -20,7 +19,6 @@ const getJustAlign=(j,a)=>{
 }
 const styles = StyleSheet.create({
   container: {
-    ...AppBackGroundColor,
     width: WIDTH,
     height: HEIGHT,
   },

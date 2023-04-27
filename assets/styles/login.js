@@ -1,9 +1,7 @@
 import { StyleSheet } from "react-native";
-import { AppBackGroundColor } from "./AppBackGroun_Header/AppAndHeaders";
 import { WIDTH } from "../../Constants/GlobalWidthHeight";
 const loginStyles = StyleSheet.create({
   loginContainer: {
-    ...AppBackGroundColor,
     width: "100%",
     height: "100%",
     margin: 0,

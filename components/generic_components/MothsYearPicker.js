@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { Text, View, StyleSheet, Button, FlatList } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 export default function MonthYear(props) {
   const [month, setMonth] = React.useState(new Date().getMonth() + 1);

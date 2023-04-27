@@ -1,9 +1,7 @@
 import { StyleSheet } from "react-native";
 import { WIDTH } from "../../Constants/GlobalWidthHeight";
-import { AppHeader } from "./AppBackGroun_Header/AppAndHeaders";
 const styles = StyleSheet.create({
   header: {
-    // backgroundColor:AppHeader,
     width: WIDTH,
     display: "flex",
     flex: 1,

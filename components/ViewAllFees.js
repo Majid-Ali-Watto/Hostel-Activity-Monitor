@@ -101,7 +101,7 @@ function ViewAllFees({ navigation }) {
 
   return (
     <View style={[styles.mainView, { backgroundColor: bgColor }]}>
-      <View style={{ flex: 1, display: showLogin }}>
+      {/* <View style={{ flex: 1, display: showLogin }}>
         <LoginOrSignUp
           navigation={navigation}
           userData={["students", "RegNo", 11, "Student"]}
@@ -109,7 +109,7 @@ function ViewAllFees({ navigation }) {
           showLogin={setShowLogin}
           setUserData={setUser}
         />
-      </View>
+      </View> */}
       <View style={{ flex: 1, display: hideLogin }}>
         <Modal animationType="slide" transparent={true} visible={modalSem}>
           <View style={styles.centeredView}>

@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 import { HEIGHT } from "../../Constants/GlobalWidthHeight";
-import { AppBackGroundColor } from "./AppBackGroun_Header/AppAndHeaders";
 const getCommonStyles = (mv, pad, bg, bdr) => {
   return {
     marginVertical: mv,
@@ -13,7 +12,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    ...AppBackGroundColor,
   },
   textInput: {
     ...getCommonStyles(10, 10, "#fff", 5),

@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import { WIDTH } from "../../Constants/GlobalWidthHeight";
 import { HEIGHT } from "../../Constants/GlobalWidthHeight";
-import { AppBackGroundColor } from "./AppBackGroun_Header/AppAndHeaders";
 
 const getAlignment = (j, a) => {
   return {
@@ -12,7 +11,6 @@ const getAlignment = (j, a) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    ...AppBackGroundColor,
     ...getAlignment("space-between", "center"),
   },
   header: {

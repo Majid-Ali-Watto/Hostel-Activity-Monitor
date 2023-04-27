@@ -3,15 +3,17 @@ import ViewAllFees from "./ViewAllFees";
 import RegisterComplaints from "./RegisterComplaints";
 import ViewComplaints from "./ViewComplaints";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { BottomNavigationStyles } from "../assets/styles/AppBackGroun_Header/AppAndHeaders";
 import React from "react";
+import ColorsContext from "../ContextAPI/ColorsContext";
+
 const Tab = createBottomTabNavigator();
 function StudentSection() {
+  const { bottomNav } = React.useContext(ColorsContext);
 
   return (
     <Tab.Navigator
       screenOptions={
-        {...BottomNavigationStyles}
+        {...bottomNav}
       }
     >
 
@@ -23,7 +25,9 @@ function StudentSection() {
           headerShown: false,
           
           tabBarIcon: () => (
-            <Icon name="clipboard-list" color={BottomNavigationStyles.tabBarIconStyles.color} size={BottomNavigationStyles.tabBarIconStyles.size} />
+            <Icon name="clipboard-list" 
+            color={bottomNav.tabBarIconStyles.color}
+             size={bottomNav.tabBarIconStyles.size} />
           ),
           
         }}
@@ -35,7 +39,9 @@ function StudentSection() {
           headerShown: false,
           // style: { fontSize: 20 },
           tabBarIcon: () => (
-            <Icon name="file-signature" color={BottomNavigationStyles.tabBarIconStyles.color} size={BottomNavigationStyles.tabBarIconStyles.size} />
+            <Icon name="file-signature" 
+            color={bottomNav.tabBarIconStyles.color} 
+            size={bottomNav.tabBarIconStyles.size} />
           ),
         }}
       />
@@ -46,7 +52,9 @@ function StudentSection() {
           headerShown: false,
           // style: { fontSize: 20 },
           tabBarIcon: () => (
-            <Icon name="list-alt" color={BottomNavigationStyles.tabBarIconStyles.color} size={BottomNavigationStyles.tabBarIconStyles.size} />
+            <Icon name="list-alt" 
+            color={bottomNav.tabBarIconStyles.color} 
+            size={bottomNav.tabBarIconStyles.size} />
           ),
 
         }}

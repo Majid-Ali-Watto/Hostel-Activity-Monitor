@@ -1,13 +1,11 @@
 import { StyleSheet, StatusBar } from "react-native";
 import { HEIGHT, WIDTH } from "../../Constants/GlobalWidthHeight";
-import { AppBackGroundColor } from "./AppBackGroun_Header/AppAndHeaders";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 0,
     padding:10,
     paddingTop:0,
-    ...AppBackGroundColor,
 
   },
   searchBar: {

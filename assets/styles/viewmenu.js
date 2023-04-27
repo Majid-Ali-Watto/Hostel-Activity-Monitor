@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { AppBackGroundColor } from "./AppBackGroun_Header/AppAndHeaders";
 import { WIDTH } from "../../Constants/GlobalWidthHeight";
 import { HEIGHT } from "../../Constants/GlobalWidthHeight";
 const total = {
@@ -13,7 +12,6 @@ const flexStyles = {
 const getStyles = () => {
   return {
     flex: 1,
-    ...AppBackGroundColor,
   };
 };
 const getStylesFontPadding = (f, p) => {

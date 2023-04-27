@@ -1,11 +1,9 @@
 import { StyleSheet } from "react-native";
 import { WIDTH } from "../../Constants/GlobalWidthHeight";
 import { HEIGHT } from "../../Constants/GlobalWidthHeight";
-import { AppBackGroundColor } from "./AppBackGroun_Header/AppAndHeaders";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    ...AppBackGroundColor,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
