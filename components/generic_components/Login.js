@@ -73,14 +73,12 @@ const LoginOrSignUp = (props) => {
 			}}
 		>
 			<View style={[loginStyles.loginContainer, { backgroundColor: bgColor }]}>
-				<View style={{ flex: 1, backgroundColor: hColor }}>
+				<View style={{ flex: 1, backgroundColor: hColor, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }}>
 					<Header />
 				</View>
 				<ScrollView>
 					<View style={loginStyles.textinputs}>
-						<Text style={[loginStyles.loginSignUpText, { fontFamily: font_Family }]}>
-							Login/SignUp for further process {props.userData[0]}
-						</Text>
+						<Text style={[loginStyles.loginSignUpText, { fontFamily: font_Family }]}>Login/SignUp for further process</Text>
 
 						<TextInput
 							style={loginStyles.inputs}
@@ -122,7 +120,7 @@ const LoginOrSignUp = (props) => {
 							</TouchableOpacity>
 						</View>
 					</View>
-					<View>
+					<View style={{ position: "relative", bottom: 0 }}>
 						<TouchableOpacity
 							style={loginStyles.backbutton}
 							onPress={() => {

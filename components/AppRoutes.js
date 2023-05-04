@@ -1,17 +1,14 @@
 /** @format */
 
+import React, { useCallback, useContext, useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import { Card } from "react-native-paper";
 import Header from "./Header";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import mainButtons from "../Constants/mainButtons";
-import React from "react";
 import { styles } from "../assets/styles/approutes";
-import { useState } from "react";
 import SplashScreen from "./generic_components/SplashScreen";
-import { useContext } from "react";
 import ColorsContext from "../ContextAPI/ColorsContext";
-import { useCallback } from "react";
 import { HEIGHT } from "../Constants/GlobalWidthHeight";
 
 export default function AppRoutes({ navigation }) {
@@ -44,7 +41,7 @@ export default function AppRoutes({ navigation }) {
 			{disp()}
 			{/* backgroundColor: color */}
 			<View style={[styles.container, { backgroundColor: bgColor, display: displayRoute }]}>
-				<View style={[styles.header, { backgroundColor: hColor }]}>
+				<View style={[styles.header, { backgroundColor: hColor, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }]}>
 					<Header />
 				</View>
 				<View style={styles.cardContainer}>
@@ -79,11 +76,6 @@ export default function AppRoutes({ navigation }) {
 											size={HEIGHT * 0.03}
 											// size={"5%"}
 										/>
-
-										{/* <Image
-                      source={require("../assets/Images/secrity.png")}
-                      style={{ width: 50, height: 50, borderRadius: 50 }}
-                    /> */}
 									</View>
 									<View
 										style={{
@@ -131,6 +123,12 @@ export default function AppRoutes({ navigation }) {
 					>
 						App Settings
 					</Text>
+					<Icon
+						name="settings"
+						color={cardsTextColor}
+						size={HEIGHT * 0.03}
+						// size={"5%"}
+					/>
 					<Text
 						onPress={handleMenuPress}
 						style={{
