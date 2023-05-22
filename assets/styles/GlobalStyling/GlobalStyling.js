@@ -34,12 +34,12 @@ const BottomNavigationStyles = {
 };
 
 const globalStylings = {
-	bgColor: "#F2F5F5",
+	bgColor: "#f7f7f7",
 	hColor: "#37B9F1",
 	hTextColor: "white",
 	topNav: { ...AppNavigationHeader },
 	bottomNav: { ...BottomNavigationStyles },
-	cardsColor: "tomato",
+	cardsColor: "white",
 	cardsTextColor: "#565360",
 	font_Family: "sans-serif-thin",
 };

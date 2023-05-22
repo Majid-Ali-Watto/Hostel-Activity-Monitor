@@ -46,6 +46,7 @@ function ViewAllFees({ navigation }) {
 		await instance
 			.post(`${IP}/getExitEntry`, user)
 			.then(function (response) {
+				console.log(response.data);
 				if (response.data.length == 0) {
 					alert("No data found....");
 					viewModalSem(true);
@@ -129,53 +130,54 @@ function ViewAllFees({ navigation }) {
 											<DataTable.Title numeric>Recorded By</DataTable.Title>
 										</DataTable.Header>
 
-										{ee.map((e) => {
-											return (
-												<View key={e.datetime + e.status}>
-													<View
-														style={{
-															flexDirection: "row",
-															justifyContent: "space-between",
-														}}
-													>
-														<Text
+										{ee &&
+											ee.map((e) => {
+												return (
+													<View key={e.datetime + e.status}>
+														<View
 															style={{
-																fontFamily: font_Family,
-																margin: 5,
-																fontSize: 12,
-																textAlign: "left",
-																flex: 1,
+																flexDirection: "row",
+																justifyContent: "space-between",
 															}}
 														>
-															{e.datetime}
-														</Text>
-														<Text
-															style={{
-																fontFamily: font_Family,
-																margin: 5,
-																fontSize: 12,
-																textAlign: "left",
-																flex: 1,
-															}}
-														>
-															{e.status}
-														</Text>
-														<Text
-															style={{
-																fontFamily: font_Family,
-																margin: 5,
-																fontSize: 12,
-																textAlign: "left",
-																flex: 1,
-															}}
-														>
-															{e.cnic}
-														</Text>
+															<Text
+																style={{
+																	fontFamily: font_Family,
+																	margin: 5,
+																	fontSize: 12,
+																	textAlign: "left",
+																	flex: 1,
+																}}
+															>
+																{e.datetime}
+															</Text>
+															<Text
+																style={{
+																	fontFamily: font_Family,
+																	margin: 5,
+																	fontSize: 12,
+																	textAlign: "left",
+																	flex: 1,
+																}}
+															>
+																{e.status}
+															</Text>
+															<Text
+																style={{
+																	fontFamily: font_Family,
+																	margin: 5,
+																	fontSize: 12,
+																	textAlign: "left",
+																	flex: 1,
+																}}
+															>
+																{e.cnic}
+															</Text>
+														</View>
+														<Divider />
 													</View>
-													<Divider />
-												</View>
-											);
-										})}
+												);
+											})}
 									</DataTable>
 								) : (
 									<Text

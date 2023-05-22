@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
 		height: HEIGHT * 0.1,
 		margin: 10,
 		justifyContent: "center",
+		borderRadius: 8,
+		shadowColor: "#52006A",
+		elevation: 20,
 	},
 
 	text1: {

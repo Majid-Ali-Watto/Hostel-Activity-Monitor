@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-
+import  { useState } from "react";
 import { styles } from "../assets/styles/viewstudentdatamess";
-
 import { View, SafeAreaView } from "react-native";
 import SList from "./search_list";
 import LoginOrSignUp from "../components/generic_components/Login";
+
 export default function ViewStudentDataMess({ navigation }) {
-  const [user, setUser] = useState("");
+  const [, setUser] = useState("");
   const [hideLogin, setHideLogin] = useState("none");
   const [showLogin, setShowLogin] = useState("flex");
 

@@ -21,13 +21,15 @@ const styles = StyleSheet.create({
 	modalView: {
 		justifyContent: "center",
 		backgroundColor: "white",
-		borderRadius: 20,
+		// borderRadius: 20,
 		padding: 10,
 		height: HEIGHT * 0.8,
 		width: WIDTH * 0.99,
-		shadowOpacity: 0.25,
+		// shadowOpacity: 0.25,
 		shadowRadius: 8,
-		elevation: 10,
+		borderRadius: 8,
+		shadowColor: "#52006A",
+		elevation: 20,
 	},
 	button: {
 		// backgroundColor: "#0000FF",

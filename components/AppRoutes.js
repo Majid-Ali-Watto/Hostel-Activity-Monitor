@@ -14,7 +14,7 @@ import { HEIGHT } from "../Constants/GlobalWidthHeight";
 export default function AppRoutes({ navigation }) {
 	const [display, setDisplay] = useState("flex");
 	const [displayRoute, setDisplayRoute] = useState("none");
-	const { bgColor, hColor, cardsColor, cardsTextColor, font_Family, bottomNav } = useContext(ColorsContext);
+	const { bgColor, hColor, cardsColor, cardsTextColor, font_Family } = useContext(ColorsContext);
 	const icons = ["user-graduate", "user-lock", "user-check", "user-secret"];
 
 	const handleSettingsPress = useCallback(() => {
@@ -36,10 +36,58 @@ export default function AppRoutes({ navigation }) {
 			</View>
 		);
 	};
+	const renderCardItem = useCallback(
+		({ item, index }) => {
+			return (
+				<Card
+					style={[styles.card, { backgroundColor: cardsColor }]}
+					onPress={() => {
+						navigation.navigate(Object.entries(item)[0][0]);
+					}}
+				>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "center",
+							alignItems: "center",
+							width: "100%",
+						}}
+					>
+						<View
+							style={{
+								width: "25%",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<Icon name={icons[index]} color={cardsTextColor} size={HEIGHT * 0.03} />
+						</View>
+						<View
+							style={{
+								borderRightColor: "silver",
+								borderWidth: 0.5,
+								height: 50,
+							}}
+						></View>
+						<View
+							style={{
+								width: "75%",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<Text style={[styles.cardtext, { fontFamily: font_Family, color: cardsTextColor }]}>{Object.entries(item)[0][1]}</Text>
+						</View>
+					</View>
+				</Card>
+			);
+		},
+		[navigation, cardsColor]
+	);
+
 	return (
 		<View style={[styles.container, { backgroundColor: bgColor }]}>
-			{disp()}
-			{/* backgroundColor: color */}
+			{display === "flex" && disp()}
 			<View style={[styles.container, { backgroundColor: bgColor, display: displayRoute }]}>
 				<View style={[styles.header, { backgroundColor: hColor, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }]}>
 					<Header />
@@ -48,56 +96,7 @@ export default function AppRoutes({ navigation }) {
 					<FlatList
 						data={mainButtons}
 						keyExtractor={(item, index) => index.toString()}
-						renderItem={({ item, index }) => (
-							<Card
-								style={[styles.card, { backgroundColor: cardsColor }]}
-								onPress={() => {
-									navigation.navigate(Object.entries(item)[0][0]);
-								}}
-							>
-								<View
-									style={{
-										flexDirection: "row",
-										justifyContent: "center",
-										alignItems: "center",
-										width: "100%",
-									}}
-								>
-									<View
-										style={{
-											width: "25%",
-											justifyContent: "center",
-											alignItems: "center",
-										}}
-									>
-										<Icon
-											name={icons[index]}
-											color={cardsTextColor}
-											size={HEIGHT * 0.03}
-											// size={"5%"}
-										/>
-									</View>
-									<View
-										style={{
-											borderRightColor: "silver",
-											borderWidth: 0.5,
-											height: 50,
-										}}
-									></View>
-									<View
-										style={{
-											width: "75%",
-											justifyContent: "center",
-											alignItems: "center",
-										}}
-									>
-										<Text style={[styles.cardtext, { fontFamily: font_Family, color: cardsTextColor }]}>
-											{Object.entries(item)[0][1]}
-										</Text>
-									</View>
-								</View>
-							</Card>
-						)}
+						renderItem={renderCardItem}
 						contentContainerStyle={styles.cardContainer}
 					/>
 				</View>
@@ -123,12 +122,12 @@ export default function AppRoutes({ navigation }) {
 					>
 						App Settings
 					</Text>
-					<Icon
+					{/* <Icon
 						name="settings"
 						color={cardsTextColor}
 						size={HEIGHT * 0.03}
 						// size={"5%"}
-					/>
+					/> */}
 					<Text
 						onPress={handleMenuPress}
 						style={{

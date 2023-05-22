@@ -12,7 +12,7 @@ const instance = axios.create();
 
 import { Card, Divider, Modal, TextInput, FAB, Button } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import { View, Text, FlatList, Alert, SafeAreaView, TouchableOpacity, Image, RefreshControl } from "react-native";
+import { ImageBackground, View, Text, FlatList, Alert, SafeAreaView, TouchableOpacity, Image, RefreshControl } from "react-native";
 import MonthYear from "./generic_components/MothsYearPicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useContext } from "react";
@@ -36,8 +36,8 @@ function SList(props) {
 	const [uri, setUri] = useState([]);
 	const [isDisabled, setIsDisAbled] = useState(false);
 	const { bgColor, cardsColor, cardsTextColor, font_Family } = useContext(ColorsContext);
-	const [, setDate] = React.useState(new Date().getMonth() + 1);
-	const [, setYear] = React.useState(new Date().getFullYear());
+	const [date, setDate] = React.useState(new Date().getMonth() + 1);
+	const [year, setYear] = React.useState(new Date().getFullYear());
 
 	let labels = ["Reg No.", "Dept", "Program", "Semester", "Hostel Fee", "Mess Fee"];
 	useEffect(() => {
@@ -153,7 +153,6 @@ function SList(props) {
 				: (option == "none" && props.userRole == "Mess Supervisor") || props.screen == "Mark Attendance"
 				? "messStudents"
 				: "students";
-
 		await instance
 			.get(`${IP}/${endPoint}`)
 			.then(function (response) {
@@ -176,6 +175,7 @@ function SList(props) {
 	};
 
 	const filteredNames = names.filter((name) => {
+		if (!name) return;
 		if (name.sname.toLowerCase().includes(searchTerm.toLowerCase())) return true;
 		else if (name.rollno.includes(searchTerm)) return true;
 		else if (name.semno.includes(searchTerm.toLowerCase())) return true;
@@ -233,6 +233,7 @@ function SList(props) {
 		);
 	};
 	function rerun() {
+		console.clear();
 		console.log("I am rendered from SList");
 	}
 	return (
@@ -282,11 +283,13 @@ function SList(props) {
 					justifyContent: "center",
 				}}
 			>
-				<TouchableOpacity style={styles.button} onPress={() => handleAttendance(searchTerm)}>
-					<Text style={[styles.ButtonText, { fontFamily: font_Family }]}>Mark Attendance</Text>
-				</TouchableOpacity>
+				{props.screen == "Mark Attendance" && names.length != 0 && (
+					<TouchableOpacity style={styles.button} onPress={() => handleAttendance(searchTerm)}>
+						<Text style={[styles.ButtonText, { fontFamily: font_Family }]}>Mark Attendance</Text>
+					</TouchableOpacity>
+				)}
 			</View>
-			<Divider style={styles.divider} />
+			{/* <Divider style={styles.divider} /> */}
 
 			<View style={styles.home}>
 				<FlatList
@@ -314,13 +317,15 @@ function SList(props) {
 								flex: 1,
 							}}
 						>
-							<Image
+							<ImageBackground
 								source={{ uri: uri[1] }}
+								// resizeMode="contain"
 								style={{
-									//  width: "100%", height: "100%",
 									flex: 1,
+									margin: 0,
+									padding: 0,
 								}}
-							/>
+							></ImageBackground>
 						</View>
 						<View
 							style={{
@@ -441,7 +446,7 @@ const stylesn = StyleSheet.create({
 	},
 	img: {
 		width: "20%",
-		height: "80%",
+		height: "100%",
 		margin: 24,
 		justifyContent: "center",
 		alignItems: "center",
@@ -482,6 +487,10 @@ const stylesn = StyleSheet.create({
 		margin: 16,
 		right: 0,
 		bottom: 0,
+		borderRadius: 50,
+		backgroundColor: "white",
+	},
+	fab: {
 		borderRadius: 50,
 		backgroundColor: "white",
 	},
@@ -564,7 +573,7 @@ function addMesOrHostelStudentModal(showAdd, font_Family, searchTerm, setShowAdd
 function renderProfileCard(cardsColor, setDate, setYear, font_Family, cardsTextColor, uri, labels) {
 	return (
 		<View style={stylesn.container}>
-			<MonthYear bgColor={cardsColor} iconSize={15} setMonth={setDate} setYear={setYear} width={"100%"} />
+			<MonthYear bgColor={cardsColor} setMonth={setDate} setYear={setYear} width={"100%"} />
 			<Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
 				<View style={stylesn.imageSec}>
 					<Text style={[stylesn.header, { fontFamily: font_Family, color: cardsTextColor }]}>{uri[0]}</Text>

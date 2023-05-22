@@ -2,16 +2,16 @@
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import React, { lazy, Suspense } from "react";
-
+import { lazy, Suspense ,useContext} from "react";
+import ColorsContext from "../ContextAPI/ColorsContext";
 const StudentData = lazy(() => import("./ViewStudentData"));
 const RegisterComplaints = lazy(() => import("./RegisterComplaints"));
 const ViewComplaints = lazy(() => import("./ViewComplaints"));
-import ColorsContext from "../ContextAPI/ColorsContext";
 const Tab = createBottomTabNavigator();
+import { Text } from "react-native";
 
 export default function StudentSection() {
-	const { bottomNav } = React.useContext(ColorsContext);
+	const { bottomNav } = useContext(ColorsContext);
 	return (
 		<Suspense fallback={() => <Text>Loading...</Text>}>
 			<Tab.Navigator screenOptions={{ ...bottomNav }}>

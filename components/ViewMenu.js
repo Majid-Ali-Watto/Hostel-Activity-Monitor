@@ -71,7 +71,55 @@ const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor) => {
 		</View>
 	);
 };
-
+const createObject = (menu) => {
+	const result = [];
+	let obj = {};
+	for (let i = 0; i < menu.length; i++) {
+		const { currDay, fullDate } = getdata(menu[i].daydate);
+		let key = menu[i].time;
+		let inner = {
+			dish: menu[i].name,
+			unitPrice: menu[i].price,
+			units: menu[i].units,
+			time: key == "Evening" ? "7PM-9PM" : currDay == "Sunday" ? "11AM-12AM" : "7AM-9AM",
+		};
+		if (menu[i + 1] == undefined) {
+			obj = {
+				day: "" + currDay,
+				date: "" + fullDate,
+				[key]: inner,
+			};
+			result.push(obj);
+		} else if (menu[i].daydate == menu[i + 1].daydate) {
+			obj = {
+				day: "" + currDay,
+				date: "" + fullDate,
+				Morning: {
+					dish: menu[i].name,
+					unitPrice: menu[i].price,
+					units: menu[i].units,
+					time: currDay == "Sunday" ? "11AM-12AM" : "7AM-9AM",
+				},
+				Evening: {
+					dish: menu[i + 1].name,
+					unitPrice: menu[i + 1].price,
+					units: menu[i + 1].units,
+					time: "7PM-9PM",
+				},
+			};
+			result.push(obj);
+			i = i + 1;
+		} else {
+			obj = {
+				day: "" + currDay,
+				date: "" + fullDate,
+				[key]: inner,
+			};
+			result.push(obj);
+		}
+	}
+	return result;
+};
 export default function ViewMenu() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [menus, setMenu] = useState([]);
@@ -93,55 +141,7 @@ export default function ViewMenu() {
 		}
 	};
 
-	const createObject = (menu) => {
-		const result = [];
-		let obj = {};
-		for (let i = 0; i < menu.length; i++) {
-			const { currDay, fullDate } = getdata(menu[i].daydate);
-			let key = menu[i].time;
-			let inner = {
-				dish: menu[i].name,
-				unitPrice: menu[i].price,
-				units: menu[i].units,
-				time: key == "Evening" ? "7PM-9PM" : currDay == "Sunday" ? "11AM-12AM" : "7AM-9AM",
-			};
-			if (menu[i + 1] == undefined) {
-				obj = {
-					day: "" + currDay,
-					date: "" + fullDate,
-					[key]: inner,
-				};
-				result.push(obj);
-			} else if (menu[i].daydate == menu[i + 1].daydate) {
-				obj = {
-					day: "" + currDay,
-					date: "" + fullDate,
-					Morning: {
-						dish: menu[i].name,
-						unitPrice: menu[i].price,
-						units: menu[i].units,
-						time: currDay == "Sunday" ? "11AM-12AM" : "7AM-9AM",
-					},
-					Evening: {
-						dish: menu[i + 1].name,
-						unitPrice: menu[i + 1].price,
-						units: menu[i + 1].units,
-						time: "7PM-9PM",
-					},
-				};
-				result.push(obj);
-				i = i + 1;
-			} else {
-				obj = {
-					day: "" + currDay,
-					date: "" + fullDate,
-					[key]: inner,
-				};
-				result.push(obj);
-			}
-		}
-		return result;
-	};
+	
 
 	const filteredNames = menus.filter(({ day, date, Morning, Evening }) => {
 		const searchTermLowerCase = searchTerm.toLowerCase();

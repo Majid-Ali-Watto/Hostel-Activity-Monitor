@@ -11,7 +11,7 @@ import {
 import LoginOrSignUp from "../components/generic_components/Login";
 
 export default function StudentData({ navigation }) {
-  const [user, setUser] = useState("");
+  const [, setUser] = useState("");
   const [hideLogin, setHideLogin] = useState("none");
   const [showLogin, setShowLogin] = useState("flex");
 

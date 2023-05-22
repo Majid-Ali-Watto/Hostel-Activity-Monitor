@@ -5,7 +5,7 @@ import { styles } from "../assets/styles/search_lists";
 import { Card } from "react-native-paper";
 import { View, Text, Image } from "react-native";
 
-import { HEIGHT, WIDTH } from "../Constants/GlobalWidthHeight";
+import { WIDTH } from "../Constants/GlobalWidthHeight";
 export default function renderStudentCard(
 	rollno,
 	cnic,
