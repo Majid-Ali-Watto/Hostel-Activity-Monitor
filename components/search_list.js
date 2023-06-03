@@ -149,9 +149,9 @@ function SList(props) {
 	const fetchNames = async (option = "none") => {
 		const endPoint =
 			props.userRole == "Hostel Supervisor" && option == "none"
-				? "hostelStudents"
+				? "students/hostelStudents"
 				: (option == "none" && props.userRole == "Mess Supervisor") || props.screen == "Mark Attendance"
-				? "messStudents"
+				? "students/messStudents"
 				: "students";
 		await instance
 			.get(`${IP}/${endPoint}`)
