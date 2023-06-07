@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import IP from "../Constants/NetworkIP";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { styles } from "../assets/styles/search_lists";
@@ -22,6 +22,7 @@ import renderStudentCard from "./renderStudentCard";
 
 function SList(props) {
 	const navigation = props.navigation;
+
 	const [names, setNames] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [sem, setSem] = useState("");
@@ -52,6 +53,7 @@ function SList(props) {
 		};
 		getData();
 	}, []);
+	useEffect(() => {}, [profile]);
 	const onRefresh = React.useCallback(async () => {
 		setRefreshing(true);
 		fetchNames();
@@ -88,7 +90,7 @@ function SList(props) {
 	};
 	const saveAttendance = async (payloadset) => {
 		await instance
-			.post(`${IP}/markAttendance`, payloadset)
+			.post(`${IP}/messSupervisor/markAttendance`, payloadset)
 			.then(function (response) {
 				let msg =
 					response.data.rowCount > 0
@@ -166,11 +168,11 @@ function SList(props) {
 		await instance
 			.post(`${IP}/exitentry`, payloadset)
 			.then(function (response) {
-				let msg = response.data.rowCount > 0 ? `${payloadset.exen} Recorded Sucessfully` : "${payloadset.exen} not Recorded Sucessfully";
+				let msg = response.data.rowCount > 0 ? `${payloadset.exen} Recorded Sucessfully` : `${payloadset.exen} not Recorded Sucessfully`;
 				Alert.alert("Exit-Entry", msg, [{ text: "OK" }]);
 			})
 			.catch(function (error) {
-				alert(error.message.toString());
+				Alert.alert("Exit-Entry Error", error.message.toString(), [{ text: "OK" }]);
 			});
 	};
 
@@ -189,12 +191,15 @@ function SList(props) {
 		}
 
 		const today = new Date();
-		const dateTime = today.toLocaleString();
+		console.log("date today", today);
+		let dateTime = today.toLocaleString();
+		// dateTime = dateTime;
+		// console.log("date time", typeof dateTime);
 		const payloadset = {
 			rollno,
 			sem,
 			exen,
-			dateTime,
+			dateTime: { dateTime },
 			cnic: getUserP(),
 		};
 

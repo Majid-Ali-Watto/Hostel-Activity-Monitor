@@ -15,7 +15,7 @@ export default function SecuritySection({ navigation }) {
 			<View style={{ flex: 1, display: showLogin }}>
 				<LoginOrSignUp
 					navigation={navigation}
-					userData={["security", "CNIC", 13, "Security Supervisor"]}
+					userData={["securitySupervosor", "CNIC", 13, "Security Supervisor"]}
 					hideLogin={setHideLogin}
 					showLogin={setShowLogin}
 					setUserData={setUser}

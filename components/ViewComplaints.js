@@ -24,7 +24,7 @@ function ViewComplaints() {
 
 	const fetchComplaints = async () => {
 		try {
-			const { data } = await instance.get(`${IP}/allComplaints`);
+			const { data } = await instance.get(`${IP}/complaints/allComplaints`);
 			let comps = [];
 			data.map((item) => {
 				if (item.complainer == getUserP()) comps.unshift(item);
@@ -64,7 +64,7 @@ function ViewComplaints() {
 		};
 
 		await instance
-			.patch(`${IP}/updateCompStatus`, payloadset)
+			.patch(`${IP}/complaints/updateCompStatus`, payloadset)
 			.then(function (response) {
 				alert(response.data);
 			})
@@ -82,7 +82,7 @@ function ViewComplaints() {
 					text: "Yes",
 					onPress: async () => {
 						await instance
-							.delete(`${IP}/removeComp/${complaintId}`)
+							.delete(`${IP}/complaints/removeComp/${complaintId}`)
 							.then(function (response) {
 								if (response.data == "Complaint deleted")
 									setComplaints(complaints.filter((complaint) => complaint.id !== complaintId));
@@ -194,8 +194,8 @@ function renderCompModal(modalVisible, setModalVisible, selectedComplaint, bgCol
 									save="value"
 									// maxHeight={getUserRole() == "Hostel Supervisor" ? 150:0}
 									boxStyles={{
-										height: 44,
-										width: 120,
+										// height: HEIGHT * 0.06,
+										width: WIDTH * 0.35,
 										backgroundColor: bgColor,
 										position: "relative",
 									}}

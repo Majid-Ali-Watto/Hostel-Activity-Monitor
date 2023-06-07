@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import ViewFeesChild from "./ViewFeeschild";
 import { styles } from "../assets/styles/viewallfees";
 
-import { View, ScrollView, Text, Modal, TouchableOpacity, Pressable } from "react-native";
+import { View, ScrollView, Text, Modal, TouchableOpacity, Pressable, Alert } from "react-native";
 import { Divider, DataTable } from "react-native-paper";
 import axios from "axios";
 import IP from "../Constants/NetworkIP";
@@ -57,6 +57,19 @@ function ViewAllFees({ navigation }) {
 				alert(error.message.toString());
 			});
 	};
+	const displaySecurityManName = async (id) => {
+		await instance
+			.get(`${IP}/securitySupervosor/${id}`)
+			.then(function (response) {
+				if (response.data.length == 0) {
+					alert("No data found....");
+				} else Alert.alert("Details", "Name : " + response.data[0].name + "\nCNIC : " + response.data[0].cnic);
+			})
+			.catch(function (error) {
+				alert(error.message.toString());
+			});
+	};
+
 	const getFees = async (u) => {
 		setEE([]);
 		let sem = [];
@@ -64,7 +77,7 @@ function ViewAllFees({ navigation }) {
 			rollno: u,
 		};
 		await instance
-			.post(`${IP}/getHostelFee`, user)
+			.post(`${IP}/hostelSupervisor/getHostelFee`, user)
 			.then(function (response) {
 				if (response.data.length == 0) {
 					alert("No data found....");
@@ -125,7 +138,7 @@ function ViewAllFees({ navigation }) {
 								{title == "Entry Exit Status" ? (
 									<DataTable>
 										<DataTable.Header>
-											<DataTable.Title>Time/Date</DataTable.Title>
+											<DataTable.Title>Date/Time</DataTable.Title>
 											<DataTable.Title>Status</DataTable.Title>
 											<DataTable.Title numeric>Recorded By</DataTable.Title>
 										</DataTable.Header>
@@ -148,6 +161,7 @@ function ViewAllFees({ navigation }) {
 																	textAlign: "left",
 																	flex: 1,
 																}}
+																onPress={() => displaySecurityManName(e.cnic)}
 															>
 																{e.datetime}
 															</Text>
@@ -159,6 +173,7 @@ function ViewAllFees({ navigation }) {
 																	textAlign: "left",
 																	flex: 1,
 																}}
+																onPress={() => displaySecurityManName(e.cnic)}
 															>
 																{e.status}
 															</Text>
@@ -170,6 +185,7 @@ function ViewAllFees({ navigation }) {
 																	textAlign: "left",
 																	flex: 1,
 																}}
+																onPress={() => displaySecurityManName(e.cnic)}
 															>
 																{e.cnic}
 															</Text>
