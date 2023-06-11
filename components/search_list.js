@@ -120,7 +120,7 @@ function SList(props) {
 		}
 
 		try {
-			const response = await instance.get(`${IP}/todayMenu/${session}`);
+			const response = await instance.get(`${IP}/Menu/todayMenu/${session}`);
 			const menu = response.data.find((item) => item.daydate === id);
 
 			if (menu) {
@@ -166,7 +166,7 @@ function SList(props) {
 	};
 	const saveExitEntry = async (payloadset) => {
 		await instance
-			.post(`${IP}/exitentry`, payloadset)
+			.post(`${IP}/ExitEntry/exitentry`, payloadset)
 			.then(function (response) {
 				let msg = response.data.rowCount > 0 ? `${payloadset.exen} Recorded Sucessfully` : `${payloadset.exen} not Recorded Sucessfully`;
 				Alert.alert("Exit-Entry", msg, [{ text: "OK" }]);

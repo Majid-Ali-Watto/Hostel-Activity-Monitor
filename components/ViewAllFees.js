@@ -44,7 +44,7 @@ function ViewAllFees({ navigation }) {
 			sems: s,
 		};
 		await instance
-			.post(`${IP}/getExitEntry`, user)
+			.post(`${IP}/ExitEntry/getExitEntry`, user)
 			.then(function (response) {
 				console.log(response.data);
 				if (response.data.length == 0) {

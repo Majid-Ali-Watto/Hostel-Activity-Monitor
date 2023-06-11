@@ -52,7 +52,7 @@ export default function AddMessMenu() {
 			time: time,
 		};
 		await instance
-			.post(`${IP}/addMenu`, payloadset)
+			.post(`${IP}/messSupervisor/addMenu`, payloadset)
 			.then(function (response) {
 				let msg = response.data.rowCount > 0 ? `Dish added sucessfully` : "Dish not added sucessfully";
 				Alert.alert("Dish", msg, [{ text: "OK" }]);

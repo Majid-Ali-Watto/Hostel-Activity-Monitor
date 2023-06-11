@@ -29,7 +29,7 @@ const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor) => {
 						<Text style={[styles.timeAM, { fontFamily: font_Family, color: cardsTextColor }]}>{item.Morning.time}</Text>
 					</View>
 				) : (
-					""
+					null
 				)}
 				<Divider />
 				{item.hasOwnProperty("Morning") ? (
@@ -42,7 +42,7 @@ const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor) => {
 						</Text>
 					</View>
 				) : (
-					""
+					null
 				)}
 
 				<Divider style={{ backgroundColor: "black" }} />
@@ -52,7 +52,7 @@ const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor) => {
 						<Text style={[styles.timePM, { fontFamily: font_Family, color: cardsTextColor }]}>{item.Evening.time}</Text>
 					</View>
 				) : (
-					""
+					null
 				)}
 				<Divider />
 				{item.hasOwnProperty("Evening") ? (
@@ -65,7 +65,7 @@ const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor) => {
 						</Text>
 					</View>
 				) : (
-					""
+					null
 				)}
 			</Card>
 		</View>
@@ -132,7 +132,7 @@ export default function ViewMenu() {
 
 	const fetchNames = async () => {
 		try {
-			const response = await instance.get(`${IP}/getMenu`);
+			const response = await instance.get(`${IP}/Menu/getMenu`);
 			menu = response.data;
 			menu = createObject(response.data);
 			setMenu(menu);

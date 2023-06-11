@@ -215,9 +215,9 @@ const LoginOrSignUp = React.memo((props) => {
 
 		let regUser = "";
 		if (props.userData[0] === "students") regUser = "students/studRegister";
-		else if (props.userData[0] === "hostelSupervisor") regUser = "hostel/hostelRegister";
-		else if (props.userData[0] === "messSupervisor") regUser = "mess/messRegister";
-		else if (props.userData[0] === "securitySupervosor") regUser = "security/securityRegister";
+		else if (props.userData[0] === "hostelSupervisor") regUser = "hostelSupervisor/hostelRegister";
+		else if (props.userData[0] === "messSupervisor") regUser = "messSupervisor/messRegister";
+		else if (props.userData[0] === "securitySupervosor") regUser = "securitySupervosor/securityRegister";
 
 		try {
 			const response = await instance.patch(`${IP}/${regUser}`, payloadset);
