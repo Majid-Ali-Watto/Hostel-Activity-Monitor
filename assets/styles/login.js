@@ -15,7 +15,7 @@ const loginStyles = StyleSheet.create({
 		justifyContent: "space-around",
 		alignItems: "center",
 	},
-	loginSignUpText: { marginBottom: 25, marginTop: 25, fontWeight: "bold" },
+	loginSignUpText: { marginBottom: 15, marginTop: 25, fontWeight: "bold" },
 	inputs: {
 		marginBottom: 5,
 		width: WIDTH * 0.9,

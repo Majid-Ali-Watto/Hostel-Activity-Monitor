@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, FlatList } from "react-native";
 import { styles } from "../assets/styles/viewmenu";
-import { Card, Divider, Searchbar } from "react-native-paper";
+import { Card, Divider, Searchbar, TextInput } from "react-native-paper";
 import axios from "axios";
 import IP from "../Constants/NetworkIP";
 import ColorsContext from "../ContextAPI/ColorsContext";
@@ -12,10 +12,10 @@ import { getdata } from "../Utils/DaysAndDate";
 import { HEIGHT, WIDTH } from "../Constants/GlobalWidthHeight";
 const instance = axios.create();
 
-const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor) => {
+const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor, dayForKey) => {
 	if (item == undefined) return;
 	return (
-		<View>
+		<View key={item.day + item.date + dayForKey}>
 			<Card style={[styles.card, { backgroundColor: cardsColor }]}>
 				<View style={styles.menuDay}>
 					<Text style={[styles.day, { fontFamily: font_Family }]}>{item.day}</Text>
@@ -28,9 +28,7 @@ const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor) => {
 						<Text style={{ fontFamily: font_Family, color: cardsTextColor }}>{item.Morning.dish}</Text>
 						<Text style={[styles.timeAM, { fontFamily: font_Family, color: cardsTextColor }]}>{item.Morning.time}</Text>
 					</View>
-				) : (
-					null
-				)}
+				) : null}
 				<Divider />
 				{item.hasOwnProperty("Morning") ? (
 					<View style={styles.timeStyle}>
@@ -41,9 +39,7 @@ const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor) => {
 							Rs. {item.Morning.units * item.Morning.unitPrice}
 						</Text>
 					</View>
-				) : (
-					null
-				)}
+				) : null}
 
 				<Divider style={{ backgroundColor: "black" }} />
 				{item.hasOwnProperty("Evening") ? (
@@ -51,9 +47,7 @@ const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor) => {
 						<Text style={{ fontFamily: font_Family, color: cardsTextColor }}>{item.Evening.dish}</Text>
 						<Text style={[styles.timePM, { fontFamily: font_Family, color: cardsTextColor }]}>{item.Evening.time}</Text>
 					</View>
-				) : (
-					null
-				)}
+				) : null}
 				<Divider />
 				{item.hasOwnProperty("Evening") ? (
 					<View style={styles.timeStyle}>
@@ -64,9 +58,7 @@ const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor) => {
 							Rs. {item.Evening.units * item.Evening.unitPrice}
 						</Text>
 					</View>
-				) : (
-					null
-				)}
+				) : null}
 			</Card>
 		</View>
 	);
@@ -141,8 +133,6 @@ export default function ViewMenu() {
 		}
 	};
 
-	
-
 	const filteredNames = menus.filter(({ day, date, Morning, Evening }) => {
 		const searchTermLowerCase = searchTerm.toLowerCase();
 		if (day.toLowerCase().includes(searchTermLowerCase)) return true;
@@ -153,7 +143,7 @@ export default function ViewMenu() {
 
 	return (
 		<View style={[styles.container, { backgroundColor: bgColor }]}>
-			<Searchbar placeholder="Search Menu" onChangeText={(text) => setSearchTerm(text)} value={searchTerm} style={styles.searchbar} />
+			<TextInput placeholder="Search Menu" onChangeText={(text) => setSearchTerm(text)} value={searchTerm} style={styles.searchbar} />
 
 			<Divider />
 			<Text style={[styles.header, { fontFamily: font_Family }]}>Today's Menu</Text>
@@ -161,7 +151,7 @@ export default function ViewMenu() {
 
 			{filteredNames.map((item) => {
 				if (item.date == getDate()) {
-					return ItemCard({ item }, cardsColor, font_Family, cardsTextColor);
+					return ItemCard({ item }, cardsColor, font_Family, cardsTextColor, "today");
 				}
 			})}
 			<Divider />
@@ -172,7 +162,7 @@ export default function ViewMenu() {
 				contentContainerStyle={{ flex: 1 }}
 				data={filteredNames}
 				renderItem={({ item }) => {
-					return ItemCard({ item }, cardsColor, font_Family, cardsTextColor);
+					return ItemCard({ item }, cardsColor, font_Family, cardsTextColor, "all");
 				}}
 				keyExtractor={(item, index) => index + item.day + item.date}
 				ListEmptyComponent={() => (

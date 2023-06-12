@@ -1,4 +1,4 @@
 /** @format */
 
-const IP = "http://10.50.1.123:3000";
+const IP = "http://192.168.31.228:3000";
 export default IP;

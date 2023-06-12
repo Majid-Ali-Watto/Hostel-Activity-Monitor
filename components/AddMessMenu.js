@@ -43,7 +43,7 @@ export default function AddMessMenu() {
 		hideDatePicker();
 	};
 
-	const addMenu = async () => {
+	const addMenu = async (addOrEdit) => {
 		const payloadset = {
 			dishName: name,
 			dishPrice: price,
@@ -52,7 +52,7 @@ export default function AddMessMenu() {
 			time: time,
 		};
 		await instance
-			.post(`${IP}/messSupervisor/addMenu`, payloadset)
+			.post(`${IP}/messSupervisor/${addOrEdit}`, payloadset)
 			.then(function (response) {
 				let msg = response.data.rowCount > 0 ? `Dish added sucessfully` : "Dish not added sucessfully";
 				Alert.alert("Dish", msg, [{ text: "OK" }]);
@@ -151,9 +151,16 @@ export default function AddMessMenu() {
 					</View>
 
 					<View style={styles.addDishContainer}>
-						<TouchableOpacity style={styles.button} onPress={addMenu}>
+						<TouchableOpacity style={styles.button} onPress={() => addMenu("addMenu")}>
 							<Text style={[styles.buttonText, { fontFamily: font_Family }]}>Add Dish</Text>
 						</TouchableOpacity>
+					</View>
+					<View style={styles.addDishContainer}>
+						{/* <TouchableOpacity style={styles.button} onPress={addMenu}> */}
+						<Text onPress={() => addMenu("editMenu")} style={{ fontFamily: font_Family, marginTop: 10 }}>
+							Edit Existing Dish
+						</Text>
+						{/* </TouchableOpacity> */}
 					</View>
 				</View>
 			</ScrollView>

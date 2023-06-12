@@ -13,20 +13,22 @@ export default function renderStudentCard(
 	setSem,
 	semno,
 	setSearchTerm,
-	setUri,
+	// setUri,
 	sname,
 	image,
 	dname,
 	program,
-	statusText,
-	mStatusText,
+	hostelfee,
+	messfee,
 	showProfile,
 	titleFont,
 	rollNoFont,
 	programFont,
 	semNoFont,
 	departmentFont,
-	textColor
+	textColor,
+	navigation,
+	uri
 ) {
 	return (
 		<Card
@@ -37,8 +39,10 @@ export default function renderStudentCard(
 				setSearchTerm(rollno);
 			}}
 			onLongPress={() => {
-				setUri([sname, image, rollno, dname, program, semno, statusText, mStatusText]);
-				showProfile(true);
+				// setUri([sname, image, rollno, dname, program, semno, statusText, messfee]);
+				// console.log(uri)
+				navigation.navigate("User Profile", { uri: { sname, image, rollno, dname, program, semno, hostelfee, messfee } });
+				// showProfile(true);
 			}}
 		>
 			<View style={{ flexDirection: "row" }}>

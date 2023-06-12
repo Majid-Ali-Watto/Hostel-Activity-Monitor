@@ -34,7 +34,7 @@
 // 						props.showLogin("none");
 // 						props.setUserData(user);
 // 						setUserP(user, props.userData[3]);
-// 					} else alert("Invalid Password");
+// 					} else alert("Invalid Credentials");
 // 				}
 // 			})
 // 			.catch(function (error) {
@@ -162,6 +162,16 @@ const LoginOrSignUp = React.memo((props) => {
 	const navigation = props.navigation;
 
 	const Login = useCallback(async () => {
+		if (!Number(user)) {
+			const validateUser = props.userData[0] === "students" ? "RegNo" : "CNIC";
+			Alert.alert(`${validateUser} Validation`, `${validateUser} must be numeric`, [
+				{
+					text: "OK",
+					style: "cancel",
+				},
+			]);
+			return;
+		}
 		if (props.userData[0] === "students" && user.length < 11) {
 			alert("Please enter RegNo of 11 digits");
 			return;
@@ -186,9 +196,9 @@ const LoginOrSignUp = React.memo((props) => {
 					props.hideLogin("flex");
 					props.showLogin("none");
 					props.setUserData(user);
-					setUserP(user, props.userData[3]);
+					setUserP(response.data[0].cnic, props.userData[3]);
 				} else {
-					alert("Invalid Password");
+					alert("Invalid Credentials");
 				}
 			}
 		} catch (error) {
@@ -197,6 +207,16 @@ const LoginOrSignUp = React.memo((props) => {
 	}, [user, password, props]);
 
 	const SignUp = useCallback(async () => {
+		if (!Number(user)) {
+			const validateUser = props.userData[0] === "students" ? "RegNo" : "CNIC";
+			Alert.alert(`${validateUser} Validation`, `${validateUser} must be numeric`, [
+				{
+					text: "OK",
+					style: "cancel",
+				},
+			]);
+			return;
+		}
 		if (props.userData[0] === "students" && user.length < 11) {
 			alert("Please enter RegNo of 11 digits");
 			return;
@@ -240,11 +260,12 @@ const LoginOrSignUp = React.memo((props) => {
 			}}
 		>
 			<View style={[loginStyles.loginContainer, { backgroundColor: bgColor }]}>
-				<View style={{ flex: 1, backgroundColor: hColor, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }}>
+				<View style={{ height: "30%", backgroundColor: hColor, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }}>
 					<Header />
 				</View>
 				<ScrollView>
 					<View style={loginStyles.textinputs}>
+						<Text style={[loginStyles.loginSignUpText, { fontFamily: font_Family }]}>Moving Forward to {props.userData[3]} Section</Text>
 						<Text style={[loginStyles.loginSignUpText, { fontFamily: font_Family }]}>Login/SignUp for further process</Text>
 
 						<TextInput

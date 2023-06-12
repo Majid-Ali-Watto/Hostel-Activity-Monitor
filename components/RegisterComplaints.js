@@ -4,11 +4,11 @@ import React, { useEffect, useState } from "react";
 import { TextInput, ScrollView, Alert } from "react-native";
 import { Button } from "react-native-paper";
 import axios from "axios";
+const instance = axios.create();
 import IP from "../Constants/NetworkIP";
 import { getUserP } from "../ContextAPI/userContext";
 import { styles } from "../assets/styles/registercomplaints";
 import ColorsContext from "../ContextAPI/ColorsContext";
-const instance = axios.create();
 
 function RegisterComplaints() {
 	const [text, setText] = useState("");
@@ -21,7 +21,7 @@ function RegisterComplaints() {
 			if (text.length === 0 || textArea.length === 0) {
 				throw new Error("Please enter complaint title and body");
 			}
-			const id = Math.floor(Math.random() * 10000);
+			const id = Math.floor(Math.random() * 10000) + new Date().getSeconds() + user.substring(3, 4);
 			const response = await instance.post(`${IP}/complaints/postComplaints`, {
 				title: text.toLowerCase(),
 				body: textArea.toLowerCase(),

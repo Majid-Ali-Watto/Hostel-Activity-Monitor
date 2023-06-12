@@ -35,9 +35,9 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: 'white',
+		backgroundColor: "white",
 		borderRadius: 8,
-		shadowColor: '#52006A',
+		shadowColor: "#52006A",
 		elevation: 20,
 	},
 
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 		padding: HEIGHT * 0.03,
 		textTransform: "uppercase",
 		// fontWeight: "bold",
-		color: "black",
+		// color: "black",
 		width: "100%",
 	},
 });

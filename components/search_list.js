@@ -34,7 +34,7 @@ function SList(props) {
 	const [showRegStud, setShowRegStud] = useState("none");
 	const [showAdd, setShowAdd] = useState(false);
 	const [tab, setTab] = useState();
-	const [uri, setUri] = useState([]);
+	// const [uri, setUri] = useState([]);
 	const [isDisabled, setIsDisAbled] = useState(false);
 	const { bgColor, cardsColor, cardsTextColor, font_Family } = useContext(ColorsContext);
 	const [date, setDate] = React.useState(new Date().getMonth() + 1);
@@ -64,7 +64,7 @@ function SList(props) {
 			rollno: searchTerm,
 		};
 		await axios
-			.post(`${IP}/saveMessStud`, payloadset)
+			.post(`${IP}/students/saveMessStud`, payloadset)
 			.then((response) => {
 				alert(response.data);
 				setSearchTerm("");
@@ -79,7 +79,7 @@ function SList(props) {
 			status: true,
 		};
 		await axios
-			.patch(`${IP}/saveHostStud`, payloadset)
+			.patch(`${IP}/students/saveHostStud`, payloadset)
 			.then((response) => {
 				response.data.rowCount > 0 ? alert("Student Added") : alert("Student not Added");
 				setSearchTerm("");
@@ -112,7 +112,7 @@ function SList(props) {
 
 		if (time >= 1 && time <= 10) {
 			session = "Morning";
-		} else if (time >= 18 && time <= 22) {
+		} else if (time >= 18 && time <= 23) {
 			session = "Evening";
 		} else {
 			alert("Not suitable mess timing");
@@ -211,8 +211,8 @@ function SList(props) {
 		const { titleFont, rollNoFont, programFont, semNoFont, departmentFont } = fonts;
 		const backgroundColor = { backgroundColor: cardsColor };
 		const textColor = { color: cardsTextColor };
-		const statusText = (status === false || status === undefined ? "Pending" : "Paid") + "-->" + "Rs. " + hostelfee;
-		const mStatusText = (mStatus === false || mStatus === undefined ? "Pending" : "Paid") + "-->" + "Rs. " + messfee || 0;
+		const statusText = hostelfee;
+		const mStatusText = messfee;
 
 		return renderStudentCard(
 			rollno,
@@ -221,20 +221,22 @@ function SList(props) {
 			setSem,
 			semno,
 			setSearchTerm,
-			setUri,
+			// setUri,
 			sname,
 			image,
 			dname,
 			program,
-			statusText,
-			mStatusText,
+			hostelfee,
+			messfee,
 			showProfile,
 			titleFont,
 			rollNoFont,
 			programFont,
 			semNoFont,
 			departmentFont,
-			textColor
+			textColor,
+			navigation
+			// uri
 		);
 	};
 	function rerun() {
@@ -307,7 +309,7 @@ function SList(props) {
 					ListEmptyComponent={() => <Text>No data</Text>}
 				/>
 			</View>
-			{profile && (
+			{/* {profile && (
 				<Modal
 					animationType="fade"
 					transparent={false}
@@ -351,7 +353,7 @@ function SList(props) {
 						</View>
 					</View>
 				</Modal>
-			)}
+			)} */}
 			{showAdd && addMesOrHostelStudentModal(showAdd, font_Family, searchTerm, setShowAdd, setIsDisAbled, addMessStud, addHostStud)}
 			<View
 				style={{
@@ -575,49 +577,49 @@ function addMesOrHostelStudentModal(showAdd, font_Family, searchTerm, setShowAdd
 	);
 }
 
-function renderProfileCard(cardsColor, setDate, setYear, font_Family, cardsTextColor, uri, labels) {
-	return (
-		<View style={stylesn.container}>
-			<MonthYear bgColor={cardsColor} setMonth={setDate} setYear={setYear} width={"100%"} />
-			<Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
-				<View style={stylesn.imageSec}>
-					<Text style={[stylesn.header, { fontFamily: font_Family, color: cardsTextColor }]}>{uri[0]}</Text>
-					<Image source={{ uri: uri[1] }} style={stylesn.img} />
-				</View>
+// function renderProfileCard(cardsColor, setDate, setYear, font_Family, cardsTextColor, uri, labels) {
+// 	return (
+// 		<View style={stylesn.container}>
+// 			{/* <MonthYear bgColor={cardsColor} setMonth={setDate} setYear={setYear} width={"100%"} /> */}
+// 			<Card style={[stylesn.card, { backgroundColor: cardsColor }]}>
+// 				<View style={stylesn.imageSec}>
+// 					<Text style={[stylesn.header, { fontFamily: font_Family, color: cardsTextColor }]}>{uri[0]}</Text>
+// 					<Image source={{ uri: uri[1] }} style={stylesn.img} />
+// 				</View>
 
-				<Text style={stylesn.divider}></Text>
-				{labels.map((l, index) => {
-					return (
-						<View>
-							<View style={stylesn.row}>
-								<Text
-									style={[
-										stylesn.label,
-										{
-											fontFamily: font_Family,
-											color: cardsTextColor,
-										},
-									]}
-								>
-									{l}
-								</Text>
-								<Text
-									style={[
-										stylesn.value,
-										{
-											fontFamily: font_Family,
-											color: cardsTextColor,
-										},
-									]}
-								>
-									{uri[index + 2] || 0}
-								</Text>
-							</View>
-							<View style={stylesn.dividerInner}></View>
-						</View>
-					);
-				})}
-			</Card>
-		</View>
-	);
-}
+// 				<Text style={stylesn.divider}></Text>
+// 				{labels.map((l, index) => {
+// 					return (
+// 						<View>
+// 							<View style={stylesn.row}>
+// 								<Text
+// 									style={[
+// 										stylesn.label,
+// 										{
+// 											fontFamily: font_Family,
+// 											color: cardsTextColor,
+// 										},
+// 									]}
+// 								>
+// 									{l}
+// 								</Text>
+// 								<Text
+// 									style={[
+// 										stylesn.value,
+// 										{
+// 											fontFamily: font_Family,
+// 											color: cardsTextColor,
+// 										},
+// 									]}
+// 								>
+// 									{uri[index + 2] || 0}
+// 								</Text>
+// 							</View>
+// 							<View style={stylesn.dividerInner}></View>
+// 						</View>
+// 					);
+// 				})}
+// 			</Card>
+// 		</View>
+// 	);
+// }

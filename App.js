@@ -12,6 +12,7 @@ const QRScanner = lazy(() => import("./components/generic_components/QRScanner")
 const ViewMenu = lazy(() => import("./components/ViewMenu"));
 const SList = lazy(() => import("./components/search_list"));
 const AppSettings = lazy(() => import("./components/AppSetting"));
+import UserProfile from "./components/userProfile";
 import { styles } from "./assets/styles/app";
 import { Alert, View } from "react-native";
 import ColorsContext from "./ContextAPI/ColorsContext";
@@ -110,6 +111,7 @@ export default function App() {
 							<Stack.Screen name="QRScanner" options={{ ...topNav }} component={QRScanner} />
 							<Stack.Screen name="Menu" options={{ ...topNav }} component={ViewMenu} />
 							<Stack.Screen name="Settings" options={{ headerShown: false }} component={AppSettings} />
+							<Stack.Screen name="User Profile" options={{ ...topNav }} component={UserProfile} />
 
 							<Stack.Screen name="Student's List" options={{ ...topNav }} component={SList} />
 						</Stack.Navigator>
