@@ -13,7 +13,6 @@ const instance = axios.create();
 import { Card, Divider, Modal, TextInput, FAB, Button } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { ImageBackground, View, Text, FlatList, Alert, SafeAreaView, TouchableOpacity, Image, RefreshControl } from "react-native";
-import MonthYear from "./generic_components/MothsYearPicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useContext } from "react";
 import ColorsContext from "../ContextAPI/ColorsContext";
@@ -211,8 +210,8 @@ function SList(props) {
 		const { titleFont, rollNoFont, programFont, semNoFont, departmentFont } = fonts;
 		const backgroundColor = { backgroundColor: cardsColor };
 		const textColor = { color: cardsTextColor };
-		const statusText = hostelfee;
-		const mStatusText = messfee;
+		// const statusText = hostelfee;
+		// const mStatusText = messfee;
 
 		return renderStudentCard(
 			rollno,
@@ -303,7 +302,7 @@ function SList(props) {
 					showsVerticalScrollIndicator={false}
 					data={filteredNames}
 					renderItem={renderCard}
-					keyExtractor={(item) => item.rollno}
+					keyExtractor={(item) => item.rollno+item.cnic}
 					refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					maxToRenderPerBatch={4}
 					ListEmptyComponent={() => <Text>No data</Text>}

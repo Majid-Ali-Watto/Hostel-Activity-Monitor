@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 
 	cardContainer: {
 		// flex: 0.7,
-		height: HEIGHT * 0.67,
+		height: HEIGHT * 0.6,
 		marginTop: 5,
 		marginBottom: 5,
 		width: WIDTH,

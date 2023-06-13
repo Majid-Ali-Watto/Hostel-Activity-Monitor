@@ -188,7 +188,7 @@ const LoginOrSignUp = React.memo((props) => {
 		try {
 			const response = await instance.get(`${IP}/${endPoint}/${user}`);
 			if (response.data.length === 0) {
-				alert("Please Register....");
+				Alert.alert("Validating User", "You are not registered yet.\nPlease Register....", [{ text: "OK" }]);
 			} else {
 				const userN = props.userData[0] === "students" ? response.data[0].rollno : response.data[0].cnic;
 				if (userN === user && response.data[0].password === password) {
@@ -198,7 +198,7 @@ const LoginOrSignUp = React.memo((props) => {
 					props.setUserData(user);
 					setUserP(response.data[0].cnic, props.userData[3]);
 				} else {
-					alert("Invalid Credentials");
+					Alert.alert("LogIn", "Invalid Credentials", [{ text: "OK" }]);
 				}
 			}
 		} catch (error) {
@@ -241,8 +241,11 @@ const LoginOrSignUp = React.memo((props) => {
 
 		try {
 			const response = await instance.patch(`${IP}/${regUser}`, payloadset);
-			let msg = response.data.rowCount > 0 ? "User Registered Successfully" : "Unable to Register";
-			Alert.alert("SignUp", msg, [{ text: "OK" }]);
+			if (response.data.msg != undefined) Alert.alert("SignUp", response.data.msg, [{ text: "OK" }]);
+			else {
+				let msg = response.data.rowCount > 0 ? "User Registered Successfully" : "Unable to Register";
+				Alert.alert("SignUp", msg, [{ text: "OK" }]);
+			}
 		} catch (error) {
 			alert(error.message.toString());
 		}

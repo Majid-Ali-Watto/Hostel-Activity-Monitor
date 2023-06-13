@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import ViewFeesChild from "./ViewFeeschild";
 import { styles } from "../assets/styles/viewallfees";
-
+import { WIDTH } from "../Constants/GlobalWidthHeight";
 import { View, ScrollView, Text, Modal, TouchableOpacity, Pressable, Alert } from "react-native";
 import { Divider, DataTable } from "react-native-paper";
 import axios from "axios";
+const instance = axios.create();
 import IP from "../Constants/NetworkIP";
 import ColorsContext from "../ContextAPI/ColorsContext";
 import LoginOrSignUp from "./generic_components/Login";
-const instance = axios.create();
 function ViewAllFees({ navigation }) {
 	const [modal, viewModal] = useState(false);
 	const [showLogin, setShowLogin] = useState("flex");
@@ -21,54 +21,24 @@ function ViewAllFees({ navigation }) {
 	const [user, setUser] = useState("");
 	const [ee, setEE] = useState([]);
 	const [feee, setFeee] = useState("");
+
 	const { bgColor, font_Family } = React.useContext(ColorsContext);
 
 	const [Semester, setSemester] = useState([
-		{ Semester: "1st", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "2nd", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "3rd", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "4th", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "5th", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "6th", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "7th", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "8th", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "9th", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "10th", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "11th", paid: "Pending Fees Status", fee: 0 },
-		{ Semester: "12th", paid: "Pending Fees Status", fee: 0 },
+		{ Semester: "1st", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "2nd", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "3rd", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "4th", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "5th", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "6th", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "7th", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "8th", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "9th", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "10th", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "11th", paid: "Pending Fees Status", fee: "0" },
+		{ Semester: "12th", paid: "Pending Fees Status", fee: "0" },
 	]);
-	const getDataEE = async (u, s) => {
-		setEE([]);
-		const user = {
-			rollno: u,
-			sems: s,
-		};
-		await instance
-			.post(`${IP}/ExitEntry/getExitEntry`, user)
-			.then(function (response) {
-				console.log(response.data);
-				if (response.data.length == 0) {
-					alert("No data found....");
-					viewModalSem(true);
-					viewModal(false);
-				} else setEE(response.data);
-			})
-			.catch(function (error) {
-				alert(error.message.toString());
-			});
-	};
-	const displaySecurityManName = async (id) => {
-		await instance
-			.get(`${IP}/securitySupervosor/${id}`)
-			.then(function (response) {
-				if (response.data.length == 0) {
-					alert("No data found....");
-				} else Alert.alert("Details", "Name : " + response.data[0].name + "\nCNIC : " + response.data[0].cnic);
-			})
-			.catch(function (error) {
-				alert(error.message.toString());
-			});
-	};
+
 
 	const getFees = async (u) => {
 		setEE([]);
@@ -85,17 +55,17 @@ function ViewAllFees({ navigation }) {
 					viewModal(false);
 				} else {
 					response.data.map((fee, index) => {
-						if (fee.status == true) {
+						if (fee.status == true && fee.mStatus == true) {
 							sem.push({
 								Semester: fee.semno,
 								paid: "All Paid Fees Status",
-								fee: fee.hostelfee,
+								fee:  "Hostel Fee : Rs. " +  fee.hostelfee + "\nMess Fee : Rs." + fee.messfee,
 							});
-						} else if (fee.status == false) {
+						} else if (fee.status == false && fee.mStatus == false) {
 							sem.push({
 								Semester: fee.semno,
 								paid: "Pending Fees Status",
-								fee: fee.hostelfee,
+								fee: "Hostel Fee : Rs. " + fee.hostelfee + "\nMess Fee : Rs." + fee.messfee,
 							});
 						}
 					});
@@ -120,165 +90,169 @@ function ViewAllFees({ navigation }) {
 				/>
 			</View>
 			<View style={{ flex: 1, display: hideLogin }}>
-				<Modal animationType="slide" transparent={true} visible={modalSem}>
-					<View style={styles.centeredView}>
-						<View style={styles.modalView}>
-							<ScrollView>
-								<Text style={[styles.modalText, { fontFamily: font_Family }]}>{titleSem}</Text>
-								<Text
-									style={{
-										textAlign: "center",
-										fontWeight: "bold",
-										fontFamily: font_Family,
-									}}
-								>
-									RegNo: {user}
-								</Text>
-								<Divider style={{ height: 2, width: "100%" }} />
-								{title == "Entry Exit Status" ? (
-									<DataTable>
-										<DataTable.Header>
-											<DataTable.Title>Date/Time</DataTable.Title>
-											<DataTable.Title>Status</DataTable.Title>
-											<DataTable.Title numeric>Recorded By</DataTable.Title>
-										</DataTable.Header>
-
-										{ee &&
-											ee.map((e) => {
-												return (
-													<View key={e.datetime + e.status}>
-														<View
-															style={{
-																flexDirection: "row",
-																justifyContent: "space-between",
-															}}
-														>
-															<Text
-																style={{
-																	fontFamily: font_Family,
-																	margin: 5,
-																	fontSize: 12,
-																	textAlign: "left",
-																	flex: 1,
-																}}
-																onPress={() => displaySecurityManName(e.cnic)}
-															>
-																{e.datetime}
-															</Text>
-															<Text
-																style={{
-																	fontFamily: font_Family,
-																	margin: 5,
-																	fontSize: 12,
-																	textAlign: "left",
-																	flex: 1,
-																}}
-																onPress={() => displaySecurityManName(e.cnic)}
-															>
-																{e.status}
-															</Text>
-															<Text
-																style={{
-																	fontFamily: font_Family,
-																	margin: 5,
-																	fontSize: 12,
-																	textAlign: "left",
-																	flex: 1,
-																}}
-																onPress={() => displaySecurityManName(e.cnic)}
-															>
-																{e.cnic}
-															</Text>
-														</View>
-														<Divider />
-													</View>
-												);
-											})}
-									</DataTable>
-								) : (
+				{/* {modalSem && (
+					<Modal
+						animationType="slide"
+						transparent={true}
+						visible={modalSem}>
+						<View style={styles.centeredView}>
+							<View style={styles.modalView}>
+								<ScrollView>
+									<Text style={[styles.modalText, { fontFamily: font_Family }]}>{titleSem}</Text>
 									<Text
 										style={{
 											textAlign: "center",
-											marginTop: 20,
+											fontWeight: "bold",
 											fontFamily: font_Family,
-										}}
-									>
-										{feee}
+										}}>
+										RegNo: {user}
 									</Text>
-								)}
-							</ScrollView>
-							<View style={{ justifyContent: "center" }}>
-								<Pressable
-									style={[styles.button, styles.buttonClose]}
-									onPress={() => {
-										viewModal(true);
-										viewModalSem(!modalSem);
-									}}
-								>
-									<Text style={[styles.textStyle, { fontFamily: font_Family }]}>Close</Text>
-								</Pressable>
-							</View>
-						</View>
-					</View>
-				</Modal>
+									<Divider style={{ height: 2, width: "100%" }} />
+									{title == "Entry Exit Status" ? (
+										<DataTable>
+											<DataTable.Header>
+												<DataTable.Title>Date/Time</DataTable.Title>
+												<DataTable.Title>Status</DataTable.Title>
+												<DataTable.Title numeric>Recorded By</DataTable.Title>
+											</DataTable.Header>
 
-				<Modal animationType="fade" transparent={true} visible={modal}>
-					<View style={styles.centeredView}>
-						<View style={styles.modalView}>
-							<Text style={[styles.modalText, { fontFamily: font_Family }]}>{title}</Text>
-							<ScrollView>
-								{Semester.map((s) => {
-									if (title == s.paid || title == "Entry Exit Status") {
-										let tit = "Semester-" + s.Semester;
-										return (
-											<Text
-												style={{
-													fontWeight: "bold",
-													backgroundColor: "lightgreen",
-													padding: 10,
-													margin: 10,
-													fontFamily: font_Family,
-												}}
-												onPress={() => {
-													viewModal(false);
-													setTitleSem(tit);
-													viewModalSem(true);
-													if (title == "Entry Exit Status") getDataEE(user, s.Semester);
-													else {
-														setFeee(s.fee);
-													}
-												}}
-												key={s.Semester}
-											>
-												Semester-{s.Semester}
-											</Text>
-										);
-									}
-								})}
-							</ScrollView>
-							<View style={{ justifyContent: "center", width: "100%" }}>
-								<Pressable style={[styles.button, styles.buttonClose]} onPress={() => viewModal(!modal)}>
-									<Text style={[styles.textStyle, { fontFamily: font_Family }]}>Close</Text>
-								</Pressable>
+											{ee &&
+												ee.map((e) => {
+													return (
+														<View key={e.datetime + e.status}>
+															<View
+																style={{
+																	flexDirection: "row",
+																	justifyContent: "space-between",
+																}}>
+																<Text
+																	style={{
+																		fontFamily: font_Family,
+																		margin: 5,
+																		fontSize: 12,
+																		textAlign: "left",
+																		flex: 1,
+																	}}
+																	onPress={() => displaySecurityManName(e.cnic)}>
+																	{e.datetime}
+																</Text>
+																<Text
+																	style={{
+																		fontFamily: font_Family,
+																		margin: 5,
+																		fontSize: 12,
+																		textAlign: "left",
+																		flex: 1,
+																	}}
+																	onPress={() => displaySecurityManName(e.cnic)}>
+																	{e.status}
+																</Text>
+																<Text
+																	style={{
+																		fontFamily: font_Family,
+																		margin: 5,
+																		fontSize: 12,
+																		textAlign: "left",
+																		flex: 1,
+																	}}
+																	onPress={() => displaySecurityManName(e.cnic)}>
+																	{e.cnic}
+																</Text>
+															</View>
+															<Divider />
+														</View>
+													);
+												})}
+										</DataTable>
+									) : (
+										<Text
+											style={{
+												textAlign: "center",
+												marginTop: 20,
+												fontFamily: font_Family,
+											}}>
+											{feee}
+										</Text>
+									)}
+								</ScrollView>
+								<View style={{ justifyContent: "center" }}>
+									<Pressable
+										style={[styles.button, styles.buttonClose]}
+										onPress={() => {
+											viewModal(true);
+											viewModalSem(!modalSem);
+										}}>
+										<Text style={[styles.textStyle, { fontFamily: font_Family }]}>Close</Text>
+									</Pressable>
+								</View>
 							</View>
 						</View>
-					</View>
-				</Modal>
+					</Modal>
+				)} */}
+
+				{modal && (
+					<Modal
+						animationType="fade"
+						transparent={true}
+						visible={modal}>
+						<View style={styles.centeredView}>
+							<View style={styles.modalView}>
+								<Text style={[styles.modalText, { fontFamily: font_Family }]}>{title}</Text>
+								<ScrollView>
+									{Semester.map((s) => {
+										if (title == s.paid || title == "Entry Exit Status") {
+											let tit = "Semester-" + s.Semester;
+											return (
+												<Text
+													style={{
+														fontWeight: "bold",
+														backgroundColor: "lightgreen",
+														padding: 10,
+														margin: 10,
+														fontFamily: font_Family,
+													}}
+													onPress={() => {
+														viewModal(false);
+														setTitleSem(tit);
+														viewModalSem(true);
+														if (title == "Entry Exit Status") {
+														
+															getDataEE(user, s.Semester)
+														} else {
+															setFeee(s.fee);
+														}
+													}}
+													key={s.Semester}>
+													Semester-{s.Semester}
+												</Text>
+											);
+										}
+									})}
+								</ScrollView>
+								<View style={{ justifyContent: "center", width: "100%" }}>
+									<Pressable
+										style={[styles.button, styles.buttonClose]}
+										onPress={() => viewModal(!modal)}>
+										<Text style={[styles.textStyle, { fontFamily: font_Family }]}>Close</Text>
+									</Pressable>
+								</View>
+							</View>
+						</View>
+					</Modal>
+				)}
 				<View
 					style={{
 						flex: 1,
 						justifyContent: "center",
 						alignItems: "center",
-					}}
-				>
+					}}>
 					<TouchableOpacity
 						style={styles.childViews}
 						onPress={() => {
 							getFees(user);
 							setTitle("All Paid Fees Status");
 							viewModal(!modal);
-						}}
-					>
+						}}>
 						<ViewFeesChild title="Fees Paid Status" />
 					</TouchableOpacity>
 					<TouchableOpacity
@@ -287,17 +261,16 @@ function ViewAllFees({ navigation }) {
 							getFees(user);
 							setTitle("Pending Fees Status");
 							viewModal(!modal);
-						}}
-					>
+						}}>
 						<ViewFeesChild title="Pending Fees Status" />
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={styles.childViews}
-						onPress={() => {
-							setTitle("Entry Exit Status");
-							viewModal(!modal);
-						}}
-					>
+						onPress={
+							()=>navigation.navigate('View Exit Entry',{user: user})
+							// setTitle("Entry Exit Status");
+							// viewModal(!modal);
+}>
 						<ViewFeesChild title="Entry Exit Status" />
 					</TouchableOpacity>
 				</View>
