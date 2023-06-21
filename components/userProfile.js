@@ -217,10 +217,14 @@ export default function UserProfile({ route }) {
 					source={{ uri: uri.image }}
 					// resizeMode="contain"
 					style={{
-						flex: 1,
+						// flex: 1,
+						height: HEIGHT*0.85,
 						margin: 0,
 						padding: 0,
-					}}></ImageBackground>
+					}}>
+				
+					</ImageBackground>
+					<Text style={{width:'100%',fontWeight:'700'}}>{uri.sname}-{uri.rollno}-{uri.dname}-{uri.program}-{uri.semno}</Text>	
 			</View>
 			<View
 				style={{

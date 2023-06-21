@@ -53,8 +53,8 @@ export default function renderStudentCard(
 					<View style={[styles.data, { width: WIDTH * 0.7 }]}>
 						<View>
 							<Text style={[styles.title, titleFont, textColor]}>{sname}</Text>
-							<Text style={[styles.rollno, rollNoFont, textColor]}>{rollno}</Text>
-							<Text style={[styles.rollno, rollNoFont, textColor]}>{cnic}</Text>
+							<Text style={[styles.rollno, rollNoFont, textColor]}>Reg# {rollno}</Text>
+							<Text style={[styles.rollno, rollNoFont, textColor]}>Cnic: {cnic}</Text>
 							<Text style={[styles.department, departmentFont, textColor]}>{dname}</Text>
 						</View>
 					</View>

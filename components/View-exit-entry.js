@@ -1,5 +1,5 @@
 import React, { useState,useContext,useEffect } from "react";
-import { Text, View, StyleSheet, Dimensions,ScrollView } from "react-native";
+import { Text, View, StyleSheet, Dimensions,ScrollView,Alert } from "react-native";
 import Constants from "expo-constants";
 import ColorsContext from "../ContextAPI/ColorsContext";
 import { Divider, DataTable } from "react-native-paper";
@@ -70,13 +70,13 @@ export default function ViewExitEntry({route}) {
 				alert(error.message.toString());
 			});
 	};
-	const displaySecurityManName = async (id) => {
+	const displaySecurityManName = async (id,status) => {
 		await instance
 			.get(`${IP}/securitySupervosor/${id}`)
 			.then(function (response) {
 				if (response.data.length == 0) {
 					alert("No data found....");
-				} else Alert.alert("Details", "Name : " + response.data[0].name + "\nCNIC : " + response.data[0].cnic);
+				} else Alert.alert(`${status} recorded by`, "Name : " + response.data[0].name + "\nCNIC : " + response.data[0].cnic);
 			})
 			.catch(function (error) {
 				alert(error.message.toString());
@@ -143,7 +143,7 @@ export default function ViewExitEntry({route}) {
 															textAlign: "left",
 															flex: 1,
 														}}
-														onPress={() => displaySecurityManName(e.cnic)}>
+														onPress={() => displaySecurityManName(e.cnic,e.status)}>
 														{e.datetime}
 													</Text>
 													<Text
@@ -154,7 +154,7 @@ export default function ViewExitEntry({route}) {
 															textAlign: "left",
 															flex: 1,
 														}}
-														onPress={() => displaySecurityManName(e.cnic)}>
+														onPress={() => displaySecurityManName(e.cnic,e.status)}>
 														{e.status}
 													</Text>
 													<Text
@@ -165,7 +165,7 @@ export default function ViewExitEntry({route}) {
 															textAlign: "left",
 															flex: 1,
 														}}
-														onPress={() => displaySecurityManName(e.cnic)}>
+														onPress={() => displaySecurityManName(e.cnic,e.status)}>
 														{e.cnic}
 													</Text>
 												</View>

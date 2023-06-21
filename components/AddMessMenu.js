@@ -44,6 +44,9 @@ export default function AddMessMenu() {
 	};
 
 	const addMenu = async (addOrEdit) => {
+		console.log('====================================');
+		console.log(addOrEdit);
+		console.log('====================================');
 		const payloadset = {
 			dishName: name,
 			dishPrice: price,
@@ -54,6 +57,7 @@ export default function AddMessMenu() {
 		await instance
 			.post(`${IP}/messSupervisor/${addOrEdit}`, payloadset)
 			.then(function (response) {
+				console.log(response);
 				let msg = response.data.rowCount > 0 ? `Dish added sucessfully` : "Dish not added sucessfully";
 				Alert.alert("Dish", msg, [{ text: "OK" }]);
 			})
@@ -157,7 +161,7 @@ export default function AddMessMenu() {
 					</View>
 					<View style={styles.addDishContainer}>
 						{/* <TouchableOpacity style={styles.button} onPress={addMenu}> */}
-						<Text onPress={() => addMenu("editMenu")} style={{ fontFamily: font_Family, marginTop: 10 }}>
+						<Text onPress={() => addMenu("editMenu")} style={{ fontFamily: font_Family, marginTop: 10,fontWeight:'700' }}>
 							Edit Existing Dish
 						</Text>
 						{/* </TouchableOpacity> */}

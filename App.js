@@ -14,6 +14,8 @@ const SList = lazy(() => import("./components/search_list"));
 const AppSettings = lazy(() => import("./components/AppSetting"));
 import UserProfile from "./components/userProfile";
 import ViewExitEntry from "./components/View-exit-entry";
+import PendingFees from "./components/PendingFees";
+import PaidFees from "./components/PaidFees";
 import { styles } from "./assets/styles/app";
 import { Alert, View } from "react-native";
 import ColorsContext from "./ContextAPI/ColorsContext";
@@ -114,6 +116,8 @@ export default function App() {
 							<Stack.Screen name="Settings" options={{ headerShown: false }} component={AppSettings} />
 							<Stack.Screen name="User Profile" options={{ ...topNav }} component={UserProfile} />
 							<Stack.Screen name="View Exit Entry" options={{ ...topNav }} component={ViewExitEntry} />
+							<Stack.Screen name="Mess Fees" options={{ ...topNav }} component={PendingFees} />
+							<Stack.Screen name="Hostel Fees" options={{ ...topNav }} component={PaidFees} />
 
 							<Stack.Screen name="Student's List" options={{ ...topNav }} component={SList} />
 						</Stack.Navigator>

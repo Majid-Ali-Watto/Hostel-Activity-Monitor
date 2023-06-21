@@ -63,6 +63,9 @@ const ItemCard = ({ item }, cardsColor, font_Family, cardsTextColor, dayForKey) 
 		</View>
 	);
 };
+
+
+
 const createObject = (menu) => {
 	const result = [];
 	let obj = {};
@@ -83,6 +86,9 @@ const createObject = (menu) => {
 			};
 			result.push(obj);
 		} else if (menu[i].daydate == menu[i + 1].daydate) {
+			if(menu[i].time=="Evening") {
+				[menu[i],menu[i+1]]=[menu[i+1],menu[i]]
+			}
 			obj = {
 				day: "" + currDay,
 				date: "" + fullDate,
@@ -112,6 +118,8 @@ const createObject = (menu) => {
 	}
 	return result;
 };
+
+
 export default function ViewMenu() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [menus, setMenu] = useState([]);
@@ -159,7 +167,7 @@ export default function ViewMenu() {
 			<Divider />
 
 			<FlatList
-				contentContainerStyle={{ flex: 1 }}
+				// contentContainerStyle={{ flex: 1 }}
 				data={filteredNames}
 				renderItem={({ item }) => {
 					return ItemCard({ item }, cardsColor, font_Family, cardsTextColor, "all");
